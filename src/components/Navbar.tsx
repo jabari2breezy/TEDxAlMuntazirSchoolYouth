@@ -33,6 +33,7 @@ export default function Navbar() {
     { name: 'Agenda', href: '/agenda', id: '04', sub: 'Time Unfolding' },
     { name: 'FAQ', href: '/faq', id: '05', sub: 'The Answers' },
     { name: 'About', href: '/about', id: '06', sub: 'Our Philosophy' },
+    { name: 'Tickets', href: '/tickets', id: '07', sub: 'Secure Your Seat' },
   ];
 
   return (
@@ -59,6 +60,7 @@ export default function Navbar() {
           { name: 'Speakers', href: '/speakers' },
           { name: 'FAQ', href: '/faq' },
           { name: 'About', href: '/about' },
+          { name: 'Tickets', href: '/tickets' },
         ].map((item) => (
           <Link 
             key={item.href}
