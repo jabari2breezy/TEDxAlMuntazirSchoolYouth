@@ -11,9 +11,9 @@ export default function Footer() {
       <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-start gap-20 relative z-10">
         <div className="flex-1 space-y-12">
           <div className="flex flex-col gap-6">
-            <Logo variant="tedx" className="scale-90 md:scale-110 origin-left" />
+            <Logo variant="tedx" theme="dark" className="scale-90 md:scale-110 origin-left" />
             <div className="w-16 h-[1px] bg-brand-primary/10" />
-            <Logo variant="school" className="scale-100 origin-left opacity-50 hover:opacity-100 transition-opacity" />
+            <Logo variant="school" theme="dark" className="scale-100 origin-left opacity-50 hover:opacity-100 transition-opacity" />
           </div>
           <p className="font-editorial text-4xl md:text-5xl leading-tight max-w-lg italic text-brand-primary">
             "Ideas are the <span className="text-brand-secondary font-title not-italic uppercase">legacy</span> that survives the curated time."

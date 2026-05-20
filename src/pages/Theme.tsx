@@ -42,7 +42,9 @@ export default function Theme() {
     <div className="bg-brand-background min-h-screen text-brand-primary font-sans overflow-x-hidden">
       
       {/* THE FRACTURE SEQUENCE HERO */}
-      <section className="relative h-[100vh] w-full flex items-center justify-center overflow-hidden bg-black">
+      <section className="relative h-[100vh] w-full flex items-center justify-center overflow-hidden bg-[#EAEBE8]">
+        {/* Grainy overlay */}
+        <div className="absolute inset-0 opacity-[0.4] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+')] z-0 pointer-events-none" />
         
         {/* TOP HALF TEXT */}
         <motion.div 
@@ -51,7 +53,7 @@ export default function Theme() {
           className="absolute inset-0 flex items-center justify-center overflow-hidden z-20 pointer-events-none"
           style={{ clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 50%)' }}
         >
-          <h1 className="text-[16vw] md:text-[14vw] font-title font-black uppercase leading-none tracking-tighter text-brand-primary">
+          <h1 className="text-[16vw] md:text-[14vw] font-title font-black uppercase leading-none tracking-tighter text-[#000839]">
             Borrowed<br/>Time.
           </h1>
         </motion.div>
@@ -63,7 +65,7 @@ export default function Theme() {
           className="absolute inset-0 flex items-center justify-center overflow-hidden z-20 pointer-events-none"
           style={{ clipPath: 'polygon(0 50%, 100% 50%, 100% 100%, 0 100%)' }}
         >
-          <h1 className="text-[16vw] md:text-[14vw] font-title font-black uppercase leading-none tracking-tighter text-brand-primary">
+          <h1 className="text-[16vw] md:text-[14vw] font-title font-black uppercase leading-none tracking-tighter text-[#000839]">
             Borrowed<br/>Time.
           </h1>
         </motion.div>
@@ -72,12 +74,12 @@ export default function Theme() {
         <motion.div
           animate={manifestoControls}
           initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-          className="absolute inset-0 flex flex-col items-center justify-center px-6 z-10"
+          className="absolute inset-0 flex flex-col items-center justify-center px-6 z-10 bg-[#EAEBE8]/80 backdrop-blur-sm"
         >
-          <span className="font-typewriter text-[10px] md:text-xs tracking-[0.5em] uppercase text-brand-secondary mb-6 border border-brand-secondary/30 px-4 py-1 rounded-full bg-brand-secondary/10">
+          <span className="font-typewriter text-[10px] md:text-xs tracking-[0.5em] uppercase text-[#006d38] mb-6 border border-[#006d38]/30 px-4 py-1 rounded-full bg-[#006d38]/10">
             The Philosophy
           </span>
-          <p className="font-editorial text-3xl md:text-5xl lg:text-6xl max-w-5xl text-center text-brand-primary italic leading-tight">
+          <p className="font-editorial text-3xl md:text-5xl lg:text-6xl max-w-5xl text-center text-[#000839] italic leading-tight">
             "None of us choose our arrival and departure in this world. Between those two moments lies everything."
           </p>
         </motion.div>
@@ -147,18 +149,18 @@ export default function Theme() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="bg-[#0a0a0a] rounded-[2.5rem] p-10 md:p-16 border border-brand-outline relative overflow-hidden md:mt-32 group hover:bg-brand-secondary hover:text-white transition-colors duration-500"
+            className="bg-[#006d38] text-white rounded-[2.5rem] p-10 md:p-16 border border-brand-outline relative overflow-hidden md:mt-32 group hover:bg-[#000839] hover:text-white transition-colors duration-500"
           >
             <div className="flex justify-between items-start mb-20 md:mb-32">
-              <span className="text-7xl md:text-9xl font-title font-black opacity-[0.03] group-hover:opacity-10 transition-opacity absolute top-10 left-10">02</span>
-              <div className="relative z-10 px-5 py-2 bg-white/5 text-white rounded-full font-typewriter text-[10px] font-bold uppercase group-hover:bg-black/20">
+              <span className="text-7xl md:text-9xl font-title font-black opacity-[0.1] group-hover:opacity-20 transition-opacity absolute top-10 left-10">02</span>
+              <div className="relative z-10 px-5 py-2 bg-white/20 text-white rounded-full font-typewriter text-[10px] font-bold uppercase group-hover:bg-white group-hover:text-black transition-colors">
                 The Present
               </div>
             </div>
             <h3 className="text-3xl md:text-5xl font-title font-bold uppercase mb-6 tracking-tighter leading-none relative z-10 text-white">
               The Value of Now
             </h3>
-            <p className="font-editorial text-lg md:text-2xl text-white opacity-70 group-hover:opacity-100 transition-opacity relative z-10 leading-relaxed">
+            <p className="font-editorial text-lg md:text-2xl opacity-90 group-hover:opacity-100 transition-opacity relative z-10 leading-relaxed text-white">
               Society tells us that "time is money," treating every hour as something that must be productive. We challenge this relentless demand for efficiency. We will explore how true value isn't found in productivity, but in presence, connection, and experiencing the current moment.
             </p>
           </motion.div>

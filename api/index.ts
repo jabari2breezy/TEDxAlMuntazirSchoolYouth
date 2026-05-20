@@ -271,22 +271,20 @@ app.post('/api/buy-ticket', async (req, res) => {
   const ticketNumber = currentCount.toString().padStart(4, '0');
 
   let ticketBuffer;
-
   try {
     const jimp = (await import('jimp')).default;
-    const templatePath = path.join(process.cwd(), 'public', 'ticket-template.jpg');
+    const templatePath = path.join(process.cwd(), 'public', 'ticket-template.png');
     
     let image;
     if (existsSync(templatePath)) {
       image = await jimp.read(templatePath);
-      // We assume the user provided a clean template without the number.
-      // We will place the number at the bottom right.
       const fontPath = path.join(__dirname, 'fonts', 'open-sans-64-white.fnt');
       const font = await jimp.loadFont(fontPath);
-      // Hardcoded coordinates that usually work for standard HD layouts
       const imageWidth = image.bitmap.width;
       const imageHeight = image.bitmap.height;
-      image.print(font, imageWidth - 400, imageHeight - 100, `NO. ${ticketNumber}`);
+      // Stamping bottom right (assuming standard HD layout). 
+      // Offset heavily to try and cover or place near the old ticket number.
+      image.print(font, imageWidth - 450, imageHeight - 120, `NO. ${ticketNumber}`);
     } else {
       // Fallback: create a blank black ticket safely
       const JimpConstructor = (jimp as any).Jimp || jimp;
@@ -300,11 +298,11 @@ app.post('/api/buy-ticket', async (req, res) => {
 
     ticketBuffer = await image.getBufferAsync(jimp.MIME_JPEG);
   } catch (err: any) {
-    console.error('Ticket generation error:', err);
-    return res.status(500).json({ error: err.message || 'Failed to generate ticket' });
-  }
+    console.error('Jimp Error (Ticket Generation Failed):', err);
+    // DO NOT fail the request. Let the user see their ticket number anyway.
+  };
 
-  if (gmailUser && gmailPass) {
+  if (gmailUser && gmailPass && ticketBuffer) {
     try {
       const nodemailer = await import('nodemailer');
       const transporter = nodemailer.createTransport({
@@ -343,10 +341,10 @@ app.post('/api/buy-ticket', async (req, res) => {
     }
   }
 
-  res.json({ 
+  return res.json({ 
     success: true, 
     ticketNumber,
-    ticketImageBase64: `data:image/jpeg;base64,${ticketBuffer.toString('base64')}`
+    ticketImageBase64: ticketBuffer ? `data:image/jpeg;base64,${ticketBuffer.toString('base64')}` : null
   });
 });
 

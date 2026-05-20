@@ -44,10 +44,10 @@ export default function Navbar() {
       />
       <nav className="fixed top-0 left-0 w-full z-[100] px-6 md:px-12 py-6 flex justify-between items-center pointer-events-none">
       <div className="flex items-center gap-6 pointer-events-auto">
-        <Link to="/" className="flex items-baseline gap-4 text-white">
-          <Logo variant="tedx" className="scale-75 md:scale-90 origin-left" />
-          <div className="hidden lg:block w-[1px] h-4 bg-white/20" />
-          <Logo variant="school" className="hidden lg:block scale-75 origin-left opacity-60 hover:opacity-100 transition-opacity" />
+        <Link to="/" className="flex items-baseline gap-4">
+          <Logo variant="tedx" theme="dark" className="scale-75 md:scale-90 origin-left" />
+          <div className="hidden lg:block w-[1px] h-4 bg-brand-primary/20" />
+          <Logo variant="school" theme="dark" className="hidden lg:block scale-75 origin-left opacity-60 hover:opacity-100 transition-opacity" />
         </Link>
       </div>
 

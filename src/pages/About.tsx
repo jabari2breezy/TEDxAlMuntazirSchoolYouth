@@ -123,7 +123,7 @@ export default function About() {
                   <span className="font-typewriter text-[10px] text-brand-secondary">0{i+1}</span>
                   <div className="h-[1px] flex-grow bg-brand-outline" />
                 </div>
-                <h3 className="text-4xl font-title font-black tracking-tighter uppercase text-brand-primary">{item.title}</h3>
+                <h3 className="text-4xl font-title font-black tracking-tighter uppercase text-brand-primary break-all sm:break-words">{item.title}</h3>
                 <p className="font-editorial text-xl text-brand-primary/60 leading-tight italic">{item.text}</p>
               </div>
             ))}
