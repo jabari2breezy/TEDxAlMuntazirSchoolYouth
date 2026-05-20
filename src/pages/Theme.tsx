@@ -42,7 +42,7 @@ export default function Theme() {
     <div className="bg-brand-background min-h-screen text-brand-primary font-sans overflow-x-hidden">
       
       {/* THE FRACTURE SEQUENCE HERO */}
-      <section className="relative h-[100vh] w-full flex items-center justify-center overflow-hidden bg-[#050507]">
+      <section className="relative h-[100vh] w-full flex items-center justify-center overflow-hidden bg-black">
         
         {/* TOP HALF TEXT */}
         <motion.div 
@@ -147,7 +147,7 @@ export default function Theme() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="bg-[#0f1218] rounded-[2.5rem] p-10 md:p-16 border border-brand-outline relative overflow-hidden md:mt-32 group hover:bg-brand-secondary hover:text-white transition-colors duration-500"
+            className="bg-[#0a0a0a] rounded-[2.5rem] p-10 md:p-16 border border-brand-outline relative overflow-hidden md:mt-32 group hover:bg-brand-secondary hover:text-white transition-colors duration-500"
           >
             <div className="flex justify-between items-start mb-20 md:mb-32">
               <span className="text-7xl md:text-9xl font-title font-black opacity-[0.03] group-hover:opacity-10 transition-opacity absolute top-10 left-10">02</span>
@@ -155,10 +155,10 @@ export default function Theme() {
                 The Present
               </div>
             </div>
-            <h3 className="text-3xl md:text-5xl font-title font-bold uppercase mb-6 tracking-tighter leading-none relative z-10">
+            <h3 className="text-3xl md:text-5xl font-title font-bold uppercase mb-6 tracking-tighter leading-none relative z-10 text-white">
               The Value of Now
             </h3>
-            <p className="font-editorial text-lg md:text-2xl opacity-70 group-hover:opacity-100 transition-opacity relative z-10 leading-relaxed">
+            <p className="font-editorial text-lg md:text-2xl text-white opacity-70 group-hover:opacity-100 transition-opacity relative z-10 leading-relaxed">
               Society tells us that "time is money," treating every hour as something that must be productive. We challenge this relentless demand for efficiency. We will explore how true value isn't found in productivity, but in presence, connection, and experiencing the current moment.
             </p>
           </motion.div>
