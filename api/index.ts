@@ -146,6 +146,29 @@ app.post('/api/register', async (req, res) => {
   const { email, name, message } = req.body;
   const gmailUser = process.env.GMAIL_USER;
   const gmailPass = process.env.GMAIL_APP_PASSWORD;
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+  if (supabaseUrl && supabaseKey) {
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      
+      const { data: existingUser } = await supabase
+        .from('registrations')
+        .select('email')
+        .eq('email', email)
+        .single();
+        
+      if (existingUser) {
+        return res.status(400).json({ success: false, error: "You've already registered before. If you have additional concerns, email us at info@tedxalmuntazir.com" });
+      }
+
+      await supabase.from('registrations').insert([{ name, email, message }]);
+    } catch (err: any) {
+      console.error('Supabase error:', err.message || err);
+    }
+  }
   
   if (gmailUser && gmailPass) {
     try {
@@ -253,13 +276,15 @@ app.post('/api/buy-ticket', async (req, res) => {
   const gmailUser = process.env.GMAIL_USER;
   const gmailPass = process.env.GMAIL_APP_PASSWORD;
 
-  // Simple sequential counter
+  // Countdown from 100
   const counterFile = path.join(process.cwd(), 'data', 'ticket_counter.json');
-  let currentCount = 1;
+  let currentCount = 100;
   try {
     if (existsSync(counterFile)) {
       const data = await fs.readFile(counterFile, 'utf8');
-      currentCount = JSON.parse(data).count + 1;
+      const parsed = JSON.parse(data);
+      // Decrement counter, clamp at 1
+      currentCount = Math.max(1, (parsed.count ?? 100) - 1);
     } else {
       await fs.mkdir(path.join(process.cwd(), 'data'), { recursive: true });
     }

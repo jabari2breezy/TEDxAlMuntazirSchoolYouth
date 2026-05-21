@@ -46,6 +46,32 @@ export default function About() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 mb-48">
+          <div className="space-y-20">
+            {[
+              {
+                title: "About TED",
+                text: "TED is a nonprofit, nonpartisan organization devoted to Ideas Worth Spreading. Our mission is to discover and spread ideas that spark imagination, embrace possibility and catalyze impact. Started as a four-day conference in California 30 years ago, TED has grown to support its mission with multiple initiatives."
+              },
+              {
+                title: "About TEDx",
+                text: "In the spirit of ideas worth spreading, TEDx is a program of local, self-organized events that bring people together to share a TED-like experience. At a TEDx event, TED Talks video and live speakers combine to spark deep discussion and connection. These local, self-organized events are branded TEDx, where x = independently organized TED event. The TED Conference provides general guidance for the TEDx program, but individual TEDx events are self-organized."
+              },
+              {
+                title: "TEDxAlMuntazirSchoolsYouth",
+                text: "Our event is run entirely by students, for the community of Dar es Salaam. We are exploring the theme of 'Borrowed Time' and how we individually and collectively choose to spend the moments we have."
+              }
+            ].map((item, i) => (
+              <div key={item.title} className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <span className="font-typewriter text-[10px] text-brand-secondary">0{i+1}</span>
+                  <div className="h-[1px] flex-grow bg-brand-outline" />
+                </div>
+                <h3 className="text-4xl font-title font-black tracking-tighter uppercase text-brand-primary break-all sm:break-words">{item.title}</h3>
+                <p className="font-editorial text-xl text-brand-primary/60 leading-tight italic">{item.text}</p>
+              </div>
+            ))}
+          </div>
+
           <div id="contact" className="space-y-16">
             <div className="p-12 border border-brand-outline bg-brand-surface space-y-8 rounded-[3rem] shadow-sm">
               <Mail className="text-brand-secondary" size={32} />
@@ -101,32 +127,6 @@ export default function About() {
             <div className="font-typewriter text-[10px] text-brand-primary/40 uppercase tracking-[0.2em] leading-relaxed max-w-sm">
               <span className="text-brand-secondary">Note:</span> Everyone has a story to tell, and we are here to provide the platform.
             </div>
-          </div>
-
-          <div className="space-y-20">
-            {[
-              {
-                title: "About TED",
-                text: "TED is a nonprofit, nonpartisan organization devoted to Ideas Worth Spreading. Our mission is to discover and spread ideas that spark imagination, embrace possibility and catalyze impact. Started as a four-day conference in California 30 years ago, TED has grown to support its mission with multiple initiatives."
-              },
-              {
-                title: "About TEDx",
-                text: "In the spirit of ideas worth spreading, TEDx is a program of local, self-organized events that bring people together to share a TED-like experience. At a TEDx event, TED Talks video and live speakers combine to spark deep discussion and connection. These local, self-organized events are branded TEDx, where x = independently organized TED event. The TED Conference provides general guidance for the TEDx program, but individual TEDx events are self-organized."
-              },
-              {
-                title: "TEDxAlMuntazirSchoolsYouth",
-                text: "Our event is run entirely by students, for the community of Dar es Salaam. We are exploring the theme of 'Borrowed Time' and how we individually and collectively choose to spend the moments we have."
-              }
-            ].map((item, i) => (
-              <div key={item.title} className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <span className="font-typewriter text-[10px] text-brand-secondary">0{i+1}</span>
-                  <div className="h-[1px] flex-grow bg-brand-outline" />
-                </div>
-                <h3 className="text-4xl font-title font-black tracking-tighter uppercase text-brand-primary break-all sm:break-words">{item.title}</h3>
-                <p className="font-editorial text-xl text-brand-primary/60 leading-tight italic">{item.text}</p>
-              </div>
-            ))}
           </div>
         </div>
 

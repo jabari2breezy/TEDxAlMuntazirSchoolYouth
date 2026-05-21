@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useAnimation } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowDown } from 'lucide-react';
 
 export default function Theme() {
   const topHalfControls = useAnimation();
@@ -92,7 +92,12 @@ export default function Theme() {
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
         >
           <span className="font-typewriter text-[10px] uppercase tracking-widest text-brand-primary/50">Scroll to Explore</span>
-          <div className="w-[1px] h-12 bg-brand-primary/20" />
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowDown size={20} className="text-brand-primary/50" />
+          </motion.div>
         </motion.div>
       </section>
 
