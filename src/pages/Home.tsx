@@ -10,6 +10,7 @@ import { MechanicalClock, FluidBlob, KineticTypography } from '../components/Mod
 import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
+import Sponsors from '../components/Sponsors';
 
 const transition = { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const };
 
@@ -391,20 +392,8 @@ export default function Home() {
 
       {/* Sectors Removed */}
 
-
-
       {/* Sponsors Strip */}
-      <div className="py-20 border-t border-white/10 bg-white/5 px-6 md:px-16 overflow-hidden">
-        <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 opacity-30 grayscale saturate-0">
-          <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white shrink-0">Our Partners</span>
-          <div className="flex flex-wrap gap-20 justify-center items-center">
-            {/* Empty for now as requested */}
-            <div className="h-8 w-32 border border-dashed border-white/20 rounded flex items-center justify-center text-[8px] uppercase tracking-widest text-white">Headline Sponsor</div>
-            <div className="h-8 w-32 border border-dashed border-white/20 rounded flex items-center justify-center text-[8px] uppercase tracking-widest text-white">Supporting Partner</div>
-            <div className="h-8 w-32 border border-dashed border-white/20 rounded flex items-center justify-center text-[8px] uppercase tracking-widest text-white">Media Partner</div>
-          </div>
-        </div>
-      </div>
+      <Sponsors />
 
       {/* Social Call to Action */}
       <section className="py-40 bg-[#0a0a0d] border-y border-white/10 relative overflow-hidden">

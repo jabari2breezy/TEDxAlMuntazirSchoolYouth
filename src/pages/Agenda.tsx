@@ -4,27 +4,35 @@ const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
 export default function Agenda() {
   const agendaItems = [
-    { time: '10:00 - 10:20', title: 'Ridhwan Mohammed', sub: 'Topic TBA', theme: 'past' },
-    { time: '10:20 - 10:40', title: 'Anaya Rashid', sub: 'The Culture of Time', theme: 'past' },
-    { time: '10:40 - 11:00', title: 'Zahra Datoo', sub: 'The Architecture of Nostalgia', theme: 'past' },
+    { time: '09:30 - 10:00', title: 'Registration', sub: 'Arrival & Check-in', theme: 'past' },
+    { time: '10:00 - 10:20', title: 'Introduction', sub: 'Welcome (7m) & Video (10m)', theme: 'past' },
     
-    { time: '11:00 - 11:15', title: 'Interactive Activity', sub: 'Audience Engagement', theme: 'past' },
+    // Session 1
+    { time: '10:20 - 10:38', title: 'Ridhwan Mohammed (Alum)', sub: 'Speaker 1', theme: 'past' },
+    { time: '10:38 - 10:43', title: 'Activity', sub: 'Audience Engagement', theme: 'past' },
+    { time: '10:43 - 11:01', title: 'Anaya Rashid', sub: 'Culture of time', theme: 'past' },
+    { time: '11:01 - 11:11', title: 'Game', sub: 'Interactive Session', theme: 'past' },
+    { time: '11:11 - 11:30', title: 'Zahra Datoo', sub: 'Nostalgia', theme: 'past' },
     
-    { time: '11:15 - 11:35', title: 'Zahra Moledina', sub: "Capitalism's Clock", theme: 'present' },
-    { time: '11:35 - 11:55', title: 'Faizaan', sub: 'Topic TBA', theme: 'present' },
-    { time: '11:55 - 12:15', title: 'Hassan Abbas Mohammed', sub: 'The Procrastination Paradox', theme: 'present' },
+    { time: '11:30 - 11:50', title: 'Tea Break', sub: 'Refreshments & Networking', theme: 'present' },
     
-    { time: '12:15 - 12:30', title: 'Interactive Activity', sub: 'Audience Engagement', theme: 'present' },
+    // Session 2
+    { time: '11:50 - 12:08', title: 'Zahra Moledina', sub: 'The best thing since sliced bread', theme: 'present' },
+    { time: '12:08 - 12:18', title: 'Kahoot / Blooket', sub: 'Interactive Challenge', theme: 'present' },
+    { time: '12:18 - 12:36', title: 'Faizaan (Emerson) (Alumni)', sub: 'Speaker 5', theme: 'present' },
+    { time: '12:36 - 12:41', title: 'Game', sub: 'Mini Activity', theme: 'present' },
+    { time: '12:41 - 13:00', title: 'Hassan Abbas Muhammad', sub: 'Procrastination', theme: 'present' },
     
-    { time: '12:30 - 13:30', title: 'Lunch & Prayer', sub: 'Nourishment & Reflection', theme: 'present' },
+    { time: '13:00 - 14:00', title: 'Salah & Food Break', sub: 'Nourishment & Reflection', theme: 'present' },
 
-    { time: '13:30 - 13:50', title: 'Yunus Osman', sub: 'The Art of Scheduling', theme: 'future' },
-    { time: '13:50 - 14:10', title: 'Sada Mbaruk Said', sub: 'Three Clocks: Climate, Animals, AI', theme: 'future' },
-    { time: '14:10 - 14:30', title: 'Liyaan Karbelkar', sub: 'The Legacy We Leave', theme: 'future' },
+    // Session 3
+    { time: '14:00 - 14:18', title: 'Yunus Osman (Alumni)', sub: 'Art of scheduling', theme: 'future' },
+    { time: '14:18 - 14:28', title: 'Game', sub: 'Audience Engagement', theme: 'future' },
+    { time: '14:28 - 14:46', title: 'Sada Mbaruk', sub: 'End of the world', theme: 'future' },
+    { time: '14:46 - 14:56', title: 'Game', sub: 'Interactive Session', theme: 'future' },
+    { time: '14:56 - 15:15', title: 'Liyaan Karblekar', sub: 'How to take your wealth with you', theme: 'future' },
     
-    // No interactive activity here because it's the last group of speakers
-    { time: '14:30 - 14:45', title: 'Sponsor Appreciation', sub: 'Gratitude for our Partners', theme: 'future' },
-    { time: '14:45 - 15:00', title: 'Closing Manifesto', sub: 'Borrowed Time: The Beginning', theme: 'future' },
+    { time: '15:15 - 15:40', title: 'Closing Ceremony', sub: 'Borrowed Time: The Beginning', theme: 'future' },
   ];
 
   return (
