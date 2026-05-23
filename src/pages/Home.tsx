@@ -10,7 +10,6 @@ import { MechanicalClock, FluidBlob, KineticTypography } from '../components/Mod
 import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
-import Sponsors from '../components/Sponsors';
 
 const transition = { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const };
 
@@ -392,8 +391,22 @@ export default function Home() {
 
       {/* Sectors Removed */}
 
+
+
       {/* Sponsors Strip */}
-      <Sponsors />
+      <div className="py-20 border-t border-white/10 bg-white/5 px-6 md:px-16 overflow-hidden">
+         <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+           <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white shrink-0">Our Partners</span>
+           <div className="flex flex-wrap gap-20 justify-center items-center">
+             <img src="/sponsors/dar-glass-works.png" alt="Dar es Salaam Glass Works" className="h-8 object-contain" />
+             <img src="/sponsors/amjad-motors.png" alt="Amjad Motors International Limited" className="h-8 object-contain" />
+             <img src="/sponsors/leta-kazi.png" alt="Leta Kazi Ltd." className="h-8 object-contain" />
+             <img src="/sponsors/jd-pharmacy.png" alt="JD Pharmacy" className="h-8 object-contain" />
+             <img src="/sponsors/etg.png" alt="ETG" className="h-8 object-contain" />
+             <img src="/sponsors/smiles-cars.png" alt="Smiles Cars Rentals" className="h-8 object-contain" />
+           </div>
+         </div>
+      </div>
 
       {/* Social Call to Action */}
       <section className="py-40 bg-[#0a0a0d] border-y border-white/10 relative overflow-hidden">

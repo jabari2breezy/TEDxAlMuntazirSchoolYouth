@@ -4,35 +4,39 @@ const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
 export default function Agenda() {
   const agendaItems = [
-    { time: '09:30 - 10:00', title: 'Registration', sub: 'Arrival & Check-in', theme: 'past' },
-    { time: '10:00 - 10:20', title: 'Introduction', sub: 'Welcome (7m) & Video (10m)', theme: 'past' },
-    
-    // Session 1
-    { time: '10:20 - 10:38', title: 'Ridhwan Mohammed (Alum)', sub: 'Speaker 1', theme: 'past' },
-    { time: '10:38 - 10:43', title: 'Activity', sub: 'Audience Engagement', theme: 'past' },
-    { time: '10:43 - 11:01', title: 'Anaya Rashid', sub: 'Culture of time', theme: 'past' },
-    { time: '11:01 - 11:11', title: 'Game', sub: 'Interactive Session', theme: 'past' },
-    { time: '11:11 - 11:30', title: 'Zahra Datoo', sub: 'Nostalgia', theme: 'past' },
-    
-    { time: '11:30 - 11:50', title: 'Tea Break', sub: 'Refreshments & Networking', theme: 'present' },
-    
-    // Session 2
-    { time: '11:50 - 12:08', title: 'Zahra Moledina', sub: 'The best thing since sliced bread', theme: 'present' },
-    { time: '12:08 - 12:18', title: 'Kahoot / Blooket', sub: 'Interactive Challenge', theme: 'present' },
-    { time: '12:18 - 12:36', title: 'Faizaan (Emerson) (Alumni)', sub: 'Speaker 5', theme: 'present' },
-    { time: '12:36 - 12:41', title: 'Game', sub: 'Mini Activity', theme: 'present' },
-    { time: '12:41 - 13:00', title: 'Hassan Abbas Muhammad', sub: 'Procrastination', theme: 'present' },
-    
-    { time: '13:00 - 14:00', title: 'Salah & Food Break', sub: 'Nourishment & Reflection', theme: 'present' },
+    // Registration & Intro
+    { time: '9:30 – 10:00', title: 'Registration', sub: '', theme: 'past' },
+    { time: '10:00 – 10:20', title: 'Intro', sub: 'Welcome (7 mins) + Opening Video (10 mins)', theme: 'past' },
 
-    // Session 3
-    { time: '14:00 - 14:18', title: 'Yunus Osman (Alumni)', sub: 'Art of scheduling', theme: 'future' },
-    { time: '14:18 - 14:28', title: 'Game', sub: 'Audience Engagement', theme: 'future' },
-    { time: '14:28 - 14:46', title: 'Sada Mbaruk', sub: 'End of the world', theme: 'future' },
-    { time: '14:46 - 14:56', title: 'Game', sub: 'Interactive Session', theme: 'future' },
-    { time: '14:56 - 15:15', title: 'Liyaan Karblekar', sub: 'How to take your wealth with you', theme: 'future' },
-    
-    { time: '15:15 - 15:40', title: 'Closing Ceremony', sub: 'Borrowed Time: The Beginning', theme: 'future' },
+    // Session 1 — Past
+    { time: '10:20 – 10:38', title: 'Ridhwan Mohammed', sub: 'Speaker (Alum)', theme: 'past' },
+    { time: '10:38 – 10:43', title: 'Interactive Activity', sub: '5 mins', theme: 'past' },
+    { time: '10:43 – 11:01', title: 'Anaya Rashid', sub: 'Culture of Time', theme: 'past' },
+    { time: '11:01 – 11:11', title: 'Game', sub: '10 mins', theme: 'past' },
+    { time: '11:11 – 11:29', title: 'Zahra Datoo', sub: 'Nostalgia', theme: 'past' },
+
+    // Tea Break
+    { time: '11:30 – 11:50', title: 'Tea Break', sub: '', theme: 'past' },
+
+    // Session 2 — Present
+    { time: '11:50 – 12:08', title: 'Zahra Moledina', sub: 'The Best Thing Since Sliced Bread', theme: 'present' },
+    { time: '12:08 – 12:18', title: 'Kahoot / Blooket', sub: '10 mins', theme: 'present' },
+    { time: '12:18 – 12:36', title: 'Faizaan (Emerson)', sub: 'Speaker (Alumni)', theme: 'present' },
+    { time: '12:36 – 12:41', title: 'Game', sub: '5 mins', theme: 'present' },
+    { time: '12:41 – 12:59', title: 'Hassan Abbas Muhammad', sub: 'Procrastination', theme: 'present' },
+
+    // Salah & Food Break
+    { time: '13:00 – 14:00', title: 'Salah & Food Break', sub: '', theme: 'present' },
+
+    // Session 3 — Future
+    { time: '14:00 – 14:18', title: 'Yunus Osman', sub: 'Art of Scheduling (Alum)', theme: 'future' },
+    { time: '14:18 – 14:28', title: 'Game', sub: '10 mins', theme: 'future' },
+    { time: '14:28 – 14:46', title: 'Sada Mbaruk Said', sub: 'End of the World', theme: 'future' },
+    { time: '14:46 – 14:56', title: 'Game', sub: '10 mins', theme: 'future' },
+    { time: '14:56 – 15:14', title: 'Liyaan Karbelkar', sub: 'How to Take Your Wealth With You', theme: 'future' },
+
+    // Closing
+    { time: '15:15 – 15:40', title: 'Closing Ceremony', sub: '', theme: 'future' },
   ];
 
   return (
@@ -88,9 +92,11 @@ export default function Agenda() {
                          <h3 className="text-4xl md:text-7xl font-title font-black uppercase text-brand-primary tracking-tight">
                            {item.title}
                          </h3>
-                         <p className="font-editorial text-2xl md:text-3xl text-brand-primary/40 italic leading-tight">
-                           {item.sub}
-                         </p>
+                         {item.sub && (
+                           <p className="font-editorial text-2xl md:text-3xl text-brand-primary/40 italic leading-tight">
+                             {item.sub}
+                           </p>
+                         )}
                       </div>
                     </div>
                   </motion.div>
