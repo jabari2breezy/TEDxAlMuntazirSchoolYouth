@@ -8,12 +8,6 @@ import InteractiveBackground from '../components/InteractiveBackground';
 import FloatingBackground from '../components/FloatingBackground';
 import SpeakerParallaxShowcase from '../components/SpeakerParallaxShowcase';
 
-const SEGMENT_COLORS: Record<string, string> = {
-  past: '#000839',
-  present: '#006d38',
-  future: '#000839',
-};
-
 const transition = { duration: 1.2, ease: [0.76, 0, 0.24, 1] as const };
 
 const containerVariants = {
@@ -224,11 +218,11 @@ export default function Speakers() {
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.92, opacity: 0, y: 40 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200, mass: 1 }}
-                className="relative w-full max-w-4xl bg-[#050507]/80 backdrop-blur-3xl rounded-[2.5rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,0,0,0.25)] border border-white/20 flex flex-col h-auto max-h-[92vh] pointer-events-auto overflow-hidden"
+                className="relative w-full max-w-4xl bg-brand-background/95 backdrop-blur-2xl rounded-[2.5rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.12)] border border-brand-outline/20 flex flex-col h-auto max-h-[92vh] pointer-events-auto overflow-hidden"
               >
               <button 
                 onClick={() => setSelectedSpeaker(null)}
-                className="absolute top-6 right-6 md:top-8 md:right-8 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/40 flex items-center justify-center text-white z-50 transition-all active:scale-90 border border-white/20 shadow-sm"
+                className="absolute top-6 right-6 md:top-8 md:right-8 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/80 backdrop-blur-md hover:bg-white flex items-center justify-center text-brand-primary z-50 transition-all active:scale-90 border border-brand-outline/20 shadow-sm"
               >
                 <X size={20} className="md:w-6 md:h-6" />
               </button>
@@ -244,19 +238,18 @@ export default function Speakers() {
                     topic={selectedSpeaker.topic}
                     image={selectedSpeaker.image}
                     segmentLabel={SEGMENTS.find(s => s.id === selectedSpeaker.segmentId)?.title}
-                    segmentColor={SEGMENT_COLORS[selectedSpeaker.segmentId] ?? '#006d38'}
                     scrollContainerRef={modalScrollRef}
                   />
                 </div>
 
-                <div className="p-6 md:p-12 pt-0 space-y-10 border-t border-white/10">
+                <div className="p-6 md:p-12 pt-0 space-y-10 border-t border-brand-outline/15">
                   <motion.section
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                   >
-                    <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-white/40 border-b border-white/10 pb-4 mb-6">Topic Title</h4>
-                    <p className="font-editorial text-3xl italic text-white/80 leading-tight">"{selectedSpeaker.topic}"</p>
+                    <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-6">Topic Title</h4>
+                    <p className="font-editorial text-3xl italic text-brand-primary leading-tight">"{selectedSpeaker.topic}"</p>
                   </motion.section>
 
                   <motion.section
@@ -265,9 +258,9 @@ export default function Speakers() {
                     transition={{ delay: 0.3 }}
                     className="relative group/bio"
                   >
-                    <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-white/40 border-b border-white/10 pb-4 mb-6">The Narrative</h4>
-                    <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-inner">
-                      <div className="font-sans text-lg text-white/80 leading-relaxed max-w-2xl space-y-4">
+                    <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-6">The Narrative</h4>
+                    <div className="p-8 rounded-3xl bg-white/60 border border-brand-outline/15 backdrop-blur-md shadow-inner">
+                      <div className="font-sans text-lg text-brand-primary/90 leading-relaxed max-w-2xl space-y-4">
                         <p className="first-letter:text-5xl first-letter:font-editorial first-letter:float-left first-letter:mr-3 first-letter:leading-none first-letter:text-brand-secondary">
                           {selectedSpeaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence, challenging us to rethink how we choose to spend the time we possess."}
                         </p>
@@ -283,7 +276,7 @@ export default function Speakers() {
                   >
                     <button 
                       onClick={() => setSelectedSpeaker(null)}
-                      className="px-10 py-5 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.2em] hover:bg-brand-secondary hover:border-brand-secondary transition-all active:scale-95"
+                      className="px-10 py-5 bg-brand-primary text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.2em] hover:bg-brand-secondary transition-all active:scale-95 shadow-lg shadow-brand-primary/10"
                     >
                       Close Journal
                     </button>
