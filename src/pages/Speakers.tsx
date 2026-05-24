@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { SEGMENTS } from '../constants';
 import { Search, Plus, X } from 'lucide-react';
@@ -6,7 +6,13 @@ import Magnetic from '../components/Magnetic';
 import MaskReveal from '../components/MaskReveal';
 import InteractiveBackground from '../components/InteractiveBackground';
 import FloatingBackground from '../components/FloatingBackground';
-import { MechanicalClock, ModernSandglass, DigitalNetwork } from '../components/ModernAnimation';
+import SpeakerParallaxShowcase from '../components/SpeakerParallaxShowcase';
+
+const SEGMENT_COLORS: Record<string, string> = {
+  past: '#000839',
+  present: '#006d38',
+  future: '#000839',
+};
 
 const transition = { duration: 1.2, ease: [0.76, 0, 0.24, 1] as const };
 
@@ -48,6 +54,7 @@ export default function Speakers() {
   const [speakersData, setSpeakersData] = useState<Speaker[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
+  const modalScrollRef = useRef<HTMLDivElement>(null);
 
   const hapticTick = () => {
     if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
@@ -213,47 +220,43 @@ export default function Speakers() {
               className="absolute inset-0 bg-brand-primary/20 backdrop-blur-md cursor-pointer"
             />
               <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 40 }}
+                initial={{ scale: 0.92, opacity: 0, y: 40 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 40 }}
+                exit={{ scale: 0.92, opacity: 0, y: 40 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200, mass: 1 }}
-                className="relative w-full max-w-3xl bg-white/40 backdrop-blur-3xl rounded-[2.5rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,0,0,0.1)] border border-white/40 flex flex-col h-auto max-h-[85vh] pointer-events-auto overflow-hidden"
+                className="relative w-full max-w-4xl bg-[#050507]/80 backdrop-blur-3xl rounded-[2.5rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,0,0,0.25)] border border-white/20 flex flex-col h-auto max-h-[92vh] pointer-events-auto overflow-hidden"
               >
               <button 
                 onClick={() => setSelectedSpeaker(null)}
-                className="absolute top-6 right-6 md:top-8 md:right-8 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/40 backdrop-blur-md hover:bg-white/60 flex items-center justify-center text-brand-primary z-50 transition-all active:scale-90 border border-white/20 shadow-sm"
+                className="absolute top-6 right-6 md:top-8 md:right-8 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/40 flex items-center justify-center text-white z-50 transition-all active:scale-90 border border-white/20 shadow-sm"
               >
                 <X size={20} className="md:w-6 md:h-6" />
               </button>
 
-              {/* Content Area */}
-              <div 
-                className="flex-1 p-6 md:p-16 pt-16 md:pt-20 overflow-y-auto custom-scrollbar"
+              <div
+                ref={modalScrollRef}
+                className="flex-1 overflow-y-auto custom-scrollbar"
                 data-lenis-prevent
               >
-                <div className="mb-10 md:mb-12">
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    <span className="font-typewriter text-[10px] text-brand-secondary uppercase tracking-[0.5em] mb-4 block opacity-60">
-                      {SEGMENTS.find(s => s.id === selectedSpeaker.segmentId)?.title || 'Speaker'} / Journal Entry
-                    </span>
-                    <h2 className="font-title text-5xl md:text-6xl font-black uppercase text-brand-primary leading-[0.9] tracking-tighter mb-4">
-                      {selectedSpeaker.name}
-                    </h2>
-                  </motion.div>
+                <div className="p-4 md:p-6 pt-14 md:pt-16">
+                  <SpeakerParallaxShowcase
+                    name={selectedSpeaker.name}
+                    topic={selectedSpeaker.topic}
+                    image={selectedSpeaker.image}
+                    segmentLabel={SEGMENTS.find(s => s.id === selectedSpeaker.segmentId)?.title}
+                    segmentColor={SEGMENT_COLORS[selectedSpeaker.segmentId] ?? '#006d38'}
+                    scrollContainerRef={modalScrollRef}
+                  />
                 </div>
-                
-                <div className="space-y-10">
+
+                <div className="p-6 md:p-12 pt-0 space-y-10 border-t border-white/10">
                   <motion.section
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                   >
-                    <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-6">Topic Title</h4>
-                    <p className="font-editorial text-3xl italic text-brand-primary leading-tight">"{selectedSpeaker.topic}"</p>
+                    <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-white/40 border-b border-white/10 pb-4 mb-6">Topic Title</h4>
+                    <p className="font-editorial text-3xl italic text-white/80 leading-tight">"{selectedSpeaker.topic}"</p>
                   </motion.section>
 
                   <motion.section
@@ -262,9 +265,9 @@ export default function Speakers() {
                     transition={{ delay: 0.3 }}
                     className="relative group/bio"
                   >
-                    <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-6">The Narrative</h4>
-                    <div className="p-8 rounded-3xl bg-white/20 border border-white/20 backdrop-blur-md shadow-inner">
-                      <div className="font-sans text-lg text-brand-primary/90 leading-relaxed max-w-2xl space-y-4">
+                    <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-white/40 border-b border-white/10 pb-4 mb-6">The Narrative</h4>
+                    <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-inner">
+                      <div className="font-sans text-lg text-white/80 leading-relaxed max-w-2xl space-y-4">
                         <p className="first-letter:text-5xl first-letter:font-editorial first-letter:float-left first-letter:mr-3 first-letter:leading-none first-letter:text-brand-secondary">
                           {selectedSpeaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence, challenging us to rethink how we choose to spend the time we possess."}
                         </p>
@@ -280,7 +283,7 @@ export default function Speakers() {
                   >
                     <button 
                       onClick={() => setSelectedSpeaker(null)}
-                      className="px-10 py-5 bg-white/40 backdrop-blur-xl border border-white/40 text-brand-primary rounded-full font-typewriter text-[10px] uppercase tracking-[0.2em] hover:bg-brand-primary hover:text-white transition-all active:scale-95 shadow-lg shadow-black/5"
+                      className="px-10 py-5 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.2em] hover:bg-brand-secondary hover:border-brand-secondary transition-all active:scale-95"
                     >
                       Close Journal
                     </button>

@@ -211,6 +211,9 @@ function ParallaxIcon({ icon: Icon, speed, left, top, delay = 0, size = 120 }: {
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const borrowedTimeRef = useRef<HTMLSpanElement>(null);
+  const mainTitleRef = useRef<HTMLHeadingElement>(null);
+  const [introReady, setIntroReady] = useState(false);
   const [eventStatus, setEventStatus] = useState<EventStatus | null>(null);
   const [updates, setUpdates] = useState<Update[]>([]);
   
@@ -263,12 +266,16 @@ export default function Home() {
     <motion.div 
       variants={containerVariants}
       initial="hidden"
-      animate="visible"
+      animate={introReady ? 'visible' : 'hidden'}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
       className="relative pt-4 bg-[#08080a] text-[#EBEBEB]"
       ref={containerRef}
     >
-      <Preloader onComplete={() => console.log('Preloader finished')} />
+      <Preloader
+        borrowedTimeRef={borrowedTimeRef}
+        mainTitleRef={mainTitleRef}
+        onComplete={() => setIntroReady(true)}
+      />
 
       {/* High-End Scroll Progress Bar */}
       <motion.div 
@@ -297,31 +304,31 @@ export default function Home() {
         </div>
 
         <div className="flex-1 w-full max-w-screen-2xl mx-auto px-6 md:px-16 pt-40 pb-20 relative z-10 flex flex-col justify-center items-center text-center">
-          <motion.div
-            variants={titleVariants}
-            className="max-w-7xl mb-12"
-          >
-            <h1 className="hero-text text-[18vw] md:text-[14vw] font-title font-black leading-[0.75] tracking-tighter uppercase text-white mix-blend-difference">
+          <div className="max-w-7xl mb-12">
+            <h1
+              ref={mainTitleRef}
+              className="text-[18vw] md:text-[14vw] font-title font-black leading-[0.75] tracking-tighter uppercase text-white mix-blend-difference opacity-0"
+            >
               TEDX ALMUNTAZIR <br />
               <span className="text-brand-secondary">SCHOOLS YOUTH</span> <br />
               <span className="opacity-30">2026</span>
             </h1>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            variants={itemVariants} 
-            className="max-w-3xl mb-16"
-          >
-             <p className="hero-text font-editorial text-4xl md:text-6xl text-white/50 italic leading-[1.1]">
-               We're living on <span className="text-white font-medium">BORROWED TIME.</span>
+          <div className="max-w-3xl mb-16 hero-text-reveal opacity-0">
+             <p className="font-editorial text-4xl md:text-6xl text-white/50 italic leading-[1.1]">
+               We're living on{' '}
+               <span ref={borrowedTimeRef} className="text-white font-medium inline-block">
+                 BORROWED TIME.
+               </span>
              </p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="hero-text mb-20">
+          <div className="hero-text-reveal mb-20 opacity-0">
             <Countdown />
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="hero-text flex flex-col md:flex-row gap-8 items-center">
+          <div className="hero-text-reveal flex flex-col md:flex-row gap-8 items-center opacity-0">
             <PrecisionButton to="/tickets" variant="light">
               Get Your Tickets
             </PrecisionButton>
@@ -329,7 +336,7 @@ export default function Home() {
               Explore the Theme
               <div className="w-12 h-[1px] bg-white/20 group-hover:bg-brand-secondary group-hover:w-16 transition-all" />
             </Link>
-          </motion.div>
+          </div>
         </div>
 
         {/* Bottom Bar Info */}
