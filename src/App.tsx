@@ -16,7 +16,6 @@ import Checkout from './pages/Checkout';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { useEffect } from 'react';
-import Lenis from 'lenis';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -54,32 +53,9 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-      infinite: false,
-    });
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
-
   return (
     <Router>
+      <SmoothScroll />
       <div className="relative selection:bg-brand-secondary selection:text-white min-h-screen flex flex-col">
           <InteractiveBackground />
           <CurtainTransition />

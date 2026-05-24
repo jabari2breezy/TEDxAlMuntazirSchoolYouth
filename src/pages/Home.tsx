@@ -10,6 +10,7 @@ import { MechanicalClock, FluidBlob, KineticTypography } from '../components/Mod
 import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
+import PrecisionButton from '../components/PrecisionButton';
 
 const transition = { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const };
 
@@ -321,9 +322,9 @@ export default function Home() {
           </motion.div>
 
           <motion.div variants={itemVariants} className="hero-text flex flex-col md:flex-row gap-8 items-center">
-            <Link to="/tickets" className="px-12 py-5 bg-white text-black rounded-full font-typewriter text-[10px] uppercase tracking-[0.3em] hover:bg-brand-secondary transition-all shadow-xl shadow-white/5">
+            <PrecisionButton to="/tickets" variant="light">
               Get Your Tickets
-            </Link>
+            </PrecisionButton>
             <Link to="/theme" className="group flex items-center gap-4 font-typewriter text-[11px] uppercase tracking-[0.4em] text-white hover:text-brand-secondary transition-colors">
               Explore the Theme
               <div className="w-12 h-[1px] bg-white/20 group-hover:bg-brand-secondary group-hover:w-16 transition-all" />
@@ -394,16 +395,16 @@ export default function Home() {
 
 
       {/* Sponsors Strip */}
-      <div className="py-20 border-t border-white/10 bg-white/5 px-6 md:px-16 overflow-hidden">
-         <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-           <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white shrink-0">Our Partners</span>
-           <div className="flex flex-wrap gap-20 justify-center items-center">
-             <img src="/sponsors/dar-glass-works.png" alt="Dar es Salaam Glass Works" className="h-8 object-contain" />
-             <img src="/sponsors/amjad-motors.png" alt="Amjad Motors International Limited" className="h-8 object-contain" />
-             <img src="/sponsors/leta-kazi.png" alt="Leta Kazi Ltd." className="h-8 object-contain" />
-             <img src="/sponsors/jd-pharmacy.png" alt="JD Pharmacy" className="h-8 object-contain" />
-             <img src="/sponsors/etg.png" alt="ETG" className="h-8 object-contain" />
-             <img src="/sponsors/smiles-cars.png" alt="Smiles Cars Rentals" className="h-8 object-contain" />
+      <div className="py-24 md:py-32 border-t border-white/10 bg-white/[0.07] px-6 md:px-16 overflow-hidden">
+         <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between gap-16">
+           <span className="font-typewriter text-xs uppercase tracking-[0.5em] text-white/80 shrink-0">Our Partners</span>
+           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10 md:gap-14 w-full items-center justify-items-center">
+             <img src="/sponsors/dar-glass-works.png" alt="Dar es Salaam Glass Works" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
+             <img src="/sponsors/amjad-motors.png" alt="Amjad Motors International Limited" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
+             <img src="/sponsors/leta-kazi.png" alt="Leta Kazi Ltd." className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
+             <img src="/sponsors/jd-pharmacy.png" alt="JD Pharmacy" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
+             <img src="/sponsors/etg.png" alt="ETG" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
+             <img src="/sponsors/smiles-cars.png" alt="Smiles Cars Rentals" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
            </div>
          </div>
       </div>

@@ -17,7 +17,13 @@
 
 @layer base {
   html {
-    scroll-behavior: auto; /* Required for Lenis */
+    scroll-behavior: auto; /* Required for Lenis on desktop */
+  }
+
+  @media (max-width: 767px) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
   body {
     @apply bg-brand-background text-brand-primary selection:bg-brand-secondary selection:text-white overflow-x-hidden antialiased;
@@ -74,7 +80,13 @@
 }
 
 .smooth-transition {
-  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gpu-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 .liquid-bg {

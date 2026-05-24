@@ -1,44 +1,80 @@
 import { motion } from 'motion/react';
+import MaskReveal from '../components/MaskReveal';
 
 const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
+type Theme = 'past' | 'present' | 'future';
+
+interface AgendaSlot {
+  duration: number;
+  title: string;
+  sub: string;
+  theme: Theme;
+  isSpeech: boolean;
+}
+
+interface AgendaItem {
+  time: string;
+  title: string;
+  sub: string;
+  theme: Theme;
+}
+
+function roundToNextFive(minutes: number): number {
+  return Math.ceil(minutes / 5) * 5;
+}
+
+function formatClock(totalMinutes: number): string {
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
+  return `${h}:${m.toString().padStart(2, '0')}`;
+}
+
+function buildAgenda(slots: AgendaSlot[], startMinutes = 9 * 60 + 30): AgendaItem[] {
+  let current = startMinutes;
+
+  return slots.map((slot) => {
+    const start = current;
+    const rawEnd = start + slot.duration;
+    const end = slot.isSpeech ? roundToNextFive(rawEnd) : rawEnd;
+    current = end;
+
+    return {
+      time: `${formatClock(start)} – ${formatClock(end)}`,
+      title: slot.title,
+      sub: slot.sub,
+      theme: slot.theme,
+    };
+  });
+}
+
+const agendaItems = buildAgenda([
+  { duration: 30, title: 'Registration', sub: '', theme: 'past', isSpeech: false },
+  { duration: 20, title: 'Intro', sub: 'Welcome + Opening Video', theme: 'past', isSpeech: false },
+
+  { duration: 18, title: 'Ridhwan Mohammed', sub: 'Speaker (Alum)', theme: 'past', isSpeech: true },
+  { duration: 5, title: 'Interactive Activity', sub: '', theme: 'past', isSpeech: false },
+  { duration: 18, title: 'Anaya Rashid', sub: 'Culture of Time', theme: 'past', isSpeech: true },
+  { duration: 10, title: 'Game', sub: '', theme: 'past', isSpeech: false },
+  { duration: 18, title: 'Zahra Datoo', sub: 'Nostalgia', theme: 'past', isSpeech: true },
+  { duration: 20, title: 'Tea Break', sub: '', theme: 'past', isSpeech: false },
+
+  { duration: 18, title: 'Zahra Moledina', sub: 'The Best Thing Since Sliced Bread', theme: 'present', isSpeech: true },
+  { duration: 10, title: 'Kahoot / Blooket', sub: '', theme: 'present', isSpeech: false },
+  { duration: 18, title: 'Faizaan (Emerson)', sub: 'Speaker (Alumni)', theme: 'present', isSpeech: true },
+  { duration: 5, title: 'Game', sub: '', theme: 'present', isSpeech: false },
+  { duration: 18, title: 'Hassan Abbas Muhammad', sub: 'Procrastination', theme: 'present', isSpeech: true },
+  { duration: 60, title: 'Salah & Food Break', sub: '', theme: 'present', isSpeech: false },
+
+  { duration: 18, title: 'Yunus Osman', sub: 'Art of Scheduling (Alum)', theme: 'future', isSpeech: true },
+  { duration: 10, title: 'Game', sub: '', theme: 'future', isSpeech: false },
+  { duration: 18, title: 'Sada Mbaruk Said', sub: 'End of the World', theme: 'future', isSpeech: true },
+  { duration: 10, title: 'Game', sub: '', theme: 'future', isSpeech: false },
+  { duration: 18, title: 'Liyaan Karbelkar', sub: 'How to Take Your Wealth With You', theme: 'future', isSpeech: true },
+  { duration: 25, title: 'Closing Ceremony', sub: '', theme: 'future', isSpeech: false },
+]);
+
 export default function Agenda() {
-  const agendaItems = [
-    // Registration & Intro
-    { time: '9:30 – 10:00', title: 'Registration', sub: '', theme: 'past' },
-    { time: '10:00 – 10:20', title: 'Intro', sub: 'Welcome (7 mins) + Opening Video (10 mins)', theme: 'past' },
-
-    // Session 1 — Past
-    { time: '10:20 – 10:38', title: 'Ridhwan Mohammed', sub: 'Speaker (Alum)', theme: 'past' },
-    { time: '10:38 – 10:43', title: 'Interactive Activity', sub: '5 mins', theme: 'past' },
-    { time: '10:43 – 11:01', title: 'Anaya Rashid', sub: 'Culture of Time', theme: 'past' },
-    { time: '11:01 – 11:11', title: 'Game', sub: '10 mins', theme: 'past' },
-    { time: '11:11 – 11:29', title: 'Zahra Datoo', sub: 'Nostalgia', theme: 'past' },
-
-    // Tea Break
-    { time: '11:30 – 11:50', title: 'Tea Break', sub: '', theme: 'past' },
-
-    // Session 2 — Present
-    { time: '11:50 – 12:08', title: 'Zahra Moledina', sub: 'The Best Thing Since Sliced Bread', theme: 'present' },
-    { time: '12:08 – 12:18', title: 'Kahoot / Blooket', sub: '10 mins', theme: 'present' },
-    { time: '12:18 – 12:36', title: 'Faizaan (Emerson)', sub: 'Speaker (Alumni)', theme: 'present' },
-    { time: '12:36 – 12:41', title: 'Game', sub: '5 mins', theme: 'present' },
-    { time: '12:41 – 12:59', title: 'Hassan Abbas Muhammad', sub: 'Procrastination', theme: 'present' },
-
-    // Salah & Food Break
-    { time: '13:00 – 14:00', title: 'Salah & Food Break', sub: '', theme: 'present' },
-
-    // Session 3 — Future
-    { time: '14:00 – 14:18', title: 'Yunus Osman', sub: 'Art of Scheduling (Alum)', theme: 'future' },
-    { time: '14:18 – 14:28', title: 'Game', sub: '10 mins', theme: 'future' },
-    { time: '14:28 – 14:46', title: 'Sada Mbaruk Said', sub: 'End of the World', theme: 'future' },
-    { time: '14:46 – 14:56', title: 'Game', sub: '10 mins', theme: 'future' },
-    { time: '14:56 – 15:14', title: 'Liyaan Karbelkar', sub: 'How to Take Your Wealth With You', theme: 'future' },
-
-    // Closing
-    { time: '15:15 – 15:40', title: 'Closing Ceremony', sub: '', theme: 'future' },
-  ];
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -47,56 +83,84 @@ export default function Agenda() {
       transition={transition}
       className="pt-40 pb-32"
     >
-      <div className="px-6 md:px-16 max-w-screen-2xl mx-auto">
-        <header className="mb-24">
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="flex flex-col gap-4"
-          >
-            <span className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase">The assembly</span>
-            <h1 className="text-7xl md:text-[10vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-brand-primary">
-              Agenda.<br /><span className="italic font-editorial lowercase text-brand-secondary">Time Unfolding.</span>
-            </h1>
-          </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] as const }}
+        className="px-6 md:px-16 max-w-screen-2xl mx-auto"
+      >
+        <header className="mb-24 border-b border-brand-outline/30 pb-12">
+          <div className="flex flex-col gap-4 overflow-hidden">
+            <MaskReveal delay={0.1}>
+              <span className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase">The assembly</span>
+            </MaskReveal>
+            <MaskReveal delay={0.2}>
+              <h1 className="text-7xl md:text-[10vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-brand-primary">
+                Agenda.<br /><span className="italic font-editorial lowercase text-brand-secondary">Time Unfolding.</span>
+              </h1>
+            </MaskReveal>
+          </div>
         </header>
 
-        <div className="space-y-48">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] as const }}
+          className="space-y-48"
+        >
           {[
             { label: 'Past', title: 'Echoes & Foundations', items: agendaItems.filter(i => i.theme === 'past') },
             { label: 'Present', title: 'Presence & Power', items: agendaItems.filter(i => i.theme === 'present') },
             { label: 'Future', title: 'Reimagining Systems', items: agendaItems.filter(i => i.theme === 'future') }
           ].map((section, sIndex) => (
-            <div key={section.label} className="space-y-16">
-              <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12">
+            <div key={section.label} className="space-y-16 border-t border-brand-outline/20 pt-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] as const }}
+                className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12"
+              >
                 <span className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase shrink-0">Section {sIndex + 1} / {section.label}</span>
-                <div className="h-px bg-brand-outline flex-grow" />
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] as const }}
+                  className="h-px bg-brand-outline flex-grow origin-left"
+                />
                 <h2 className="text-3xl md:text-4xl font-title font-black uppercase text-brand-primary tracking-tighter shrink-0">{section.title}</h2>
-              </div>
+              </motion.div>
 
-              <div className="py-10 space-y-32">
+              <div className="py-10 space-y-0">
                 {section.items.map((item, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
                     viewport={{ once: true, margin: "-10%" }}
-                    transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
-                    className="relative group"
+                    transition={{ delay: i * 0.05, duration: 0.6 }}
+                    className="relative group border-t border-brand-outline/15 py-16 first:border-t-0"
                   >
                     <div className="space-y-6">
-                      <span className="font-typewriter text-2xl md:text-4xl text-brand-primary/20 group-hover:text-brand-secondary transition-colors duration-500">
-                        {item.time}
-                      </span>
-                      <div className="space-y-2">
-                         <h3 className="text-4xl md:text-7xl font-title font-black uppercase text-brand-primary tracking-tight">
-                           {item.title}
-                         </h3>
-                         {item.sub && (
-                           <p className="font-editorial text-2xl md:text-3xl text-brand-primary/40 italic leading-tight">
-                             {item.sub}
-                           </p>
-                         )}
+                      <MaskReveal delay={i * 0.05}>
+                        <span className="font-typewriter text-2xl md:text-4xl text-brand-primary/20 group-hover:text-brand-secondary transition-colors duration-500">
+                          {item.time}
+                        </span>
+                      </MaskReveal>
+                      <div className="space-y-2 overflow-hidden">
+                        <MaskReveal delay={0.08 + i * 0.05}>
+                          <h3 className="text-4xl md:text-7xl font-title font-black uppercase text-brand-primary tracking-tight">
+                            {item.title}
+                          </h3>
+                        </MaskReveal>
+                        {item.sub && (
+                          <MaskReveal delay={0.12 + i * 0.05}>
+                            <p className="font-editorial text-2xl md:text-3xl text-brand-primary/40 italic leading-tight">
+                              {item.sub}
+                            </p>
+                          </MaskReveal>
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -104,8 +168,8 @@ export default function Agenda() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </motion.div>
   );
 }

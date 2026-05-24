@@ -42,17 +42,17 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 h-[2px] bg-brand-secondary z-[200] origin-left"
         style={{ scaleX: scrollYProgress }}
       />
-      <nav className="fixed top-0 left-0 w-full z-[100] px-6 md:px-12 py-6 flex justify-between items-center pointer-events-none">
+      <nav className="fixed top-0 left-0 w-full z-[100] px-6 md:px-12 py-6 flex justify-between items-center pointer-events-none mix-blend-difference text-white isolate">
       <div className="flex items-center gap-6 pointer-events-auto">
         <Link to="/" className="flex items-baseline gap-4">
-          <Logo variant="tedx" theme="dark" className="scale-75 md:scale-90 origin-left" />
-          <div className="hidden lg:block w-[1px] h-4 bg-brand-primary/20" />
-          <Logo variant="school" theme="dark" className="hidden lg:block scale-75 origin-left opacity-60 hover:opacity-100 transition-opacity" />
+          <Logo variant="tedx" theme="dark" className="scale-75 md:scale-90 origin-left [&_span]:!text-white" />
+          <div className="hidden lg:block w-[1px] h-4 bg-white/30" />
+          <Logo variant="school" theme="dark" className="hidden lg:block scale-75 origin-left opacity-80 hover:opacity-100 transition-opacity" />
         </Link>
       </div>
 
       {/* Navbar Pill - Desktop Centered */}
-      <div className="hidden xl:flex items-center bg-white/60 backdrop-blur-2xl rounded-full p-1.5 border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.05)] pointer-events-auto">
+      <div className="hidden xl:flex items-center rounded-full p-1.5 border border-white/30 pointer-events-auto">
         {[
           { name: 'Home', href: '/' },
           { name: 'Theme', href: '/theme' },
@@ -66,13 +66,13 @@ export default function Navbar() {
             key={item.href}
             to={item.href}
             className={`px-6 py-2 rounded-full text-[9px] font-sans font-bold uppercase tracking-[0.2em] transition-all duration-300 relative ${
-              location.pathname === item.href ? 'text-white' : 'text-brand-primary/50 hover:text-brand-primary'
+              location.pathname === item.href ? 'text-brand-primary' : 'text-white/70 hover:text-white'
             }`}
           >
             {location.pathname === item.href && (
               <motion.div 
                 layoutId="nav-glow"
-                className="absolute inset-0 bg-brand-primary rounded-full z-[-1]"
+                className="absolute inset-0 bg-white rounded-full z-[-1]"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
@@ -84,20 +84,21 @@ export default function Navbar() {
       <div className="flex items-center gap-4 md:gap-8 pointer-events-auto">
         {/* Menu Toggle */}
         <button 
-          className="group flex items-center gap-4 bg-white/60 backdrop-blur-xl border border-white/40 rounded-full pl-6 pr-4 py-2 shadow-sm transition-all hover:bg-white"
+          className="group flex items-center gap-4 border border-white/30 rounded-full pl-6 pr-4 py-2 transition-all hover:border-white"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span className="font-typewriter text-[9px] uppercase tracking-[0.2em] text-brand-primary/60 group-hover:text-brand-secondary transition-colors">
+          <span className="font-typewriter text-[9px] uppercase tracking-[0.2em] text-white/70 group-hover:text-white transition-colors">
             Menu
           </span>
           <div className="flex flex-col items-end gap-1.5 transition-all">
-            <span className="h-[1px] bg-brand-primary transition-all duration-500 w-5 group-hover:w-7 group-hover:bg-brand-secondary" />
-            <span className="h-[1px] bg-brand-primary transition-all duration-500 w-7 group-hover:w-3 group-hover:bg-brand-secondary" />
+            <span className="h-[1px] bg-white transition-all duration-500 w-5 group-hover:w-7" />
+            <span className="h-[1px] bg-white transition-all duration-500 w-7 group-hover:w-3" />
           </div>
         </button>
       </div>
+      </nav>
 
-      {/* Menu Overlay - Full Screen Liquid */}
+      {/* Menu Overlay - Full Screen Liquid (outside blend layer) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div 
@@ -177,7 +178,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
     </>
   );
 }
