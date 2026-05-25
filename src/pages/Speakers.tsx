@@ -218,7 +218,7 @@ export default function Speakers() {
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.92, opacity: 0, y: 40 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200, mass: 1 }}
-                className="relative w-full max-w-4xl bg-brand-background/95 backdrop-blur-2xl rounded-[2.5rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.12)] border border-brand-outline/20 flex flex-col h-auto max-h-[92vh] pointer-events-auto overflow-hidden"
+                className="relative w-full max-w-4xl bg-brand-background/95 backdrop-blur-2xl rounded-[2.5rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.12)] border border-brand-outline/20 flex flex-col h-auto max-h-[92vh] pointer-events-auto overflow-hidden overscroll-contain"
               >
               <button 
                 onClick={() => setSelectedSpeaker(null)}

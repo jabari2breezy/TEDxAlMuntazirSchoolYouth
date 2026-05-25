@@ -10,6 +10,7 @@ interface SponsorTier {
   name: string;
   accent: string;
   logoHeight: string;
+  maxWidth: string;
   sponsors: Sponsor[];
 }
 
@@ -17,7 +18,8 @@ const SPONSOR_TIERS: SponsorTier[] = [
   {
     name: 'Platinum Sponsors',
     accent: 'from-white/25 via-white/10 to-transparent',
-    logoHeight: 'h-16 sm:h-20 md:h-24 lg:h-28',
+    logoHeight: 'h-20 sm:h-24 md:h-28 lg:h-32',
+    maxWidth: 'max-w-[min(100%,420px)]',
     sponsors: [
       { src: '/sponsors/etg.png', alt: 'ETG' },
       { src: '/sponsors/asas.png', alt: 'ASAS' },
@@ -26,34 +28,47 @@ const SPONSOR_TIERS: SponsorTier[] = [
   {
     name: 'Gold Sponsor',
     accent: 'from-amber-200/20 via-white/5 to-transparent',
-    logoHeight: 'h-14 sm:h-16 md:h-20 lg:h-24',
-    sponsors: [{ src: '/sponsors/leta-kazi.png', alt: 'Leta Kazi Ltd.' }],
+    logoHeight: 'h-16 sm:h-20 md:h-24 lg:h-28',
+    maxWidth: 'max-w-[min(100%,480px)]',
+    sponsors: [{ src: '/sponsors/leta-kazi.png', alt: 'LETA KAZI LTD.' }],
   },
   {
     name: 'Silver Sponsor',
     accent: 'from-slate-300/15 via-white/5 to-transparent',
-    logoHeight: 'h-14 sm:h-16 md:h-20 lg:h-24',
-    sponsors: [{ src: '/sponsors/jd-pharmacy.png', alt: 'JD Pharmacy' }],
+    logoHeight: 'h-16 sm:h-20 md:h-24 lg:h-28',
+    maxWidth: 'max-w-[min(100%,400px)]',
+    sponsors: [{ src: '/sponsors/jd-pharmacy.png', alt: 'JD PHARMACY' }],
   },
   {
     name: 'Bronze Sponsors',
     accent: 'from-orange-300/15 via-white/5 to-transparent',
-    logoHeight: 'h-12 sm:h-14 md:h-16 lg:h-20',
+    logoHeight: 'h-14 sm:h-16 md:h-20 lg:h-24',
+    maxWidth: 'max-w-[min(100%,360px)]',
     sponsors: [
-      { src: '/sponsors/smiles-cars.png', alt: 'Smiles Cars Rentals' },
+      { src: '/sponsors/smiles-cars.png', alt: 'Smiles Cars' },
       { src: '/sponsors/dar-glass-works.png', alt: 'Dar es Salaam Glass Works' },
-      { src: '/sponsors/amjad-motors.png', alt: 'Amjad Motors International Limited' },
+      { src: '/sponsors/amjad-motors.png', alt: 'AMJAD MOTORS International Limited' },
     ],
   },
 ];
 
-function SponsorLogo({ src, alt, heightClass }: { src: string; alt: string; heightClass: string }) {
+function SponsorLogo({
+  src,
+  alt,
+  heightClass,
+  maxWidth,
+}: {
+  src: string;
+  alt: string;
+  heightClass: string;
+  maxWidth: string;
+}) {
   return (
-    <div className="group flex items-center justify-center px-4 md:px-8 py-4 md:py-6 transition-transform duration-500 hover:scale-105">
+    <div className="group flex items-center justify-center px-6 md:px-10 py-6 md:py-8 transition-transform duration-500 hover:scale-[1.04]">
       <img
         src={src}
         alt={alt}
-        className={`${heightClass} w-auto max-w-[min(100%,320px)] object-contain object-center drop-shadow-[0_8px_24px_rgba(0,0,0,0.35)] brightness-110 contrast-[1.02] transition-all duration-500 group-hover:brightness-125`}
+        className={`${heightClass} w-auto ${maxWidth} object-contain object-center drop-shadow-[0_12px_32px_rgba(0,0,0,0.45)] transition-all duration-500 group-hover:drop-shadow-[0_16px_40px_rgba(0,0,0,0.55)]`}
         loading="lazy"
         decoding="async"
       />
@@ -105,9 +120,9 @@ export default function SponsorsSection() {
               </div>
 
               <div
-                className={`flex flex-wrap items-center justify-center gap-8 md:gap-14 lg:gap-20 py-10 md:py-14 ${
-                  tier.sponsors.length === 1 ? 'max-w-2xl mx-auto' : ''
-                } ${tier.sponsors.length === 2 ? 'max-w-4xl mx-auto' : ''}`}
+                className={`flex flex-wrap items-center justify-center gap-10 md:gap-16 lg:gap-24 py-12 md:py-16 ${
+                  tier.sponsors.length === 1 ? 'max-w-3xl mx-auto' : ''
+                } ${tier.sponsors.length === 2 ? 'max-w-5xl mx-auto' : ''}`}
               >
                 {tier.sponsors.map((sponsor) => (
                   <SponsorLogo
@@ -115,6 +130,7 @@ export default function SponsorsSection() {
                     src={sponsor.src}
                     alt={sponsor.alt}
                     heightClass={tier.logoHeight}
+                    maxWidth={tier.maxWidth}
                   />
                 ))}
               </div>
