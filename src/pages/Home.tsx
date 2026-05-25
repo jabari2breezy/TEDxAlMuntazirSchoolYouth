@@ -11,6 +11,7 @@ import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
 import PrecisionButton from '../components/PrecisionButton';
+import SponsorsSection from '../components/SponsorsSection';
 
 const transition = { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const };
 
@@ -388,20 +389,7 @@ export default function Home() {
 
 
 
-      {/* Sponsors Strip */}
-      <div className="py-24 md:py-32 border-t border-white/10 bg-white/[0.07] px-6 md:px-16 overflow-hidden">
-         <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between gap-16">
-           <span className="font-typewriter text-xs uppercase tracking-[0.5em] text-white/80 shrink-0">Our Partners</span>
-           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10 md:gap-14 w-full items-center justify-items-center">
-             <img src="/sponsors/dar-glass-works.png" alt="Dar es Salaam Glass Works" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
-             <img src="/sponsors/amjad-motors.png" alt="Amjad Motors International Limited" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
-             <img src="/sponsors/leta-kazi.png" alt="Leta Kazi Ltd." className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
-             <img src="/sponsors/jd-pharmacy.png" alt="JD Pharmacy" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
-             <img src="/sponsors/etg.png" alt="ETG" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
-             <img src="/sponsors/smiles-cars.png" alt="Smiles Cars Rentals" className="h-14 sm:h-16 md:h-20 lg:h-24 w-full max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-500" />
-           </div>
-         </div>
-      </div>
+      <SponsorsSection />
 
       {/* Social Call to Action */}
       <section className="py-40 bg-[#0a0a0d] border-y border-white/10 relative overflow-hidden">
