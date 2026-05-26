@@ -8,7 +8,8 @@ type Theme = 'past' | 'present' | 'future';
 interface AgendaSlot {
   duration: number;
   title: string;
-  sub: string;
+  sub?: string;
+  topic?: string;
   theme: Theme;
   isSpeech: boolean;
 }
@@ -16,7 +17,8 @@ interface AgendaSlot {
 interface AgendaItem {
   time: string;
   title: string;
-  sub: string;
+  sub?: string;
+  topic?: string;
   theme: Theme;
 }
 
@@ -43,6 +45,7 @@ function buildAgenda(slots: AgendaSlot[], startMinutes = 9 * 60 + 30): AgendaIte
       time: `${formatClock(start)} – ${formatClock(end)}`,
       title: slot.title,
       sub: slot.sub,
+      topic: slot.topic,
       theme: slot.theme,
     };
   });
@@ -52,25 +55,25 @@ const agendaItems = buildAgenda([
   { duration: 30, title: 'Registration', sub: '', theme: 'past', isSpeech: false },
   { duration: 20, title: 'Intro', sub: 'Welcome + Opening Video', theme: 'past', isSpeech: false },
 
-  { duration: 18, title: 'Ridhwan Mohammed', sub: 'Speaker (Alum)', theme: 'past', isSpeech: true },
+  { duration: 18, title: 'Ridhwan Mohammed', topic: 'Topic to be announced', theme: 'past', isSpeech: true },
   { duration: 5, title: 'Interactive Activity', sub: '', theme: 'past', isSpeech: false },
-  { duration: 18, title: 'Anaya Rashid', sub: 'Culture of Time', theme: 'past', isSpeech: true },
+  { duration: 18, title: 'Anaya Rashid', topic: 'The Culture of Time', theme: 'past', isSpeech: true },
   { duration: 10, title: 'Game', sub: '', theme: 'past', isSpeech: false },
-  { duration: 18, title: 'Zahra Datoo', sub: 'Nostalgia', theme: 'past', isSpeech: true },
+  { duration: 18, title: 'Zahra Datoo', topic: 'The Architecture of Nostalgia', theme: 'past', isSpeech: true },
   { duration: 20, title: 'Tea Break', sub: '', theme: 'past', isSpeech: false },
 
-  { duration: 18, title: 'Zahra Moledina', sub: 'The Best Thing Since Sliced Bread', theme: 'present', isSpeech: true },
+  { duration: 18, title: 'Zahra Moledina', topic: "Capitalism's Clock", theme: 'present', isSpeech: true },
   { duration: 10, title: 'Kahoot / Blooket', sub: '', theme: 'present', isSpeech: false },
-  { duration: 18, title: 'Faizaan (Emerson)', sub: 'Speaker (Alumni)', theme: 'present', isSpeech: true },
+  { duration: 18, title: 'Speaker TBA', topic: 'Topic to be announced', theme: 'present', isSpeech: true },
   { duration: 5, title: 'Game', sub: '', theme: 'present', isSpeech: false },
-  { duration: 18, title: 'Hassan Abbas Muhammad', sub: 'Procrastination', theme: 'present', isSpeech: true },
+  { duration: 18, title: 'Hassan Abbas Mohammed', topic: 'The Procrastination Paradox', theme: 'present', isSpeech: true },
   { duration: 60, title: 'Salah & Food Break', sub: '', theme: 'present', isSpeech: false },
 
-  { duration: 18, title: 'Yunus Osman', sub: 'Art of Scheduling (Alum)', theme: 'future', isSpeech: true },
+  { duration: 18, title: 'Yunus Osman', topic: 'The Art of Scheduling', theme: 'future', isSpeech: true },
   { duration: 10, title: 'Game', sub: '', theme: 'future', isSpeech: false },
-  { duration: 18, title: 'Sada Mbaruk Said', sub: 'End of the World', theme: 'future', isSpeech: true },
+  { duration: 18, title: 'Sada Mbaruk Said', topic: 'Three Clocks: Climate, Animals, AI', theme: 'future', isSpeech: true },
   { duration: 10, title: 'Game', sub: '', theme: 'future', isSpeech: false },
-  { duration: 18, title: 'Liyaan Karbelkar', sub: 'How to Take Your Wealth With You', theme: 'future', isSpeech: true },
+  { duration: 18, title: 'Liyaan Karbelkar', topic: 'The Legacy We Leave', theme: 'future', isSpeech: true },
   { duration: 25, title: 'Closing Ceremony', sub: '', theme: 'future', isSpeech: false },
 ]);
 
@@ -148,15 +151,22 @@ export default function Agenda() {
                           {item.time}
                         </span>
                       </MaskReveal>
-                      <div className="space-y-2 overflow-hidden">
+                      <div className="space-y-3 overflow-hidden">
                         <MaskReveal delay={0.08 + i * 0.05}>
                           <h3 className="text-4xl md:text-7xl font-title font-black uppercase text-brand-primary tracking-tight">
                             {item.title}
                           </h3>
                         </MaskReveal>
+                        {item.topic && (
+                          <MaskReveal delay={0.1 + i * 0.05}>
+                            <p className="font-editorial text-2xl md:text-4xl text-brand-secondary/90 italic leading-tight max-w-4xl">
+                              {item.topic}
+                            </p>
+                          </MaskReveal>
+                        )}
                         {item.sub && (
                           <MaskReveal delay={0.12 + i * 0.05}>
-                            <p className="font-editorial text-2xl md:text-3xl text-brand-primary/40 italic leading-tight">
+                            <p className="font-typewriter text-sm md:text-base uppercase tracking-[0.25em] text-brand-primary/40">
                               {item.sub}
                             </p>
                           </MaskReveal>

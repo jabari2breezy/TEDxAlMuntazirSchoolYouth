@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Ticket, MapPin, Lightbulb } from 'lucide-react';
+import ScrollHint from '../components/ScrollHint';
 
 const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
@@ -59,6 +60,12 @@ const FAQ_DATA = [
 
 export default function FAQ() {
   const [activeCategory, setActiveCategory] = useState(FAQ_DATA[0].category);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => setShowScrollHint(true), 900);
+    return () => window.clearTimeout(t);
+  }, []);
 
   // Intersection Observer to update active category on scroll
   useEffect(() => {
@@ -93,7 +100,7 @@ export default function FAQ() {
       className="min-h-screen bg-white"
     >
       <div className="px-6 md:px-16 max-w-screen-2xl mx-auto pt-40 pb-32">
-        <header className="mb-32">
+        <header className="mb-32 relative pb-20">
           <motion.div
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -104,9 +111,15 @@ export default function FAQ() {
               The <br /><span className="italic font-editorial lowercase text-brand-secondary">Essentials.</span>
             </h1>
           </motion.div>
+          <ScrollHint
+            show={showScrollHint}
+            target="#faq-content"
+            label="Scroll for answers"
+            className="!bottom-0"
+          />
         </header>
 
-        <div className="flex flex-col lg:flex-row gap-20">
+        <div id="faq-content" className="flex flex-col lg:flex-row gap-20 scroll-mt-12">
           {/* Left Sidebar - Categories */}
           <div className="lg:w-1/3">
             <div className="lg:sticky lg:top-40 space-y-2">

@@ -22,7 +22,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
     maxWidth: 'max-w-[min(100%,420px)]',
     sponsors: [
       { src: '/sponsors/etg.png', alt: 'ETG' },
-      { src: '/sponsors/asas.png', alt: 'ASAS' },
+      { src: '/sponsors/asas@2x.png', alt: 'ASAS' },
     ],
   },
   {
@@ -68,9 +68,10 @@ function SponsorLogo({
       <img
         src={src}
         alt={alt}
-        className={`${heightClass} w-auto ${maxWidth} object-contain object-center drop-shadow-[0_12px_32px_rgba(0,0,0,0.45)] transition-all duration-500 group-hover:drop-shadow-[0_16px_40px_rgba(0,0,0,0.55)]`}
+        className={`${heightClass} w-auto ${maxWidth} object-contain object-center drop-shadow-[0_12px_32px_rgba(0,0,0,0.45)] transition-all duration-500 group-hover:drop-shadow-[0_16px_40px_rgba(0,0,0,0.55)] [image-rendering:auto]`}
         loading="lazy"
         decoding="async"
+        draggable={false}
       />
     </div>
   );

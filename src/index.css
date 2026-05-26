@@ -25,6 +25,16 @@
       scroll-behavior: smooth;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.lenis {
+      scroll-behavior: auto;
+    }
+  }
+
+  html.lenis.lenis-smooth {
+    scroll-behavior: auto;
+  }
   body {
     @apply bg-brand-background text-brand-primary selection:bg-brand-secondary selection:text-white overflow-x-hidden antialiased;
     font-family: var(--font-sans);

@@ -14,7 +14,7 @@ OUT = os.path.join(os.path.dirname(__file__), "../public/sponsors")
 
 LOGO_SOURCES = {
     "etg.png": ("image-d136ec14-19e8-45dd-8e59-02304e5c4490.png", "white", 320),
-    "asas.png": ("image-089a25b5-c254-4158-9dc4-a4dcc2370fea.png", "white", 160),
+    "asas.png": ("image-089a25b5-c254-4158-9dc4-a4dcc2370fea.png", "white", 400),
     "jd-pharmacy.png": ("image-78becd8f-ce7b-4ba2-91b8-a78a5d823ae5.png", "white", 280),
     "smiles-cars.png": ("image-491c90a3-8c0d-4bf2-9f30-7e1e05d9dbc4.png", "white", 220),
     "dar-glass-works.png": ("image-7d32a088-5411-4083-976b-d6668d85c8a3.png", "black", 220),
@@ -66,13 +66,28 @@ def save_scaled(img, path, max_dim):
     print(path, img.size)
 
 
+TEDX_LOGO = ("image-9a3430bd-2b05-42f8-8d86-908ae02f79d3.png", "black", 640)
+LOGO_OUT = os.path.join(os.path.dirname(__file__), "../public/logo")
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
+    os.makedirs(LOGO_OUT, exist_ok=True)
+
+    tedx_src, tedx_mode, tedx_max = TEDX_LOGO
+    tedx = Image.open(os.path.join(ASSETS, tedx_src))
+    tedx = remove_black(tedx) if tedx_mode == "black" else remove_white(tedx)
+    save_scaled(tedx, os.path.join(LOGO_OUT, "tedx-almuntazir-youth.png"), tedx_max)
+
     for name, (src, mode, max_dim) in LOGO_SOURCES.items():
         path = os.path.join(ASSETS, src)
         img = Image.open(path)
         out = remove_white(img) if mode == "white" else remove_black(img)
         save_scaled(out, os.path.join(OUT, name), max_dim)
+        if name == "asas.png":
+            w, h = out.size
+            asas2 = out.resize((w * 2, h * 2), Image.Resampling.LANCZOS)
+            asas2.save(os.path.join(OUT, "asas@2x.png"), optimize=False)
 
 if __name__ == "__main__":
     main()

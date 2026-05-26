@@ -163,7 +163,9 @@ export default function Speakers() {
                 {filteredSpeakers.map((speaker, i) => (
                 <div
                   key={speaker.id}
-                  className="group relative grid grid-cols-1 md:grid-cols-12 gap-8 py-16 border-b border-brand-outline px-6 -mx-6 rounded-[2rem] items-center overflow-hidden hover:bg-white/5 hover:backdrop-blur-md transition-all duration-500"
+                  className={`group relative grid grid-cols-1 md:grid-cols-12 gap-8 py-16 border-b border-brand-outline px-6 -mx-6 rounded-[2rem] items-center overflow-hidden hover:bg-white/5 hover:backdrop-blur-md transition-all duration-500 ${
+                    speaker.name === 'Speaker TBA' ? 'opacity-75' : ''
+                  }`}
                 >
                 <div className="md:col-span-1 font-typewriter text-[11px] text-brand-primary/20 relative z-10 hidden md:block">
                   0{i + 1}

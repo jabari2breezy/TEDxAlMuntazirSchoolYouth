@@ -13,15 +13,18 @@ export default function SmoothScroll() {
     if (lenis || mediaQuery.matches) return;
 
     lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
+      wheelMultiplier: 0.92,
+      touchMultiplier: 1.6,
       infinite: false,
     });
+
+    window.__lenis = lenis;
+    document.documentElement.classList.add('lenis', 'lenis-smooth');
 
     const raf = (time: number) => {
       lenis?.raf(time);
@@ -35,6 +38,8 @@ export default function SmoothScroll() {
     cancelAnimationFrame(rafId);
     lenis?.destroy();
     lenis = null;
+    delete window.__lenis;
+    document.documentElement.classList.remove('lenis', 'lenis-smooth');
   };
 
   const handleBreakpointChange = (event: MediaQueryListEvent | MediaQueryList) => {

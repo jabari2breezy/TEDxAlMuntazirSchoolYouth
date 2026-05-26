@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useAnimation } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import ScrollHint from '../components/ScrollHint';
 
 export default function Theme() {
   const topHalfControls = useAnimation();
   const bottomHalfControls = useAnimation();
   const manifestoControls = useAnimation();
-  const [sequenceComplete, setSequenceComplete] = useState(false);
+  const [fractureComplete, setFractureComplete] = useState(false);
 
   useEffect(() => {
     const runSequence = async () => {
-      // Phase 1: Wait 1 second
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Phase 2: The Fracture
       topHalfControls.start({ 
         y: '-35vh', 
         transition: { duration: 2, ease: [0.85, 0, 0.15, 1] } 
@@ -24,15 +23,14 @@ export default function Theme() {
         transition: { duration: 2, ease: [0.85, 0, 0.15, 1] } 
       });
 
-      // Phase 3: The Revelation
+      setFractureComplete(true);
+
       await manifestoControls.start({ 
         opacity: 1, 
         scale: 1, 
         filter: "blur(0px)",
         transition: { duration: 1.5, ease: "easeOut" } 
       });
-
-      setSequenceComplete(true);
     };
 
     runSequence();
@@ -84,25 +82,18 @@ export default function Theme() {
           </p>
         </motion.div>
 
-        {/* SCROLL INDICATOR */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: sequenceComplete ? 1 : 0 }}
-          transition={{ duration: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
-        >
-          <span className="font-typewriter text-[10px] uppercase tracking-widest text-brand-primary/50">Scroll to Explore</span>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ArrowDown size={20} className="text-brand-primary/50" />
-          </motion.div>
-        </motion.div>
+        <ScrollHint
+          show={fractureComplete}
+          target="#theme-content"
+          label="Scroll to explore"
+          className="text-[#000839]"
+        />
       </section>
 
-      {/* CHAMPIONS4GOOD INSPIRED CONTENT LAYOUT */}
-      <section className="py-32 px-4 md:px-12 max-w-screen-2xl mx-auto space-y-24 md:space-y-40">
+      <section
+        id="theme-content"
+        className="py-32 px-4 md:px-12 max-w-screen-2xl mx-auto space-y-24 md:space-y-40 scroll-mt-8"
+      >
         
         {/* Intro Block */}
         <motion.div 

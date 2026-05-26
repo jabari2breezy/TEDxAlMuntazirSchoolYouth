@@ -56,6 +56,14 @@ export const SOCIALS = {
 export const SPEAKERS: Speaker[] = [
   {
     id: '1',
+    name: 'Ridhwan Mohammed',
+    topic: 'Topic to be announced',
+    bio: "Ridhwan Mohammed explores the historical narratives that have shaped our current reality.",
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600&h=800',
+    segmentId: 'past'
+  },
+  {
+    id: '2',
     name: 'Anaya Rashid',
     topic: 'The Culture of Time',
     bio: 'Exploring how different cultures perceive and value the passage of time.',
@@ -63,20 +71,12 @@ export const SPEAKERS: Speaker[] = [
     segmentId: 'past'
   },
   {
-    id: '2',
+    id: '3',
     name: 'Zahra Datoo',
     topic: 'The Architecture of Nostalgia',
     bio: 'How our built environment preserves or distorts our collective memory.',
     image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=600&h=800',
     segmentId: 'past'
-  },
-  {
-    id: '3',
-    name: 'Hassan Abbas Mohammed',
-    topic: 'The Procrastination Paradox',
-    bio: 'The psychology behind why we delay the things that matter most.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600&h=800',
-    segmentId: 'present'
   },
   {
     id: '4',
@@ -88,6 +88,30 @@ export const SPEAKERS: Speaker[] = [
   },
   {
     id: '5',
+    name: 'Hassan Abbas Mohammed',
+    topic: 'The Procrastination Paradox',
+    bio: 'The psychology behind why we delay the things that matter most.',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600&h=800',
+    segmentId: 'present'
+  },
+  {
+    id: '6',
+    name: 'Yunus Osman',
+    topic: 'The Art of Scheduling',
+    bio: 'Decoding intentional scheduling and reclaiming control over our future.',
+    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=600&h=800',
+    segmentId: 'future'
+  },
+  {
+    id: '7',
+    name: 'Sada Mbaruk Said',
+    topic: 'Three Clocks: Climate, Animals, AI',
+    bio: "Sada explores the concept of 'slow destruction' and our collective responsibility before the damage becomes irreversible.",
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600&h=800',
+    segmentId: 'future'
+  },
+  {
+    id: '8',
     name: 'Liyaan Karbelkar',
     topic: 'The Legacy We Leave',
     bio: 'Defining stewardship for the generations that will inherit our world.',
@@ -95,11 +119,11 @@ export const SPEAKERS: Speaker[] = [
     segmentId: 'future'
   },
   {
-    id: '6',
-    name: 'Sada Mbaruk Said',
-    topic: 'Three Clocks: Climate, Animals, AI',
-    bio: "Sada explores the concept of 'slow destruction,' challenging the notion of a sudden global catastrophe in favor of a more insidious reality: the gradual unraveling of our world through the small, everyday choices we often ignore. By examining the interconnected chain of conflict, societal collapse, and environmental decay, she reveals how seemingly isolated issues feed into a larger systemic crisis. Her talk serves as a powerful reminder that the true danger lies not in a single disaster, but in the millions of moments where we choose not to care, urging us to recognize our collective responsibility before the damage becomes irreversible.",
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600&h=800',
-    segmentId: 'future'
+    id: '9',
+    name: 'Speaker TBA',
+    topic: 'Topic to be announced',
+    bio: 'Our ninth speaker will be announced soon.',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600&h=800',
+    segmentId: 'present'
   }
 ];

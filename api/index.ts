@@ -49,38 +49,38 @@ app.get('/api/speakers', (req, res) => {
     },
     { 
       id: '5', 
-      name: 'Faizaan', 
-      topic: 'Topic TBA', 
-      segmentId: 'present',
-      bio: "Faizaan delves into the complexities of navigating the modern world. His insights shed light on how we can ground ourselves amidst the rapid pace of contemporary life."
-    },
-    { 
-      id: '6', 
       name: 'Hassan Abbas Mohammed', 
       topic: 'The Procrastination Paradox', 
       segmentId: 'present',
       bio: "Hassan Abbas Mohammed unpacks the psychology behind delay. He reveals how procrastination is often less about laziness and more about our complex emotional relationship with time and self-worth."
     },
     { 
-      id: '7', 
+      id: '6', 
       name: 'Yunus Osman', 
       topic: 'The Art of Scheduling', 
       segmentId: 'future',
       bio: "Yunus Osman decodes the structural mastery of time management, exploring how intentional scheduling transforms chaos into predictable success. His talk provides a blueprint for reclaiming control over our future."
     },
     { 
-      id: '8', 
+      id: '7', 
       name: 'Sada Mbaruk Said', 
       topic: 'Three Clocks: Climate, Animals, AI', 
       segmentId: 'future',
       bio: "Sada explores 'slow destruction,' challenging the notion of a sudden global catastrophe in favor of a more insidious reality. By examining the interconnected chain of environmental decay and societal shift, she reveals how everyday choices feed into a larger systemic crisis."
     },
     { 
-      id: '9', 
+      id: '8', 
       name: 'Liyaan Karbelkar', 
       topic: 'The Legacy We Leave', 
       segmentId: 'future',
       bio: "Liyaan Karbelkar challenges us to think beyond our immediate lifespans. She asks us to consider how the actions we take today will ripple out to define the world for generations to come."
+    },
+    { 
+      id: '9', 
+      name: 'Speaker TBA', 
+      topic: 'Topic to be announced', 
+      segmentId: 'present',
+      bio: "Our ninth speaker will be announced soon. One more voice will join the assembly to explore what we do with the time we have."
     }
   ];
   res.json(speakers);

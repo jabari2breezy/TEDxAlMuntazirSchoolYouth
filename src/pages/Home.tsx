@@ -344,7 +344,7 @@ export default function Home() {
 
             <div className="flex gap-12 items-center opacity-60">
               <div className="text-right">
-                <span className="block font-typewriter text-[9px] uppercase tracking-widest text-white">8+ Speakers</span>
+                <span className="block font-typewriter text-[9px] uppercase tracking-widest text-white">9 Speakers</span>
                 <span className="block font-typewriter text-[9px] uppercase tracking-widest text-white">1 Inspiring Day</span>
               </div>
             </div>
