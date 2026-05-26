@@ -216,7 +216,7 @@ export default function Speakers() {
   useEffect(() => {
     fetch('/api/speakers')
       .then(res => {
-        if (!res.ok) throw new Error(\`HTTP error! status: \${res.status}\`);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
       })
       .then(data => {
@@ -279,9 +279,9 @@ export default function Speakers() {
                   setSelectedSegment(id);
                   hapticTick();
                 }}
-                className={\`py-3 font-typewriter text-[11px] uppercase tracking-[0.4em] transition-all relative \${
+                className={`py-3 font-typewriter text-[11px] uppercase tracking-[0.4em] transition-all relative ${
                   selectedSegment === id ? 'text-brand-secondary' : 'text-brand-primary/40 hover:text-brand-primary'
-                }\`}
+                }`}
               >
                 {id === 'all' ? 'Everything' : SEGMENTS.find(s => s.id === id)?.title}
                 {selectedSegment === id && (
