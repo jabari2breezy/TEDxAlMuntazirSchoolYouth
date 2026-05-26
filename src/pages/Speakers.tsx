@@ -236,7 +236,6 @@ export default function Speakers() {
                   <SpeakerParallaxShowcase
                     name={selectedSpeaker.name}
                     topic={selectedSpeaker.topic}
-                    image={selectedSpeaker.image}
                     segmentLabel={SEGMENTS.find(s => s.id === selectedSpeaker.segmentId)?.title}
                     scrollContainerRef={modalScrollRef}
                   />

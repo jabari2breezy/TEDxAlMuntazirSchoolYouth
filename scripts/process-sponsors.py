@@ -14,14 +14,12 @@ OUT = os.path.join(os.path.dirname(__file__), "../public/sponsors")
 
 LOGO_SOURCES = {
     "etg.png": ("image-d136ec14-19e8-45dd-8e59-02304e5c4490.png", "white", 320),
-    "asas.png": ("625902c9-3605-498a-adbd-34c1116fbffb-8c15bc61-3480-4009-a898-c1a8eb329c31.png", "white", 140),
+    "asas.png": ("image-089a25b5-c254-4158-9dc4-a4dcc2370fea.png", "white", 160),
     "jd-pharmacy.png": ("image-78becd8f-ce7b-4ba2-91b8-a78a5d823ae5.png", "white", 280),
     "smiles-cars.png": ("image-491c90a3-8c0d-4bf2-9f30-7e1e05d9dbc4.png", "white", 220),
-    "dar-glass-works.png": ("image-efac1325-f63c-4d0d-97a1-61fd3d652ff2.png", "black", 200),
+    "dar-glass-works.png": ("image-7d32a088-5411-4083-976b-d6668d85c8a3.png", "black", 220),
+    "amjad-motors.png": ("image-7c84d029-b944-48d4-be34-c77cb53fe28d.png", "black", 220),
 }
-
-POSTER = "625902c9-3605-498a-adbd-34c1116fbffb-ded38633-4f69-436b-8188-4c24409bdee9.png"
-AMJAD_CROP = (0.58, 0.66, 0.98, 0.88)
 
 
 def trim_alpha(img):
@@ -75,13 +73,6 @@ def main():
         img = Image.open(path)
         out = remove_white(img) if mode == "white" else remove_black(img)
         save_scaled(out, os.path.join(OUT, name), max_dim)
-
-    ref = Image.open(os.path.join(ASSETS, POSTER))
-    w, h = ref.size
-    l, t, r, b = AMJAD_CROP
-    amjad = remove_white(ref.crop((int(w * l), int(h * t), int(w * r), int(h * b))))
-    save_scaled(amjad, os.path.join(OUT, "amjad-motors.png"), 200)
-
 
 if __name__ == "__main__":
     main()
