@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Ticket as TicketIcon, Calendar, MapPin } from 'lucide-react';
+import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight } from 'lucide-react';
 import { TICKETS_URL } from '../constants';
 import InteractiveBackground from '../components/InteractiveBackground';
 
@@ -8,7 +8,7 @@ const INCLUDED_ITEMS = [
   'Full access to all live speaker sessions',
   'Interactive workshop zones',
   'Premium networking breaks',
-  'Official TEDxAlmuntazirSchoolYouth merch',
+  'Official TEDxAlmuntazirSchoolsYouth merch',
   'Curated lunch & refreshments experience'
 ];
 
@@ -27,34 +27,33 @@ export default function Tickets() {
   
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const targetX = isMobile ? 0 : -250;
-  const targetY = isMobile ? -150 : 0;
+  const targetY = isMobile ? -140 : 0;
   
   const ticketX = useTransform(scrollYProgress, [0, 0.3, 0.5], [0, 0, targetX]);
   const ticketY = useTransform(scrollYProgress, [0, 0.2, 0.5], [50, -20, targetY]);
 
   // Section Opacities
-  const section1Opacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
-  const section2Opacity = useTransform(scrollYProgress, [0.4, 0.5, 0.7, 0.8], [0, 1, 1, 0]);
-  const section4Opacity = useTransform(scrollYProgress, [0.8, 0.9, 1], [0, 1, 1]);
+  const section1Opacity = useTransform(scrollYProgress, [0, 0.08, 0.12], [1, 1, 0]);
+  const section1Y = useTransform(scrollYProgress, [0, 0.12], [0, -40]);
+  const section2Opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.95], [0, 1, 1]);
 
   // Background Colors
   const bgColor = useTransform(
     scrollYProgress,
     [0, 0.4, 0.8, 1],
-    ['#f3f3f4', '#050507', '#050507', '#000839']
+    ['#f3f3f4', '#050507', '#050507', '#050507']
   );
 
-  const section2TextColor = '#ffffff';
-
   return (
-    <div className="bg-brand-background">
-      <div ref={containerRef} className="h-[400vh] relative">
+    <div className="bg-[#050507]">
+      {/* Scroll-hijacked 3D ticket experience */}
+      <div ref={containerRef} className="h-[300vh] relative">
         <motion.div 
           className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center perspective-[1200px]"
           style={{ backgroundColor: bgColor }}
         >
           {/* Decorative Background Elements */}
-          <motion.div style={{ opacity: useTransform(scrollYProgress, [0.5, 0.6], [0, 1]) }} className="absolute inset-0 pointer-events-none z-0">
+          <motion.div style={{ opacity: useTransform(scrollYProgress, [0.4, 0.5], [0, 1]) }} className="absolute inset-0 pointer-events-none z-0">
             <InteractiveBackground />
           </motion.div>
 
@@ -68,7 +67,7 @@ export default function Tickets() {
               y: ticketY,
               transformStyle: "preserve-3d"
             }}
-            className="relative z-20 w-full max-w-[340px] md:max-w-md mx-6 pointer-events-auto"
+            className="relative z-20 w-full max-w-[320px] md:max-w-md mx-6 pointer-events-auto"
           >
             <div className="relative rounded-[2rem] overflow-hidden shadow-[0_32px_128px_rgba(0,8,57,0.3)] bg-white">
               {/* Top navy section */}
@@ -119,10 +118,10 @@ export default function Tickets() {
           <div className="absolute inset-0 pointer-events-none z-30">
             {/* Section 1: Intro */}
             <motion.div 
-              style={{ opacity: section1Opacity }}
+              style={{ opacity: section1Opacity, y: section1Y }}
               className="absolute inset-0 flex flex-col items-center justify-start pt-[15vh]"
             >
-              <h1 className="text-6xl md:text-[8vw] font-title font-black tracking-tighter uppercase text-[#000839] leading-[0.85] text-center drop-shadow-sm">
+              <h1 className="text-5xl md:text-[8vw] font-title font-black tracking-tighter uppercase text-[#000839] leading-[0.85] text-center drop-shadow-sm">
                 The Ultimate<br/><span className="italic font-editorial lowercase text-brand-secondary">Experience.</span>
               </h1>
               <p className="mt-6 font-typewriter text-xs uppercase tracking-[0.3em] text-[#000839]/50">Scroll to explore</p>
@@ -130,52 +129,82 @@ export default function Tickets() {
 
             {/* Section 2: What's Included */}
             <motion.div 
-              style={{ opacity: section2Opacity, color: section2TextColor }}
-              className="absolute inset-0 flex flex-col md:flex-row items-center justify-end px-6 md:px-24"
+              style={{ opacity: section2Opacity }}
+              className="absolute inset-x-0 bottom-6 md:bottom-auto md:right-24 md:left-auto md:top-1/2 md:-translate-y-1/2 flex flex-col items-center md:items-start px-6 md:px-0 z-30 pointer-events-none"
             >
-              <div className="w-full md:w-[45%] lg:w-[40%] space-y-6 pt-[50vh] md:pt-0">
-                <h3 className="font-title font-black text-4xl uppercase tracking-tighter">What's<br/>Included</h3>
-                <ul className="space-y-4">
+              <div className="w-full max-w-[320px] md:max-w-md space-y-4 md:space-y-6 text-white pointer-events-auto bg-black/40 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 md:p-0 rounded-2xl border border-white/10 md:border-none shadow-lg md:shadow-none">
+                <h3 className="font-title font-black text-2xl md:text-5xl uppercase tracking-tighter leading-none text-center md:text-left text-white">
+                  What's<br className="hidden md:block"/><span className="text-brand-secondary md:text-white"> Included</span>
+                </h3>
+                <ul className="space-y-2 md:space-y-3">
                   {INCLUDED_ITEMS.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary mt-2 shrink-0" />
-                      <span className="font-sans text-sm md:text-base font-medium opacity-80">{item}</span>
+                    <li key={i} className="flex items-start gap-2.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#e62b1e] mt-2 shrink-0 animate-pulse" />
+                      <span className="font-sans text-xs md:text-base font-medium text-white/90 leading-relaxed">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </motion.div>
-
-            {/* Event Details removed entirely */}
-
-            {/* Section 4: Final CTA */}
-            <motion.div 
-              style={{ opacity: section4Opacity }}
-              className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-50"
-            >
-              <div className="absolute inset-0 bg-[#000839]/80 backdrop-blur-md pointer-events-auto" />
-              <div className="relative z-10 flex flex-col items-center gap-12 pointer-events-auto mt-[20vh] md:mt-0">
-                <h2 className="text-5xl md:text-8xl font-title font-black tracking-tighter uppercase text-center drop-shadow-2xl text-white leading-[0.8]">
-                  Don't Waste<br/>
-                  <span className="italic font-editorial lowercase text-brand-secondary">Your Time.</span>
-                </h2>
-                <a 
-                  href={TICKETS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative px-12 py-6 bg-white text-[#000839] rounded-full overflow-hidden shadow-[0_0_60px_rgba(255,255,255,0.2)] transition-all hover:scale-105 active:scale-95"
-                >
-                  <div className="absolute inset-0 bg-brand-secondary translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.76,0,0.24,1]" />
-                  <span className="relative z-10 font-typewriter text-sm uppercase tracking-[0.3em] font-bold group-hover:text-white transition-colors duration-500">
-                    Secure Your Spot
-                  </span>
-                </a>
-              </div>
-            </motion.div>
-
           </div>
         </motion.div>
       </div>
+
+      {/* Static CTA Section (Directly above the footer and 100% visible) */}
+      <section className="relative min-h-[80vh] bg-[#050507] flex flex-col items-center justify-center px-6 py-24 overflow-hidden border-t border-white/5 z-20">
+        {/* Glow effect */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-brand-secondary/10 blur-[120px] pointer-events-none" />
+        
+        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center space-y-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+            className="space-y-4"
+          >
+            <span className="font-typewriter text-xs md:text-sm uppercase tracking-[0.4em] text-brand-secondary">TEDxAlmuntazirSchoolsYouth</span>
+            <h2 className="text-5xl md:text-8xl font-title font-black tracking-tighter uppercase text-white leading-[0.85] drop-shadow-2xl">
+              Don't Waste<br/>
+              <span className="italic font-editorial lowercase text-[#e62b1e]">Your Time.</span>
+            </h2>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 0.7, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.76, 0, 0.24, 1] }}
+            className="max-w-md font-sans text-sm md:text-base text-white/80 leading-relaxed"
+          >
+            Be part of the defining youth conference. Engage with powerful voices, explore fresh ideas, and secure your place in history.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
+            className="w-full flex justify-center"
+          >
+            <a 
+              href="https://tukiio.com/event/tedxalmuntazirschoolsyouth"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center gap-4 px-10 md:px-14 py-5 md:py-6 bg-[#e62b1e] text-white rounded-full overflow-hidden shadow-[0_0_50px_rgba(230,43,30,0.3)] hover:shadow-[0_0_80px_rgba(230,43,30,0.5)] transition-all duration-500 hover:scale-105 active:scale-98"
+            >
+              {/* Liquid overlay sliding up on hover */}
+              <div className="absolute inset-0 bg-[#000839] translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.76,0,0.24,1]" />
+              
+              <span className="relative z-10 font-typewriter text-xs md:text-sm uppercase tracking-[0.25em] font-black transition-colors duration-500 group-hover:text-white">
+                BUY TICKETS ON TUKIIO
+              </span>
+              <ArrowUpRight size={18} className="relative z-10 transition-transform duration-500 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 text-white shrink-0" />
+            </a>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }
+
