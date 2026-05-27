@@ -7,6 +7,7 @@ interface ScrollHintProps {
   target?: string | HTMLElement;
   label?: string;
   className?: string;
+  placementClassName?: string;
   delay?: number;
 }
 
@@ -15,6 +16,7 @@ export default function ScrollHint({
   target,
   label = 'Scroll',
   className = '',
+  placementClassName = 'bottom-8 md:bottom-12',
   delay = 0,
 }: ScrollHintProps) {
   const handleClick = () => {
@@ -32,7 +34,7 @@ export default function ScrollHint({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: show ? 1 : 0, y: show ? 0 : 8 }}
       transition={{ duration: 0.65, delay, ease: [0.25, 1, 0.5, 1] }}
-      className={`absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-3 cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary/50 rounded-full px-4 py-2 ${className} ${
+      className={`absolute left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-3 cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary/50 rounded-full px-4 py-2 ${placementClassName} ${className} ${
         show ? 'pointer-events-auto' : 'pointer-events-none'
       }`}
       aria-label={label}
@@ -40,17 +42,20 @@ export default function ScrollHint({
       <span className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.45em] text-brand-primary/45 group-hover:text-brand-secondary transition-colors">
         {label}
       </span>
-      <motion.span
+      <motion.div
         animate={{ y: [0, 6, 0] }}
         transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-primary/15 bg-white/40 backdrop-blur-md group-hover:border-brand-secondary/40 group-hover:bg-brand-secondary/10 transition-colors"
+        className="flex flex-col items-center"
       >
-        <ChevronDown
-          size={18}
-          className="text-brand-primary/50 group-hover:text-brand-secondary transition-colors"
-          strokeWidth={2}
-        />
-      </motion.span>
+        <div className="h-14 md:h-16 w-px bg-brand-primary/20 group-hover:bg-brand-secondary/40 transition-colors" />
+        <div className="mt-3 flex h-12 w-12 items-center justify-center rounded-full border border-brand-primary/15 bg-white/35 backdrop-blur-md group-hover:border-brand-secondary/40 group-hover:bg-brand-secondary/10 transition-colors">
+          <ChevronDown
+            size={20}
+            className="text-brand-primary/55 group-hover:text-brand-secondary transition-colors"
+            strokeWidth={2}
+          />
+        </div>
+      </motion.div>
     </motion.button>
   );
 }

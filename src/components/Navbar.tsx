@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
-import { SOCIALS } from '../constants';
+import { SOCIALS, TICKETS_URL } from '../constants';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +33,7 @@ export default function Navbar() {
     { name: 'Agenda', href: '/agenda', id: '04', sub: 'Time Unfolding' },
     { name: 'FAQ', href: '/faq', id: '05', sub: 'The Answers' },
     { name: 'About', href: '/about', id: '06', sub: 'Our Philosophy' },
-    { name: 'Tickets', href: '/tickets', id: '07', sub: 'Secure Your Seat' },
+    { name: 'Tickets', href: TICKETS_URL, id: '07', sub: 'Secure Your Seat' },
   ];
 
   return (
@@ -60,24 +60,36 @@ export default function Navbar() {
           { name: 'Speakers', href: '/speakers' },
           { name: 'FAQ', href: '/faq' },
           { name: 'About', href: '/about' },
-          { name: 'Tickets', href: '/tickets' },
+          { name: 'Tickets', href: TICKETS_URL },
         ].map((item) => (
-          <Link 
-            key={item.href}
-            to={item.href}
-            className={`px-6 py-2 rounded-full text-[9px] font-sans font-bold uppercase tracking-[0.2em] transition-all duration-300 relative ${
-              location.pathname === item.href ? 'text-brand-primary' : 'text-white/70 hover:text-white'
-            }`}
-          >
-            {location.pathname === item.href && (
-              <motion.div 
-                layoutId="nav-glow"
-                className="absolute inset-0 bg-white rounded-full z-[-1]"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              />
-            )}
-            {item.name}
-          </Link>
+          item.href.startsWith('http') ? (
+            <a
+              key={item.href}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-2 rounded-full text-[9px] font-sans font-bold uppercase tracking-[0.2em] transition-all duration-300 relative text-white/70 hover:text-white"
+            >
+              {item.name}
+            </a>
+          ) : (
+            <Link 
+              key={item.href}
+              to={item.href}
+              className={`px-6 py-2 rounded-full text-[9px] font-sans font-bold uppercase tracking-[0.2em] transition-all duration-300 relative ${
+                location.pathname === item.href ? 'text-brand-primary' : 'text-white/70 hover:text-white'
+              }`}
+            >
+              {location.pathname === item.href && (
+                <motion.div 
+                  layoutId="nav-glow"
+                  className="absolute inset-0 bg-white rounded-full z-[-1]"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+              {item.name}
+            </Link>
+          )
         ))}
       </div>
 
@@ -125,36 +137,69 @@ export default function Navbar() {
 
             <div className="flex-grow flex flex-col justify-center px-6 md:px-16 relative z-10">
               {menuItems.map((item, i) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="group relative flex items-baseline gap-12 py-8 border-b border-white/5 last:border-none overflow-hidden"
-                >
-                  <span className="font-typewriter text-xs text-brand-secondary/30 group-hover:text-brand-secondary transition-colors">
-                    {item.id}
-                  </span>
-                  <div className="flex flex-col">
-                    <motion.span 
-                      initial={{ y: 100, rotate: 5 }}
-                      animate={{ y: 0, rotate: 0 }}
-                      transition={{ delay: 0.3 + (i * 0.08), duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
-                      className={`text-5xl md:text-8xl font-kinetic font-black tracking-tighter uppercase leading-[0.8] transition-all duration-700 ${
-                        location.pathname === item.href ? 'text-brand-secondary' : 'text-white group-hover:italic group-hover:translate-x-8'
-                      }`}
-                    >
-                      {item.name}
-                    </motion.span>
-                    <motion.span 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.6 + (i * 0.1) }}
-                      className="font-typewriter text-[9px] uppercase tracking-[1em] text-white/20 group-hover:text-white/60 transition-all pl-2 md:pl-4 mt-4"
-                    >
-                      {item.sub}
-                    </motion.span>
-                  </div>
-                </Link>
+                item.href.startsWith('http') ? (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsOpen(false)}
+                    className="group relative flex items-baseline gap-12 py-8 border-b border-white/5 last:border-none overflow-hidden"
+                  >
+                    <span className="font-typewriter text-xs text-brand-secondary/30 group-hover:text-brand-secondary transition-colors">
+                      {item.id}
+                    </span>
+                    <div className="flex flex-col">
+                      <motion.span 
+                        initial={{ y: 100, rotate: 5 }}
+                        animate={{ y: 0, rotate: 0 }}
+                        transition={{ delay: 0.3 + (i * 0.08), duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+                        className="text-5xl md:text-8xl font-kinetic font-black tracking-tighter uppercase leading-[0.8] transition-all duration-700 text-white group-hover:italic group-hover:translate-x-8"
+                      >
+                        {item.name}
+                      </motion.span>
+                      <motion.span 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 + (i * 0.1) }}
+                        className="font-typewriter text-[9px] uppercase tracking-[1em] text-white/20 group-hover:text-white/60 transition-all pl-2 md:pl-4 mt-4"
+                      >
+                        {item.sub}
+                      </motion.span>
+                    </div>
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className="group relative flex items-baseline gap-12 py-8 border-b border-white/5 last:border-none overflow-hidden"
+                  >
+                    <span className="font-typewriter text-xs text-brand-secondary/30 group-hover:text-brand-secondary transition-colors">
+                      {item.id}
+                    </span>
+                    <div className="flex flex-col">
+                      <motion.span 
+                        initial={{ y: 100, rotate: 5 }}
+                        animate={{ y: 0, rotate: 0 }}
+                        transition={{ delay: 0.3 + (i * 0.08), duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+                        className={`text-5xl md:text-8xl font-kinetic font-black tracking-tighter uppercase leading-[0.8] transition-all duration-700 ${
+                          location.pathname === item.href ? 'text-brand-secondary' : 'text-white group-hover:italic group-hover:translate-x-8'
+                        }`}
+                      >
+                        {item.name}
+                      </motion.span>
+                      <motion.span 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 + (i * 0.1) }}
+                        className="font-typewriter text-[9px] uppercase tracking-[1em] text-white/20 group-hover:text-white/60 transition-all pl-2 md:pl-4 mt-4"
+                      >
+                        {item.sub}
+                      </motion.span>
+                    </div>
+                  </Link>
+                )
               ))}
             </div>
 

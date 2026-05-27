@@ -11,6 +11,7 @@ import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
 import PrecisionButton from '../components/PrecisionButton';
+import { TICKETS_URL } from '../constants';
 import SponsorsSection from '../components/SponsorsSection';
 
 const transition = { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const };
@@ -317,7 +318,7 @@ export default function Home() {
           </motion.div>
 
           <motion.div variants={itemVariants} className="hero-text flex flex-col md:flex-row gap-8 items-center">
-            <PrecisionButton to="/tickets" variant="light">
+            <PrecisionButton href={TICKETS_URL} target="_blank" rel="noopener noreferrer" variant="light">
               Get Your Tickets
             </PrecisionButton>
             <Link to="/theme" className="group flex items-center gap-4 font-typewriter text-[11px] uppercase tracking-[0.4em] text-white hover:text-brand-secondary transition-colors">

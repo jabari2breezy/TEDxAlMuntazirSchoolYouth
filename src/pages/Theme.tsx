@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useAnimation } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import ScrollHint from '../components/ScrollHint';
+import { TICKETS_URL } from '../constants';
 
 export default function Theme() {
   const topHalfControls = useAnimation();
@@ -87,6 +87,7 @@ export default function Theme() {
           target="#theme-content"
           label="Scroll to explore"
           className="text-[#000839]"
+          placementClassName="top-[26vh] md:top-[24vh]"
         />
       </section>
 
@@ -205,13 +206,15 @@ export default function Theme() {
             <p className="font-editorial text-2xl md:text-4xl italic opacity-70 mb-16 max-w-3xl mx-auto leading-relaxed">
               Join us to rethink the systems we've inherited, and actively design the ones we leave behind.
             </p>
-            <Link 
-              to="/tickets"
+            <a 
+              href={TICKETS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-6 bg-brand-secondary text-brand-background px-12 md:px-16 py-6 md:py-8 rounded-full font-title font-bold text-xl md:text-3xl uppercase tracking-widest hover:bg-black hover:text-white transition-all hover:scale-105 active:scale-95 group shadow-2xl"
             >
               Secure Your Seat 
               <ArrowRight size={36} className="group-hover:translate-x-2 transition-transform" />
-            </Link>
+            </a>
           </div>
         </motion.div>
 

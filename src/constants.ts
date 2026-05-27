@@ -53,6 +53,8 @@ export const SOCIALS = {
   email: 'tedxalmuntazirschoolsyouth@gmail.com'
 };
 
+export const TICKETS_URL = 'https://tukiio.com/event/tedxalmuntazirschoolsyouth';
+
 export const SPEAKERS: Speaker[] = [
   {
     id: '1',

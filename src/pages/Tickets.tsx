@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'moti
 import { Link } from 'react-router-dom';
 import MaskReveal from '../components/MaskReveal';
 import { Lock, MapPin, Calendar, Clock } from 'lucide-react';
+import { TICKETS_URL } from '../constants';
 
 const ease = [0.25, 1, 0.5, 1] as const;
 
@@ -131,14 +132,14 @@ function TicketStub() {
 
         <div className="p-8 md:p-10 bg-[#050507]/50 flex flex-col items-center gap-6 text-center">
           <ComingSoonPulse />
-          <button
-            type="button"
-            disabled
-            className="w-full py-5 rounded-full border border-white/15 bg-white/5 text-white/40 font-typewriter text-[10px] uppercase tracking-[0.45em] cursor-not-allowed flex items-center justify-center gap-3"
+          <a
+            href={TICKETS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-5 rounded-full border border-brand-secondary/40 bg-brand-secondary/15 text-brand-secondary font-typewriter text-[10px] uppercase tracking-[0.45em] flex items-center justify-center gap-3 hover:bg-brand-secondary hover:text-white hover:border-brand-secondary transition-all active:scale-[0.99]"
           >
-            <Lock size={14} />
-            Checkout — Coming Soon
-          </button>
+            Get Tickets (Tukiio)
+          </a>
           <p className="font-typewriter text-[8px] uppercase tracking-[0.4em] text-white/30">
             Students only · Valid ID required at door
           </p>
@@ -163,7 +164,7 @@ export default function Tickets() {
   const lineScale = useTransform(progress, [0, 0.5], [0, 1]);
 
   return (
-    <div ref={sectionRef} className="min-h-screen bg-[#050507] text-white overflow-hidden">
+    <div ref={sectionRef} className="min-h-screen bg-brand-background text-brand-primary overflow-hidden">
       {/* Ambient grid */}
       <motion.div
         style={{ opacity: gridOpacity }}
@@ -174,8 +175,8 @@ export default function Tickets() {
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)
+              linear-gradient(rgba(0,8,57,0.07) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0,8,57,0.07) 1px, transparent 1px)
             `,
             backgroundSize: '80px 80px',
           }}
@@ -183,8 +184,8 @@ export default function Tickets() {
       </motion.div>
 
       <motion.div style={{ y: bgY }} className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full bg-brand-secondary/20 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] rounded-full bg-brand-primary/50 blur-[100px]" />
+        <div className="absolute top-1/4 -left-32 w-[560px] h-[560px] rounded-full bg-brand-secondary/20 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-[720px] h-[520px] rounded-full bg-brand-primary/20 blur-[120px]" />
       </motion.div>
 
       {/* Hero */}
@@ -216,7 +217,7 @@ export default function Tickets() {
             className="lg:max-w-xs space-y-4"
           >
             <p className="font-editorial text-2xl md:text-3xl text-white/45 italic leading-snug">
-              The gateway opens soon. Until then, study the pass — know what you are reserving.
+              Secure your seat via Tukiio — fast checkout, instant confirmation, QR verification at the door.
             </p>
             <motion.div
               style={{ scaleX: lineScale }}
@@ -247,15 +248,14 @@ export default function Tickets() {
                 <br />
                 <span className="text-brand-secondary">Soon</span>
               </p>
-              <p className="font-sans text-sm text-white/50 leading-relaxed mb-8">
-                Ticket sales will launch via our secure checkout on Tukiio. You will receive a
-                digital pass with QR verification at the door.
+              <p className="font-sans text-sm text-brand-primary/60 leading-relaxed mb-8">
+                Checkout happens on Tukiio. You’ll receive a digital pass with QR verification at the door.
               </p>
               <div className="flex flex-wrap gap-3">
                 {['Selcom', 'Airtel Money', 'HaloPesa', 'Mastercard'].map((method) => (
                   <span
                     key={method}
-                    className="px-4 py-2 rounded-full border border-white/10 font-typewriter text-[8px] uppercase tracking-[0.3em] text-white/25"
+                    className="px-4 py-2 rounded-full border border-brand-outline/40 font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/45 bg-white/50"
                   >
                     {method}
                   </span>

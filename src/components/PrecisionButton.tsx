@@ -6,6 +6,8 @@ interface PrecisionButtonProps {
   children: React.ReactNode;
   to?: string;
   href?: string;
+  target?: string;
+  rel?: string;
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
@@ -16,6 +18,8 @@ export default function PrecisionButton({
   children,
   to,
   href,
+  target,
+  rel,
   onClick,
   className = '',
   disabled = false,
@@ -83,7 +87,7 @@ export default function PrecisionButton({
 
   if (href) {
     return (
-      <a href={href} className="inline-block interactive" onClick={onClick}>
+      <a href={href} target={target} rel={rel} className="inline-block interactive" onClick={onClick}>
         {inner}
       </a>
     );

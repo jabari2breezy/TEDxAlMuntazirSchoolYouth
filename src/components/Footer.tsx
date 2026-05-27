@@ -1,6 +1,6 @@
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { SOCIALS } from '../constants';
+import { SOCIALS, TICKETS_URL } from '../constants';
 import Logo from './Logo';
 
 export default function Footer() {
@@ -30,7 +30,7 @@ export default function Footer() {
               <Link to="/agenda" className="hover:text-brand-secondary transition-colors">Agenda</Link>
               <Link to="/faq" className="hover:text-brand-secondary transition-colors">FAQs</Link>
               <Link to="/about" className="hover:text-brand-secondary transition-colors">About</Link>
-              <Link to="/tickets" className="hover:text-brand-secondary transition-colors">Tickets</Link>
+              <a href={TICKETS_URL} target="_blank" rel="noopener noreferrer" className="hover:text-brand-secondary transition-colors">Tickets</a>
             </div>
           </div>
 

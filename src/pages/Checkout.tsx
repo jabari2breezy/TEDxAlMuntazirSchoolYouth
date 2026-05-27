@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { TICKETS_URL } from '../constants';
 
 export default function Checkout() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
@@ -53,9 +54,9 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-brand-background pt-32 pb-20 px-6 md:px-16 text-brand-primary">
       <div className="max-w-3xl mx-auto">
-        <Link to="/tickets" className="inline-flex items-center gap-2 font-typewriter text-[10px] uppercase tracking-widest text-brand-primary/50 hover:text-brand-primary transition-colors mb-12">
+        <a href={TICKETS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-typewriter text-[10px] uppercase tracking-widest text-brand-primary/50 hover:text-brand-primary transition-colors mb-12">
           <ArrowLeft size={14} /> Back to Tickets
-        </Link>
+        </a>
 
         <motion.div
           variants={containerVariants}
