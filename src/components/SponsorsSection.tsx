@@ -18,8 +18,8 @@ const SPONSOR_TIERS: SponsorTier[] = [
   {
     name: 'Platinum Sponsors',
     accent: 'from-white/25 via-white/10 to-transparent',
-    logoHeight: 'h-20 sm:h-24 md:h-28 lg:h-32',
-    maxWidth: 'max-w-[min(100%,420px)]',
+    logoHeight: 'h-28 sm:h-32 md:h-40 lg:h-48',
+    maxWidth: 'max-w-[min(100%,520px)]',
     sponsors: [
       { src: '/sponsors/etg.png', alt: 'ETG' },
       { src: '/sponsors/asas@2x.png', alt: 'ASAS' },
@@ -28,8 +28,8 @@ const SPONSOR_TIERS: SponsorTier[] = [
   {
     name: 'Gold Sponsor',
     accent: 'from-amber-200/20 via-white/5 to-transparent',
-    logoHeight: 'h-16 sm:h-20 md:h-24 lg:h-28',
-    maxWidth: 'max-w-[min(100%,480px)]',
+    logoHeight: 'h-24 sm:h-28 md:h-36 lg:h-44',
+    maxWidth: 'max-w-[min(100%,560px)]',
     sponsors: [{ src: '/sponsors/leta-kazi.png', alt: 'LETA KAZI LTD.' }],
   },
   {
@@ -145,8 +145,7 @@ export default function SponsorsSection() {
           viewport={{ once: true }}
           className="text-center mt-12 md:mt-16 font-typewriter text-[10px] uppercase tracking-[0.45em] text-white/50"
         >
-          <span className="text-brand-secondary">♥</span> We appreciate you{' '}
-          <span className="text-brand-secondary">♥</span>
+          We appreciate you
         </motion.p>
       </div>
     </section>

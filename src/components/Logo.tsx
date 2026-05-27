@@ -11,15 +11,15 @@ export default function Logo({ className = '', variant = 'tedx', theme = 'light'
 
   if (variant === 'tedx') {
     return (
-      <img
-        src="/logo/tedx-almuntazir-youth.png"
-        srcSet="/logo/tedx-almuntazir-youth.png 1x"
-        alt="TEDx Al Muntazir School Youth"
-        width={640}
-        height={211}
-        className={`h-11 sm:h-12 md:h-14 w-auto object-contain object-left ${className}`}
-        decoding="async"
-      />
+      <div className={`flex items-end gap-1 ${className}`}>
+        <div className="flex items-baseline font-sans font-black tracking-tighter leading-none text-[32px] md:text-[40px]">
+          <span className={textColor}>TED</span>
+          <span className="text-[#e62b1e] text-[0.8em] ml-[1px]">x</span>
+        </div>
+        <div className={`font-sans font-normal tracking-tight pb-[3px] md:pb-[4px] leading-none text-[15px] md:text-[19px] ${textColor}`}>
+          AlMuntazirSchoolsYouth
+        </div>
+      </div>
     );
   }
 

@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="flex-1 space-y-12">
           <div className="flex flex-col gap-6">
             <Link to="/" className="inline-block" onClick={scrollToTop}>
-              <Logo variant="tedx" theme="light" className="scale-90 md:scale-110 origin-left invert hue-rotate-180" />
+              <Logo variant="tedx" theme="light" className="scale-90 md:scale-110 origin-left" />
             </Link>
             <div className="w-16 h-[1px] bg-brand-primary/10" />
             <Logo variant="school" theme="light" className="scale-100 origin-left opacity-60 hover:opacity-100 transition-opacity" />

@@ -8,10 +8,9 @@ interface PreloaderProps {
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [isMounted, setIsMounted] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  const bluePanelRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    if (!containerRef.current || !bluePanelRef.current) return;
+    if (!containerRef.current) return;
 
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -21,70 +20,45 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         }
       });
 
-      // Loading percentage animation runs in parallel
-      gsap.to(".loading-percentage", {
+      // 1. Counter animation
+      tl.to(".loading-counter", {
         innerHTML: 100,
-        duration: 2.2,
-        ease: "power2.out",
+        duration: 2.5,
+        ease: "power3.inOut",
         snap: { innerHTML: 1 },
         onUpdate: function() {
           const targets = this.targets();
-          if (targets[0]) targets[0].innerHTML = Math.round(targets[0].innerHTML) + '%';
+          if (targets[0]) targets[0].innerHTML = Math.round(targets[0].innerHTML).toString().padStart(3, '0');
         }
-      });
-
-      // Phase 1: The Broken Present
-      // Massive typography shears out from invisible layout grids
-      tl.from(".hero-text-anim", {
-        yPercent: 120,
-        duration: 1.2,
-        ease: "expo.out",
-        stagger: 0.1
       })
-
-      // Phase 2: The Sliding Inversion
-      // The deep blue plate slides aggressively over the text
-      .to(bluePanelRef.current, {
-        clipPath: 'inset(0% 0% 0% 0%)',
-        duration: 1.2,
-        ease: "power4.inOut"
-      }, "-=0.6")
-      
-      // Minimalist data strings slide out from the margins
-      .from(".data-string", {
-        yPercent: 100,
+      // Fade out the counter and the lines
+      .to(".preloader-ui", {
         opacity: 0,
+        y: -20,
         duration: 0.8,
-        ease: "power3.out",
-        stagger: 0.1
-      }, "-=0.8")
+        ease: "power2.inOut"
+      }, "+=0.2")
+      
+      // 2. The Reveal Mask expands revealing "BORROWED TIME"
+      .to(".mask-layer", {
+        clipPath: "circle(150% at 50% 50%)",
+        duration: 1.8,
+        ease: "power4.inOut"
+      }, "-=0.4")
+      
+      // 3. Typography scales slightly for impact
+      .fromTo(".hero-text-anim", 
+        { scale: 0.85, opacity: 0, filter: "blur(10px)" },
+        { scale: 1, opacity: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out", stagger: 0.15 },
+        "-=1.4"
+      )
 
-      // Phase 3: The Elastic Collapse
-      // Snap vertically toward the horizontal center line
+      // 4. The Exit: Slide the entire preloader UP
       .to(containerRef.current, {
-        scaleY: 0.002, // Compress into a razor-thin ribbon
-        transformOrigin: "center center",
-        duration: 0.8,
+        yPercent: -100,
+        duration: 1.2,
         ease: "expo.inOut"
-      }, "+=0.4")
-      
-      // The Full Reveal
-      // Ribbon scales up past the screen lens
-      .to(containerRef.current, {
-        scaleY: 100, // Blow past viewport
-        opacity: 0,
-        duration: 0.8,
-        ease: "power4.inOut"
-      })
-
-      // Stagger reveal the main landing page typography
-      .from(".hero-text", {
-        y: 50,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 1,
-        ease: "power3.out"
-      }, "-=0.6");
+      }, "+=0.8");
 
     }, containerRef);
 
@@ -96,49 +70,32 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   return (
     <div 
       ref={containerRef}
-      id="preloader-overlay"
-      className="fixed inset-0 z-[9999] bg-[#050507] overflow-hidden flex flex-col justify-center pointer-events-auto origin-center will-change-transform"
+      className="fixed inset-0 z-[9999] bg-[#050507] overflow-hidden flex items-center justify-center pointer-events-auto will-change-transform"
     >
-      {/* Base Layer: Black Canvas */}
-      <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-24 pointer-events-none">
-        <div className="overflow-hidden">
-          <h1 className="hero-text-anim text-[16vw] md:text-[14vw] font-title font-black uppercase text-white leading-[0.8] tracking-tighter">
-            BORROWED
-          </h1>
+      {/* Background grain texture */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
+
+      {/* Center UI (Counter) */}
+      <div className="preloader-ui absolute z-20 flex flex-col items-center justify-center gap-6">
+        <div className="w-px h-12 bg-white/20" />
+        <div className="flex items-baseline gap-2 text-white font-typewriter">
+          <span className="text-sm opacity-50 tracking-[0.3em]">LOADING</span>
+          <span className="loading-counter text-6xl md:text-8xl font-light tracking-tighter">000</span>
+          <span className="text-sm opacity-50 tracking-[0.3em]">SYS</span>
         </div>
-        <div className="overflow-hidden flex justify-end">
-          <h1 className="hero-text-anim text-[16vw] md:text-[14vw] font-title font-black uppercase text-brand-secondary leading-[0.8] tracking-tighter">
-            TIME
-          </h1>
-        </div>
+        <div className="w-px h-12 bg-white/20" />
       </div>
 
-      {/* Deep Blue Sliding Overlay Layer */}
-      <div 
-        ref={bluePanelRef} 
-        className="absolute inset-0 bg-brand-primary flex flex-col justify-center px-6 md:px-24 overflow-hidden pointer-events-none will-change-transform" 
-        style={{ clipPath: 'inset(0% 100% 0% 0%)' }}
-      >
-        {/* Micro-Typography Data Stamps */}
-        <div className="absolute top-12 right-12 md:right-24 overflow-hidden">
-          <span className="data-string block font-typewriter text-xs tracking-widest text-white/50 uppercase">
-            DAR ES SALAAM / 2026
-          </span>
-        </div>
-        <div className="absolute bottom-12 left-12 md:left-24 overflow-hidden">
-          <span className="data-string loading-percentage block font-typewriter text-4xl font-bold tracking-widest text-white">
-            0%
-          </span>
-        </div>
-
-        {/* Color Inverted Typography */}
-        <div className="overflow-hidden">
-          <h1 className="text-[16vw] md:text-[14vw] font-title font-black uppercase text-white leading-[0.8] tracking-tighter">
+      {/* The Masking Layer containing the big typography */}
+      <div className="mask-layer absolute inset-0 bg-[#000839] flex flex-col justify-center px-6 md:px-16" style={{ clipPath: "circle(0% at 50% 50%)" }}>
+        {/* Subtle grid in background of the mask layer */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+        
+        <div className="relative z-10 w-full max-w-screen-2xl mx-auto flex flex-col items-center justify-center text-center">
+          <h1 className="hero-text-anim text-[16vw] md:text-[12vw] font-title font-black uppercase text-white leading-[0.85] tracking-tighter mix-blend-screen">
             BORROWED
           </h1>
-        </div>
-        <div className="overflow-hidden flex justify-end">
-          <h1 className="text-[16vw] md:text-[14vw] font-title font-black uppercase text-[#0c1012] leading-[0.8] tracking-tighter">
+          <h1 className="hero-text-anim text-[16vw] md:text-[12vw] font-title font-black uppercase text-[#e62b1e] leading-[0.85] tracking-tighter mix-blend-screen -mt-2 md:-mt-6">
             TIME
           </h1>
         </div>

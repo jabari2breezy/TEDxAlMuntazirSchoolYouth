@@ -1,203 +1,201 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ArrowRight, Clock, MapPin, Calendar, Ticket, CheckCircle2, Zap } from 'lucide-react';
+import { Ticket as TicketIcon, Calendar, MapPin } from 'lucide-react';
+import { TICKETS_URL } from '../constants';
+import InteractiveBackground from '../components/InteractiveBackground';
 
-const TUKIIO_URL = 'https://tukiio.com/event/tedxalmuntazirschoolsyouth';
-
-const features = [
-  { icon: Clock, label: 'Full Day', detail: '9 Talks across 3 sessions' },
-  { icon: MapPin, label: 'AlMuntazir Nursery', detail: 'UN Road, Upanga, Dar es Salaam' },
-  { icon: Calendar, label: 'June 14, 2026', detail: 'Doors open 9:30 AM' },
+const INCLUDED_ITEMS = [
+  'Full access to all live speaker sessions',
+  'Interactive workshop zones',
+  'Premium networking breaks',
+  'Official TEDxAlmuntazirSchoolYouth merch',
+  'Curated lunch & refreshments experience'
 ];
-
-const includes = [
-  'Your ticket grants you full access to all live speaker sessions, interactive workshop zones, premium networking breaks, official TEDxAlmuntazirSchoolYouth merchandise, and a curated lunch/refreshments experience'
-];
-
-const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-function HeroNumber({ n }: { n: number }) {
-  return (
-    <motion.span
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="tabular-nums"
-    >
-      {n}
-    </motion.span>
-  );
-}
 
 export default function Tickets() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [hovered, setHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroY = isMobile ? undefined : useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
-  const heroBgScale = isMobile ? undefined : useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  // Ticket 3D Transforms
+  const ticketRotateX = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [15, 0, -10, 5, 0]);
+  const ticketRotateY = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [-15, 0, 15, -5, 0]);
+  const ticketScale = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [0.8, 1, 0.9, 1.1, 1]);
+  const ticketY = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [50, 0, -20, 0, -40]);
+
+  // Section Opacities
+  const section1Opacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
+  const section2Opacity = useTransform(scrollYProgress, [0.2, 0.3, 0.45, 0.55], [0, 1, 1, 0]);
+  const section3Opacity = useTransform(scrollYProgress, [0.55, 0.65, 0.8, 0.9], [0, 1, 1, 0]);
+  const section4Opacity = useTransform(scrollYProgress, [0.85, 0.95, 1], [0, 1, 1]);
+
+  // Background Colors
+  const bgColor = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.6, 1],
+    ['#f3f3f4', '#e2e2e4', '#050507', '#000839']
+  );
 
   return (
-    <div className="min-h-screen bg-brand-background pt-20">
-      <section className="py-24 md:py-40 px-6 md:px-16 max-w-screen-xl mx-auto pt-32 md:pt-48">
-        <div className="grid lg:grid-cols-5 gap-16 lg:gap-24 items-start">
-          {/* Left — Ticket card */}
-          <div className="lg:col-span-3">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-5%' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* Ticket Visual */}
-              <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
-                {/* Top navy section */}
-                <div className="bg-[#000839] px-6 md:px-12 pt-10 md:pt-12 pb-12 md:pb-16">
-                  <div className="flex items-start justify-between mb-10 md:mb-12 gap-4">
-                    <div className="flex-1 min-w-0">
-                      <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-widest md:tracking-[0.4em] text-white/30 block mb-2 truncate md:overflow-visible md:whitespace-normal">
-                        TEDxAlMuntazirSchoolsYouth
-                      </span>
-                      <h2 className="font-title font-black text-3xl md:text-5xl uppercase text-white tracking-tighter leading-none break-words">
-                        Borrowed<br/>Time
-                      </h2>
-                    </div>
-                    <Ticket size={32} className="text-[#006d38] opacity-60 shrink-0 mt-1 md:w-10 md:h-10" />
-                  </div>
+    <div className="bg-brand-background">
+      <div ref={containerRef} className="h-[400vh] relative">
+        <motion.div 
+          className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center perspective-[1200px]"
+          style={{ backgroundColor: bgColor }}
+        >
+          {/* Decorative Background Elements */}
+          <motion.div style={{ opacity: useTransform(scrollYProgress, [0.5, 0.6], [0, 1]) }} className="absolute inset-0 pointer-events-none z-0">
+            <InteractiveBackground />
+          </motion.div>
 
-                  <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <p className="font-typewriter text-[9px] uppercase tracking-widest text-white/30 mb-1">Date</p>
-                      <p className="font-title font-bold text-white text-lg uppercase">June 14, 2026</p>
-                    </div>
-                    <div>
-                      <p className="font-typewriter text-[9px] uppercase tracking-widest text-white/30 mb-1">Time</p>
-                      <p className="font-title font-bold text-white text-lg uppercase">9:30 AM</p>
-                    </div>
-                    <div>
-                      <p className="font-typewriter text-[9px] uppercase tracking-widest text-white/30 mb-1">Venue</p>
-                      <p className="font-title font-bold text-white text-base uppercase leading-tight">AlMuntazir<br/>Nursery, Upanga</p>
-                    </div>
-                    <div>
-                      <p className="font-typewriter text-[9px] uppercase tracking-widest text-white/30 mb-1">Type</p>
-                      <p className="font-title font-bold text-[#006d38] text-lg uppercase">General</p>
-                    </div>
+          {/* The Main Ticket Product (Center Stage) */}
+          <motion.div
+            style={{
+              rotateX: ticketRotateX,
+              rotateY: ticketRotateY,
+              scale: ticketScale,
+              y: ticketY,
+              transformStyle: "preserve-3d"
+            }}
+            className="relative z-20 w-full max-w-[340px] md:max-w-md mx-6 pointer-events-auto"
+          >
+            <div className="relative rounded-[2rem] overflow-hidden shadow-[0_32px_128px_rgba(0,8,57,0.3)] bg-white">
+              {/* Top navy section */}
+              <div className="bg-[#000839] px-6 md:px-12 pt-10 md:pt-12 pb-12 md:pb-16 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 70%)' }} />
+                <div className="flex items-start justify-between mb-8 md:mb-12 gap-4 relative z-10">
+                  <div className="flex-1 min-w-0">
+                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-widest md:tracking-[0.4em] text-white/40 block mb-2 truncate">
+                      TEDxAlMuntazirSchoolsYouth
+                    </span>
+                    <h2 className="font-title font-black text-4xl md:text-5xl uppercase text-white tracking-tighter leading-none break-words">
+                      Borrowed<br/>Time
+                    </h2>
                   </div>
+                  <TicketIcon size={32} className="text-[#e62b1e] shrink-0 mt-1 md:w-10 md:h-10" />
                 </div>
 
-                {/* Perforated divider */}
-                <div className="bg-[#000839] relative flex items-center">
-                  <div className="absolute left-0 w-6 h-12 bg-[#f9f9f9] rounded-r-full -translate-x-1" />
-                  <div className="flex-1 mx-6 border-t-2 border-dashed border-white/10" />
-                  <div className="absolute right-0 w-6 h-12 bg-[#f9f9f9] rounded-l-full translate-x-1" />
-                </div>
-
-                {/* Bottom green section */}
-                <div className="bg-[#006d38] px-8 md:px-12 py-8 flex items-center justify-between">
+                <div className="grid grid-cols-2 gap-6 relative z-10">
                   <div>
-                    <p className="font-typewriter text-[9px] uppercase tracking-widest text-white/50 mb-1">Admission</p>
-                    <p className="font-title font-black text-white text-2xl uppercase">TZS 30,000</p>
+                    <span className="font-typewriter text-[8px] uppercase tracking-widest text-white/40 block mb-1">Date</span>
+                    <p className="font-sans font-bold text-white text-sm">March 2026</p>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <p className="font-typewriter text-[9px] uppercase tracking-widest text-white/50 mb-1">Category</p>
-                    <p className="font-title font-bold text-white text-sm uppercase">Students Only</p>
+                  <div>
+                    <span className="font-typewriter text-[8px] uppercase tracking-widest text-white/40 block mb-1">Location</span>
+                    <p className="font-sans font-bold text-white text-sm">Al Muntazir Nursery</p>
                   </div>
                 </div>
               </div>
 
-              {/* Price note */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="mt-6 font-typewriter text-[10px] text-[#000839]/40 uppercase tracking-widest text-center"
-              >
-                Tickets sold exclusively via Tuki.io · Secure checkout
-              </motion.p>
-            </motion.div>
-          </div>
+              {/* Perforated divider */}
+              <div className="bg-[#000839] relative flex items-center">
+                <div className="absolute left-0 w-6 h-12 bg-white rounded-r-full -translate-x-1 shadow-inner" />
+                <div className="flex-1 mx-6 border-t-2 border-dashed border-white/20" />
+                <div className="absolute right-0 w-6 h-12 bg-white rounded-l-full translate-x-1 shadow-inner" />
+              </div>
 
-          {/* Right — CTA + includes */}
-          <div className="lg:col-span-2 space-y-12">
-
-            {/* What's included */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-5%' }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h3 className="font-title font-black text-2xl uppercase tracking-tighter text-[#000839] mb-8">
-                What's Included
-              </h3>
-              <ul className="space-y-5">
-                {includes.map((item, i) => (
-                  <motion.li
-                    key={item}
-                    initial={{ opacity: 0, x: 16 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.07, duration: 0.5 }}
-                    className="flex items-start gap-4"
-                  >
-                    <CheckCircle2 size={18} className="text-[#006d38] mt-0.5 shrink-0" />
-                    <span className="font-sans text-[#000839]/70 text-sm leading-relaxed">{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* Buy CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="space-y-5"
-            >
-              <a
-                href={TUKIIO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
-                className="group relative flex items-center justify-between w-full bg-[#000839] text-white px-8 py-6 rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,8,57,0.35)]"
-              >
-                {/* Hover fill */}
-                <motion.div
-                  className="absolute inset-0 bg-[#006d38]"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: hovered ? 1 : 0 }}
-                  transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-                  style={{ originX: 0 }}
-                />
-                <div className="relative z-10">
-                  <span className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/50 block mb-1">
-                    Buy Now
-                  </span>
-                  <span className="font-title font-black text-2xl uppercase tracking-tighter">
-                    Get Tickets
-                  </span>
+              {/* Bottom section */}
+              <div className="bg-white px-6 md:px-12 py-8 flex flex-col items-center">
+                <div className="w-full mb-6">
+                  <div className="h-16 w-full flex gap-1 justify-between">
+                    {[...Array(30)].map((_, i) => (
+                      <div key={i} className="h-full bg-[#000839]" style={{ width: `${Math.random() * 4 + 2}px` }} />
+                    ))}
+                  </div>
                 </div>
-                <motion.div
-                  animate={{ x: hovered ? 4 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative z-10"
-                >
-                  <ArrowRight size={28} />
-                </motion.div>
-              </a>
+                <div className="flex items-end gap-2 text-[#000839]">
+                  <span className="font-typewriter text-[10px] uppercase tracking-widest opacity-40 pb-2">Tsh</span>
+                  <span className="font-title font-black text-5xl tracking-tighter">30,000</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
-              <p className="flex items-center gap-2 font-typewriter text-[10px] uppercase tracking-widest text-[#000839]/40">
-                <Zap size={12} className="text-[#006d38]" />
-                Powered by Tuki.io · Secure &amp; Instant
-              </p>
+          {/* OVERLAYS (Floating Content Sections) */}
+          <div className="absolute inset-0 pointer-events-none z-30">
+            {/* Section 1: Intro */}
+            <motion.div 
+              style={{ opacity: section1Opacity }}
+              className="absolute inset-0 flex flex-col items-center justify-start pt-[15vh]"
+            >
+              <h1 className="text-6xl md:text-[8vw] font-title font-black tracking-tighter uppercase text-[#000839] leading-[0.85] text-center drop-shadow-sm">
+                The Ultimate<br/><span className="italic font-editorial lowercase text-brand-secondary">Experience.</span>
+              </h1>
+              <p className="mt-6 font-typewriter text-xs uppercase tracking-[0.3em] text-[#000839]/50">Scroll to explore</p>
             </motion.div>
-          </div>
-        </div>
-      </section>
 
+            {/* Section 2: What's Included */}
+            <motion.div 
+              style={{ opacity: section2Opacity }}
+              className="absolute inset-0 flex flex-col md:flex-row items-center justify-between px-6 md:px-24"
+            >
+              <div className="w-full md:w-1/3 space-y-6 pt-[10vh] md:pt-0">
+                <h3 className="font-title font-black text-4xl uppercase tracking-tighter text-[#000839]">What's<br/>Included</h3>
+                <ul className="space-y-4">
+                  {INCLUDED_ITEMS.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary mt-2 shrink-0" />
+                      <span className="font-sans text-sm md:text-base font-medium text-[#000839]/80">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+
+            {/* Section 3: The Details */}
+            <motion.div 
+              style={{ opacity: section3Opacity }}
+              className="absolute inset-0 flex flex-col md:flex-row items-center justify-end px-6 md:px-24 text-white"
+            >
+              <div className="w-full md:w-1/3 space-y-8 pb-[10vh] md:pb-0 text-right md:text-left">
+                <h3 className="font-title font-black text-4xl uppercase tracking-tighter drop-shadow-md">Event Details</h3>
+                <div className="space-y-6 bg-white/5 p-6 rounded-2xl backdrop-blur-md border border-white/10">
+                  <div className="flex flex-col md:flex-row items-end md:items-start gap-4">
+                    <Calendar className="w-8 h-8 text-brand-secondary shrink-0" />
+                    <div>
+                      <h4 className="font-typewriter text-[10px] uppercase tracking-widest text-white/50">When</h4>
+                      <p className="font-sans text-lg">Saturday, March 2026</p>
+                      <p className="font-sans text-sm text-white/70">9:30 AM – 5:00 PM</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col md:flex-row items-end md:items-start gap-4">
+                    <MapPin className="w-8 h-8 text-brand-secondary shrink-0" />
+                    <div>
+                      <h4 className="font-typewriter text-[10px] uppercase tracking-widest text-white/50">Where</h4>
+                      <p className="font-sans text-lg">Al Muntazir Nursery</p>
+                      <p className="font-sans text-sm text-white/70">UN Road, Upanga</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Section 4: Final CTA */}
+            <motion.div 
+              style={{ opacity: section4Opacity }}
+              className="absolute inset-0 flex flex-col items-center justify-end pb-[15vh] text-white pointer-events-none"
+            >
+              <h2 className="text-4xl md:text-6xl font-title font-black tracking-tighter uppercase mb-8 text-center drop-shadow-lg">
+                Time is ticking.
+              </h2>
+              <div className="pointer-events-auto">
+                <a 
+                  href={TICKETS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-10 py-5 bg-white text-[#000839] rounded-full font-typewriter text-xs uppercase tracking-[0.2em] hover:bg-brand-secondary hover:text-white transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+                >
+                  Purchase Ticket
+                </a>
+              </div>
+            </motion.div>
+
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

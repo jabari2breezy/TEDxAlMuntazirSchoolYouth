@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Ticket, MapPin, Lightbulb } from 'lucide-react';
 import ScrollHint from '../components/ScrollHint';
+import MaskReveal from '../components/MaskReveal';
 
 const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
@@ -100,22 +101,28 @@ export default function FAQ() {
       className="min-h-screen bg-white"
     >
       <div className="px-6 md:px-16 max-w-screen-2xl mx-auto pt-40 pb-32">
-        <header className="mb-32 relative pb-20">
+        <header className="mb-32 relative pb-20 border-b border-brand-outline/30 flex flex-col items-center text-center">
           <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="flex flex-col gap-4"
+            initial={{ scale: 0.9, y: 100, opacity: 0, filter: 'blur(10px)' }}
+            animate={{ scale: 1, y: 0, opacity: 1, filter: 'blur(0px)' }}
+            transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+            className="flex flex-col gap-4 overflow-hidden items-center"
           >
-            <span className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase">Information Center</span>
-            <h1 className="text-7xl md:text-[8vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-brand-primary">
-              The <br /><span className="italic font-editorial lowercase text-brand-secondary">Essentials.</span>
-            </h1>
+            <MaskReveal delay={0.1}>
+              <span className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase">Information Center</span>
+            </MaskReveal>
+            <MaskReveal delay={0.2}>
+              <h1 className="text-7xl md:text-[8vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-brand-primary flex flex-col items-center">
+                <span>The</span>
+                <span className="italic font-editorial lowercase text-brand-secondary">Essentials.</span>
+              </h1>
+            </MaskReveal>
           </motion.div>
           <ScrollHint
             show={showScrollHint}
             target="#faq-content"
             label="Scroll for answers"
-            className="bottom-0 md:-bottom-12"
+            className="-bottom-16"
           />
         </header>
 
