@@ -20,26 +20,31 @@ export default function Tickets() {
     offset: ["start start", "end end"]
   });
 
-  // Ticket 3D Transforms
-  const ticketRotateX = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [15, 0, -10, 5, 0]);
-  const ticketRotateY = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [-15, 0, 15, -5, 0]);
-  const ticketScale = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [0.8, 1, 0.9, 1.1, 1]);
-  const ticketY = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [50, 0, -20, 0, -40]);
+  // Ticket 3D Transforms (Stops at 0.5)
+  const ticketRotateX = useTransform(scrollYProgress, [0, 0.2, 0.5], [15, -10, 0]);
+  const ticketRotateY = useTransform(scrollYProgress, [0, 0.2, 0.5], [-15, 15, 0]);
+  const ticketScale = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [0.8, 1.1, 1, 1, 0.9]);
+  
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const targetX = isMobile ? 0 : -250;
+  const targetY = isMobile ? -150 : 0;
+  
+  const ticketX = useTransform(scrollYProgress, [0, 0.3, 0.5], [0, 0, targetX]);
+  const ticketY = useTransform(scrollYProgress, [0, 0.2, 0.5], [50, -20, targetY]);
 
   // Section Opacities
   const section1Opacity = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
-  const section2Opacity = useTransform(scrollYProgress, [0.2, 0.3, 0.45, 0.55], [0, 1, 1, 0]);
-  const section3Opacity = useTransform(scrollYProgress, [0.55, 0.65, 0.8, 0.9], [0, 1, 1, 0]);
-  const section4Opacity = useTransform(scrollYProgress, [0.85, 0.95, 1], [0, 1, 1]);
+  const section2Opacity = useTransform(scrollYProgress, [0.4, 0.5, 0.7, 0.8], [0, 1, 1, 0]);
+  const section4Opacity = useTransform(scrollYProgress, [0.8, 0.9, 1], [0, 1, 1]);
 
   // Background Colors
   const bgColor = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.6, 1],
-    ['#f3f3f4', '#e2e2e4', '#050507', '#000839']
+    [0, 0.4, 0.8, 1],
+    ['#f3f3f4', '#050507', '#050507', '#000839']
   );
 
-  const section2TextColor = useTransform(scrollYProgress, [0.2, 0.5], ['#000839', '#ffffff']);
+  const section2TextColor = '#ffffff';
 
   return (
     <div className="bg-brand-background">
@@ -56,6 +61,7 @@ export default function Tickets() {
           {/* The Main Ticket Product (Center Stage) */}
           <motion.div
             style={{
+              x: ticketX,
               rotateX: ticketRotateX,
               rotateY: ticketRotateY,
               scale: ticketScale,
@@ -125,9 +131,9 @@ export default function Tickets() {
             {/* Section 2: What's Included */}
             <motion.div 
               style={{ opacity: section2Opacity, color: section2TextColor }}
-              className="absolute inset-0 flex flex-col md:flex-row items-center justify-between px-6 md:px-24"
+              className="absolute inset-0 flex flex-col md:flex-row items-center justify-end px-6 md:px-24"
             >
-              <div className="w-full md:w-1/3 space-y-6 pt-[10vh] md:pt-0">
+              <div className="w-full md:w-[45%] lg:w-[40%] space-y-6 pt-[50vh] md:pt-0">
                 <h3 className="font-title font-black text-4xl uppercase tracking-tighter">What's<br/>Included</h3>
                 <ul className="space-y-4">
                   {INCLUDED_ITEMS.map((item, i) => (
@@ -140,33 +146,7 @@ export default function Tickets() {
               </div>
             </motion.div>
 
-            {/* Section 3: The Details */}
-            <motion.div 
-              style={{ opacity: section3Opacity }}
-              className="absolute inset-0 flex flex-col md:flex-row items-center justify-end px-6 md:px-24 text-white"
-            >
-              <div className="w-full md:w-1/3 space-y-8 pb-[10vh] md:pb-0 text-right md:text-left">
-                <h3 className="font-title font-black text-4xl uppercase tracking-tighter drop-shadow-md">Event Details</h3>
-                <div className="space-y-6 bg-white/5 p-6 rounded-2xl backdrop-blur-md border border-white/10">
-                  <div className="flex flex-col md:flex-row items-end md:items-start gap-4">
-                    <Calendar className="w-8 h-8 text-brand-secondary shrink-0" />
-                    <div>
-                      <h4 className="font-typewriter text-[10px] uppercase tracking-widest text-white/50">When</h4>
-                      <p className="font-sans text-lg">Saturday, March 2026</p>
-                      <p className="font-sans text-sm text-white/70">9:30 AM – 5:00 PM</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col md:flex-row items-end md:items-start gap-4">
-                    <MapPin className="w-8 h-8 text-brand-secondary shrink-0" />
-                    <div>
-                      <h4 className="font-typewriter text-[10px] uppercase tracking-widest text-white/50">Where</h4>
-                      <p className="font-sans text-lg">Al Muntazir Nursery</p>
-                      <p className="font-sans text-sm text-white/70">UN Road, Upanga</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            {/* Event Details removed entirely */}
 
             {/* Section 4: Final CTA */}
             <motion.div 
