@@ -87,7 +87,7 @@ export default function Theme() {
           target="#theme-content"
           label="Scroll to explore"
           className="text-[#000839]"
-          placementClassName="top-[26vh] md:top-[24vh]"
+          placementClassName="bottom-8 md:bottom-12"
         />
       </section>
 

@@ -71,16 +71,20 @@ function SpeakerRow({ speaker, i, onOpen }: { speaker: Speaker; i: number; onOpe
       <div className="md:col-span-10 relative z-10">
         <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-12">
           <div className="flex items-center justify-between md:block">
-            <h3 className="text-3xl md:text-6xl font-title font-black tracking-tighter text-brand-primary uppercase flex overflow-hidden">
-              {speaker.name.split('').map((char, index) => (
-                <motion.span
-                  key={index}
-                  className="inline-block"
-                  animate={{ y: isHovered ? [0, -40, 40, 0] : 0, opacity: isHovered ? [1, 0, 0, 1] : 1 }}
-                  transition={{ duration: 0.6, delay: index * 0.02, ease: "easeInOut" }}
-                >
-                  {char === ' ' ? '\u00A0' : char}
-                </motion.span>
+            <h3 className="text-3xl md:text-6xl font-title font-black tracking-tighter text-brand-primary uppercase flex flex-wrap gap-x-3 md:gap-x-4 overflow-hidden">
+              {speaker.name.split(' ').map((word, wordIndex) => (
+                <div key={wordIndex} className="flex">
+                  {word.split('').map((char, index) => (
+                    <motion.span
+                      key={`${wordIndex}-${index}`}
+                      className="inline-block"
+                      animate={{ y: isHovered ? [0, -40, 40, 0] : 0, opacity: isHovered ? [1, 0, 0, 1] : 1 }}
+                      transition={{ duration: 0.6, delay: (wordIndex * 5 + index) * 0.02, ease: "easeInOut" }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </div>
               ))}
             </h3>
             <span className="md:hidden font-typewriter text-[10px] text-brand-primary/20">0{i + 1}</span>

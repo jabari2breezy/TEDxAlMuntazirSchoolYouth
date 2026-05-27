@@ -32,15 +32,23 @@ export default function About() {
       className="pt-40"
     >
       <div className="px-6 md:px-16 max-w-screen-2xl mx-auto">
-        <header className="mb-32">
+        <header className="mb-32 flex flex-col items-center text-center mt-12 md:mt-24 overflow-hidden">
           <motion.div
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={transition}
+            initial={{ scale: 0.9, y: 100, opacity: 0, filter: 'blur(10px)' }}
+            animate={{ scale: 1, y: 0, opacity: 1, filter: 'blur(0px)' }}
+            transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
           >
-            <div className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase mb-12">Registry / Info</div>
-            <h1 className="text-[10vw] font-title font-black tracking-tighter leading-[0.75] uppercase text-brand-primary">
-              What it's <br /><span className="italic font-editorial lowercase -ml-6 text-brand-secondary">all about.</span>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 1 }}
+              className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase mb-8"
+            >
+              Registry / Info
+            </motion.div>
+            <h1 className="text-[16vw] md:text-[14vw] font-title font-black tracking-tighter leading-[0.8] uppercase text-brand-primary flex flex-col items-center">
+              <span>What it's</span>
+              <span className="italic font-editorial lowercase text-brand-secondary">all about.</span>
             </h1>
           </motion.div>
         </header>
@@ -161,10 +169,9 @@ export default function About() {
               { 
                 category: 'Production', 
                 members: [
-                  { name: 'Abbas Dharsee', year: '13', lead: true, title: 'Team Lead' },
+                  { name: 'Muhammed Omar', year: '12', lead: true, title: 'Team Lead' },
                   { name: 'Husseinali Sharif', year: '12' },
                   { name: 'Nayah Gangi', year: '12' },
-                  { name: 'Muhammed Omar', year: '12' },
                   { name: 'Dhara Gajjar', year: '11' },
                   { name: 'Mohammed Datoo', year: '12' }
                 ] 
@@ -172,11 +179,9 @@ export default function About() {
               { 
                 category: 'Marketing', 
                 members: [
-                  { name: 'Malka Khalid', year: '10' },
-                  { name: 'Kazim sherzaman', year: '12' },
-                  { name: 'Raudha Fahmi', year: '12' },
                   { name: 'Mehreen Akthar', year: '12', lead: true, title: 'Team Lead' },
-                  { name: 'Sarah sumar', year: '12' }
+                  { name: 'Malka Khalid', year: '10' },
+                  { name: 'Kazim sherzaman', year: '12' }
                 ] 
               },
               { 
@@ -193,10 +198,8 @@ export default function About() {
               { 
                 category: 'Finance', 
                 members: [
-                  { name: 'Fadhlun Albeity', year: '10' },
-                  { name: 'Amaan Sheriff', year: '12' },
-                  { name: 'Ali Jawad Nanji', year: '12' },
                   { name: 'Falak Mawji', year: '12', lead: true, title: 'Team Lead' },
+                  { name: 'Amaan Sheriff', year: '12' },
                   { name: 'Mohammad raza muraj', year: '11' }
                 ] 
               }

@@ -115,7 +115,7 @@ export default function FAQ() {
             show={showScrollHint}
             target="#faq-content"
             label="Scroll for answers"
-            className="!bottom-0"
+            className="bottom-0 md:-bottom-12"
           />
         </header>
 

@@ -4,6 +4,8 @@ import { SOCIALS, TICKETS_URL } from '../constants';
 import Logo from './Logo';
 
 export default function Footer() {
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
   return (
     <footer className="px-6 md:px-16 py-32 border-t border-brand-outline relative overflow-hidden bg-brand-surface/40 backdrop-blur-md">
       <div className="absolute inset-0 liquid-bg opacity-5 -z-10" />
@@ -11,9 +13,11 @@ export default function Footer() {
       <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-start gap-20 relative z-10">
         <div className="flex-1 space-y-12">
           <div className="flex flex-col gap-6">
-            <Logo variant="tedx" theme="dark" className="scale-90 md:scale-110 origin-left" />
+            <Link to="/" className="inline-block" onClick={scrollToTop}>
+              <Logo variant="tedx" theme="light" className="scale-90 md:scale-110 origin-left invert hue-rotate-180" />
+            </Link>
             <div className="w-16 h-[1px] bg-brand-primary/10" />
-            <Logo variant="school" theme="dark" className="scale-100 origin-left opacity-50 hover:opacity-100 transition-opacity" />
+            <Logo variant="school" theme="light" className="scale-100 origin-left opacity-60 hover:opacity-100 transition-opacity" />
           </div>
           <p className="font-editorial text-4xl md:text-5xl leading-tight max-w-lg italic text-brand-primary">
             "Ideas are the <span className="text-brand-secondary font-title not-italic uppercase">legacy</span> that survives the curated time."
