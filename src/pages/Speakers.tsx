@@ -71,10 +71,7 @@ function SpeakerRow({ speaker, i, onOpen }: { speaker: Speaker; i: number; onOpe
       <div className="md:col-span-10 relative z-10">
         <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-12">
           <div className="flex items-center justify-between md:block">
-            <h3 
-              className="text-3xl md:text-6xl font-title font-black tracking-tighter text-white uppercase flex flex-wrap gap-x-3 md:gap-x-4 overflow-hidden"
-              style={{ textShadow: '0 0 10px rgba(0,109,56,0.6), 0 0 20px rgba(0,109,56,0.4)' }}
-            >
+            <h3 className="text-3xl md:text-6xl font-title font-black tracking-tighter text-brand-primary uppercase flex flex-wrap gap-x-3 md:gap-x-4 overflow-hidden">
               {speaker.name.split(' ').map((word, wordIndex) => (
                 <div key={wordIndex} className="flex">
                   {word.split('').map((char, index) => (

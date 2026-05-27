@@ -122,7 +122,7 @@ export default function FAQ() {
             show={showScrollHint}
             target="#faq-content"
             label="Scroll for answers"
-            className="-bottom-16"
+            className="md:translate-x-[25vw] translate-x-[20vw] top-[60%] -translate-y-1/2"
           />
         </header>
 

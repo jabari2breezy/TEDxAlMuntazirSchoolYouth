@@ -25,15 +25,15 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         }
       });
 
-      // 1. Counter animation
-      tl.to(".loading-counter", {
-        innerHTML: 100,
+      // 1. Counter animation (Mobile safe object animation)
+      const count = { val: 0 };
+      tl.to(count, {
+        val: 100,
         duration: 2.5,
         ease: "power3.inOut",
-        snap: { innerHTML: 1 },
         onUpdate: function() {
-          const targets = this.targets();
-          if (targets[0]) targets[0].innerHTML = Math.round(targets[0].innerHTML).toString().padStart(3, '0');
+          const el = document.querySelector('.loading-counter');
+          if (el) el.innerHTML = Math.round(count.val).toString().padStart(3, '0');
         }
       })
       // Fade out the counter and the lines
@@ -97,10 +97,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
         
         <div className="relative z-10 w-full max-w-screen-2xl mx-auto flex flex-col items-center justify-center text-center">
-          <h1 className="hero-text-anim text-[16vw] md:text-[12vw] font-title font-black uppercase text-white leading-[0.85] tracking-tighter mix-blend-screen">
+          <h1 className="hero-text-anim text-[16vw] md:text-[12vw] font-title font-black uppercase text-white leading-[0.85] tracking-tighter">
             BORROWED
           </h1>
-          <h1 className="hero-text-anim text-[16vw] md:text-[12vw] font-title font-black uppercase text-[#e62b1e] leading-[0.85] tracking-tighter mix-blend-screen -mt-2 md:-mt-6">
+          <h1 className="hero-text-anim text-[16vw] md:text-[12vw] font-title font-black uppercase text-[#e62b1e] leading-[0.85] tracking-tighter -mt-2 md:-mt-6">
             TIME
           </h1>
         </div>

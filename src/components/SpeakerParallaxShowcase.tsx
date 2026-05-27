@@ -9,15 +9,11 @@ interface SpeakerParallaxShowcaseProps {
 }
 
 const glowGreen = {
-  color: '#a7f3c9',
+  color: '#ffffff',
   textShadow: [
-    '0 0 8px rgba(167, 243, 201, 1)',
-    '0 0 22px rgba(74, 222, 128, 0.95)',
-    '0 0 48px rgba(34, 197, 94, 0.75)',
-    '0 0 80px rgba(16, 185, 129, 0.45)',
-    '0 2px 0 rgba(6, 95, 70, 0.9)',
-    '0 6px 0 rgba(4, 78, 58, 0.75)',
-    '0 12px 24px rgba(0, 8, 57, 0.35)',
+    '0 0 10px rgba(0, 109, 56, 0.4)',
+    '0 0 20px rgba(0, 109, 56, 0.3)',
+    '0 0 30px rgba(0, 109, 56, 0.2)'
   ].join(', '),
 };
 
