@@ -1,345 +1,293 @@
-import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'motion/react';
-import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star } from 'lucide-react';
+import React from 'react';
+import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
+import MaskReveal from '../components/MaskReveal';
+import { Lock, MapPin, Calendar, Clock } from 'lucide-react';
+import { TUKIIO_CHECKOUT_URL } from '../constants';
 
-const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
+const ease = [0.25, 1, 0.5, 1] as const;
 
-function GlisteningStars({ count = 80, scrollProgress }: { count?: number; scrollProgress?: any }) {
-  const stars = useMemo(() =>
-    Array.from({ length: count }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 1.5 + 0.5,
-      delay: Math.random() * 5,
-      duration: Math.random() * 3 + 2,
-      parallaxSpeed: (Math.random() * 0.6 + 0.2),
-    })),
-    [count]
-  );
-
+function BuyStatus() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {stars.map(s => (
-        <StarDot key={s.id} s={s} scrollProgress={scrollProgress} />
-      ))}
+    <span className="font-typewriter text-[9px] tracking-[0.5em] text-brand-secondary">
+      BUY VIA TUKIIO
+    </span>
+  );
+}
+
+function TicketStub() {
+  return (
+    <div className="relative w-full max-w-lg mx-auto">
+      <div
+        className="relative overflow-hidden rounded-[2.25rem] border border-brand-outline/20 bg-gradient-to-br from-white via-white to-brand-secondary/10 shadow-[0_30px_120px_rgba(0,0,0,0.08)]"
+      >
+        <div className="absolute inset-0 pointer-events-none opacity-60">
+          <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-brand-secondary/15 blur-3xl" />
+          <div className="absolute -bottom-24 -left-20 w-80 h-80 rounded-full bg-brand-primary/10 blur-3xl" />
+        </div>
+
+        <div className="relative p-8 md:p-10 space-y-8">
+          <div className="flex justify-between items-start gap-4">
+            <div>
+              <span className="font-typewriter text-[8px] uppercase tracking-[0.45em] text-brand-primary/45 block mb-2">
+                Admission Class
+              </span>
+              <h3 className="font-title text-3xl md:text-4xl font-black uppercase text-brand-primary tracking-tighter">
+                General
+              </h3>
+            </div>
+            <div className="text-right">
+              <span className="font-typewriter text-[8px] uppercase tracking-[0.35em] text-brand-primary/45 block mb-1">
+                Rate
+              </span>
+              <p className="font-title text-2xl font-black text-brand-secondary">TZS 30K</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 text-brand-primary/70">
+            {[
+              { icon: Calendar, label: 'Date', value: '14 JUN 2026' },
+              { icon: MapPin, label: 'Venue', value: 'NURSERY CAMPUS' },
+              { icon: Clock, label: 'Doors', value: '09:30 AM' },
+              { icon: Lock, label: 'Status', value: 'BUY ONLINE' },
+            ].map(({ icon: Icon, label, value }) => (
+              <div key={label} className="space-y-1 border-l border-brand-outline/20 pl-4">
+                <Icon size={14} className="text-brand-secondary/80 mb-1" strokeWidth={1.5} />
+                <span className="font-typewriter text-[7px] uppercase tracking-[0.35em] text-brand-primary/35 block">
+                  {label}
+                </span>
+                <span className="font-sans text-xs font-bold uppercase tracking-wide text-brand-primary/90">
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <ul className="space-y-2 border-t border-dashed border-brand-outline/15 pt-6">
+            {[
+              'Full day — all sessions',
+              'Networking lunch',
+              'Attendee gift bag',
+              'Digital certificate',
+            ].map((perk) => (
+              <li
+                key={perk}
+                className="font-typewriter text-[9px] uppercase tracking-[0.25em] text-brand-primary/50 flex items-center gap-3"
+              >
+                <span className="w-1 h-1 rounded-full bg-brand-secondary" />
+                {perk}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Perforation */}
+        <div className="relative h-6 bg-brand-primary/5">
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-dashed border-brand-primary/10" />
+          {Array.from({ length: 24 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-brand-primary/20"
+              style={{ left: `${(i / 23) * 100}%`, transform: 'translate(-50%, -50%)' }}
+            />
+          ))}
+        </div>
+
+        <div className="p-8 md:p-10 bg-gradient-to-r from-brand-primary/5 via-white to-brand-secondary/10 flex flex-col items-center gap-6 text-center">
+          <BuyStatus />
+          <a
+            href={TUKIIO_CHECKOUT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-5 rounded-full bg-brand-secondary text-white font-typewriter text-[10px] uppercase tracking-[0.45em] flex items-center justify-center gap-3 hover:brightness-110 transition-all active:scale-[0.99] shadow-[0_18px_60px_rgba(0,109,56,0.18)]"
+          >
+            Buy Tickets on Tukiio
+          </a>
+          <p className="font-typewriter text-[8px] uppercase tracking-[0.4em] text-brand-primary/35">
+            Students only · Valid ID required at door
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
-
-function StarDot({ s, scrollProgress }: { s: any; scrollProgress?: any }) {
-  const parallaxY = scrollProgress
-    ? useTransform(scrollProgress, [0, 1], [s.parallaxSpeed * 50, -s.parallaxSpeed * 50])
-    : undefined;
-
-  return (
-    <motion.div
-      className="absolute rounded-full bg-white"
-      style={{
-        left: `${s.x}%`,
-        top: `${s.y}%`,
-        width: s.size,
-        height: s.size,
-        opacity: 0,
-        boxShadow: `0 0 ${s.size * 2}px ${s.size}px rgba(255,255,255,0.15)`,
-        y: parallaxY,
-        animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
-      }}
-    />
-  );
-}
-
-const INCLUDED_ITEMS = [
-  { text: 'Full access to all live speaker sessions', icon: Zap },
-  { text: 'Interactive workshop zones', icon: Star },
-  { text: 'Premium networking breaks', icon: ShieldCheck },
-  { text: 'Official TEDxAlmuntazir merch', icon: Zap },
-  { text: 'Curated lunch & refreshments', icon: Star }
-];
 
 export default function Tickets() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  // Ticket 3D Transforms
-  const rotateY = useTransform(scrollYProgress, 
-    [0, 0.2, 0.3, 0.8, 0.9, 1], 
-    [0, 360, 345, 345, 360, 360]
-  );
-  
-  const rotateX = useTransform(scrollYProgress,
-    [0, 0.2, 0.3, 0.8, 0.9, 1],
-    [0, 0, 10, 10, 0, 0]
-  );
-
-  // Desktop: ticket shifts right, details appear left
-  const xMovementDesktop = useTransform(scrollYProgress,
-    [0, 0.2, 0.3, 0.8, 0.9, 1],
-    [0, 0, 240, 240, 0, 0]
-  );
-  
-  // Mobile: ticket slides DOWN so details can appear ABOVE
-  const yMovementMobile = useTransform(scrollYProgress,
-    [0, 0.2, 0.3, 0.8, 0.9, 1],
-    ['0%', '0%', '55%', '55%', '0%', '0%']
-  );
-
-  const ticketX = isMobile ? 0 : xMovementDesktop;
-  const ticketY = isMobile ? yMovementMobile : 0;
-
-  const ticketScale = useTransform(scrollYProgress,
-    [0, 0.2, 0.3, 0.8, 0.9, 1],
-    [1, 1, 0.75, 0.75, 1.15, 1.15]
-  );
-
-  // Details content opacity - Phase 2
-  const centerContentOpacity = useTransform(scrollYProgress,
-    [0.25, 0.35, 0.75, 0.85],
-    [0, 1, 1, 0]
-  );
-  
-  // Desktop: details slide in from left
-  // Mobile: details appear from the TOP of the screen (above the ticket)
-  const detailsYDesktop = useTransform(scrollYProgress,
-    [0.25, 0.35, 0.75, 0.85],
-    [50, 0, 0, -50]
-  );
-  const detailsYMobile = useTransform(scrollYProgress,
-    [0.25, 0.35, 0.75, 0.85],
-    [-40, 0, 0, -40]
-  );
-
-  // Scroll indicator
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
-
-  // Phase 3 text swap
-  const [isPhase3, setIsPhase3] = useState(false);
-  useEffect(() => {
-    const unsub = scrollYProgress.on("change", (v) => {
-      setIsPhase3(v >= 0.88);
-    });
-    return () => unsub();
-  }, [scrollYProgress]);
-
   return (
-    <div className="bg-[#050507] text-white">
-      {/* Noise overlay */}
-      <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
-      
-      {/* 400vh scroll container for the 3 phases */}
-      <div ref={containerRef} className="h-[400vh] relative">
-        <div 
-          className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
-          style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
-        >
-          
-          {/* Fixed dark background — ensures no white flash on mobile */}
-          <div className="absolute inset-0 bg-[#050507] z-0" />
+    <div className="min-h-screen bg-white text-brand-primary overflow-hidden">
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 10%, rgba(0,109,56,0.12) 0%, transparent 45%),
+            radial-gradient(circle at 85% 30%, rgba(0,8,57,0.12) 0%, transparent 50%),
+            radial-gradient(circle at 55% 80%, rgba(0,109,56,0.06) 0%, transparent 55%)
+          `,
+        }}
+      />
 
-          {/* Ambient glow blobs — dark-only, works on all devices */}
-          <div className="absolute inset-0 z-0 pointer-events-none">
-            <div className="absolute top-0 left-0 w-[60vw] h-[60vh] rounded-full opacity-10"
-              style={{ background: 'radial-gradient(circle, rgba(0,109,56,0.4) 0%, transparent 70%)', transform: 'translate(-30%, -30%)' }} />
-            <div className="absolute bottom-0 right-0 w-[50vw] h-[50vh] rounded-full opacity-10"
-              style={{ background: 'radial-gradient(circle, rgba(0,8,57,0.5) 0%, transparent 70%)', transform: 'translate(30%, 30%)' }} />
+      {/* Hero */}
+      <section className="relative z-10 pt-28 md:pt-36 pb-16 px-6 md:px-16 max-w-screen-2xl mx-auto">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-12 mb-20">
+          <div className="max-w-4xl">
+            <MaskReveal>
+              <span className="font-typewriter text-[10px] uppercase tracking-[1em] text-brand-secondary block mb-6">
+                Access Protocol / 07
+              </span>
+            </MaskReveal>
+            <MaskReveal delay={0.08}>
+              <h1 className="text-[14vw] md:text-[9vw] font-title font-black uppercase leading-[0.78] tracking-tighter">
+                <span className="inline-block">Secure</span>
+                <br />
+                <span className="text-brand-secondary italic font-editorial lowercase text-[12vw] md:text-[7vw] -ml-2">
+                  your seat.
+                </span>
+              </h1>
+            </MaskReveal>
           </div>
 
-          <GlisteningStars count={80} scrollProgress={scrollYProgress} />
-
-          {/* Scroll Indicator */}
-          <motion.div 
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 pointer-events-none"
-            style={{ opacity: scrollIndicatorOpacity }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.9, ease }}
+            className="lg:max-w-xs space-y-4"
           >
-            <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/50">Scroll to Explore</span>
-            <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
+            <p className="font-editorial text-2xl md:text-3xl text-brand-primary/55 italic leading-snug">
+              Secure your seat via Tukiio — fast checkout, instant confirmation, QR verification at the door.
+            </p>
+            <div className="h-px bg-brand-secondary origin-left w-full" />
           </motion.div>
-
-          {/* ──── MOBILE LAYOUT ──── */}
-          {isMobile && (
-            <>
-              {/* Details panel — top portion of screen on mobile */}
-              <motion.div 
-                style={{ opacity: centerContentOpacity, y: detailsYMobile }}
-                className="absolute z-10 top-[5vh] left-0 right-0 px-5 pointer-events-auto"
-              >
-                <div className="space-y-3">
-                  <div>
-                    <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-brand-secondary">The Inclusion</span>
-                    <h3 className="text-3xl font-title font-black uppercase tracking-tighter leading-none mt-1">Event Details</h3>
-                    <p className="font-editorial text-base italic text-white/60 mt-1">June 14, 2026. Al Muntazir Nursery Campus.</p>
-                  </div>
-                  <div className="space-y-2 bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-md">
-                    {INCLUDED_ITEMS.map((item, i) => (
-                      <div key={i} className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-md bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                          <item.icon size={11} className="text-brand-secondary" />
-                        </div>
-                        <span className="font-sans text-xs text-white/80">{item.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* 3D Ticket — center/bottom on mobile */}
-              <motion.div
-                style={{
-                  rotateX,
-                  rotateY,
-                  scale: ticketScale,
-                  y: ticketY,
-                  transformStyle: "preserve-3d"
-                }}
-                className="absolute z-20 w-full max-w-[280px] bottom-[8vh] pointer-events-auto group cursor-pointer"
-                onClick={() => { if (isPhase3) window.open('https://tukiio.com/event/tedxalmuntazirschoolsyouth', '_blank'); }}
-              >
-                <TicketCard isPhase3={isPhase3} />
-              </motion.div>
-            </>
-          )}
-
-          {/* ──── DESKTOP LAYOUT ──── */}
-          {!isMobile && (
-            <>
-              {/* Details panel — left side on desktop */}
-              <motion.div 
-                style={{ opacity: centerContentOpacity, y: detailsYDesktop }}
-                className="absolute z-10 w-full max-w-xl px-6 left-[8vw] pointer-events-auto"
-              >
-                <div className="space-y-8">
-                  <div className="space-y-2">
-                    <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-brand-secondary">The Inclusion</span>
-                    <h3 className="text-6xl font-title font-black uppercase tracking-tighter leading-none">Event Details</h3>
-                    <p className="font-editorial text-xl italic text-white/60">June 14, 2026. Al Muntazir Nursery Campus.</p>
-                  </div>
-                  <div className="space-y-4 bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-md">
-                    {INCLUDED_ITEMS.map((item, i) => (
-                      <div key={i} className="flex items-center gap-4 group">
-                        <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                          <item.icon size={14} className="text-brand-secondary" />
-                        </div>
-                        <span className="font-sans text-base text-white/80">{item.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="space-y-2">
-                    <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-brand-secondary">Instructions</span>
-                    <p className="text-sm text-white/60 leading-relaxed font-typewriter">
-                      Proceeding to checkout will redirect you to the Tukiio portal. Please have your M-Pesa or card details ready.
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* 3D Ticket — center/right on desktop */}
-              <motion.div
-                style={{
-                  rotateX,
-                  rotateY,
-                  scale: ticketScale,
-                  x: ticketX,
-                  transformStyle: "preserve-3d"
-                }}
-                className="relative z-20 w-full max-w-[400px] pointer-events-auto group cursor-pointer"
-                onClick={() => { if (isPhase3) window.open('https://tukiio.com/event/tedxalmuntazirschoolsyouth', '_blank'); }}
-              >
-                <TicketCard isPhase3={isPhase3} />
-              </motion.div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
-  return (
-    <div className={`relative rounded-[2.5rem] overflow-hidden bg-[#f7f4ee] shadow-[0_50px_100px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-500 ${isPhase3 ? 'ring-4 ring-brand-secondary ring-offset-4 ring-offset-[#050507]' : ''}`}>
-      
-      {/* Ticket Top */}
-      <div className="bg-[#000839] px-8 md:px-14 pt-10 md:pt-16 pb-12 md:pb-14 relative overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0"
-          animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-        />
-        
-        <div className="flex justify-between items-start relative z-10">
-          <div className="flex-1">
-            <span className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/30 block mb-3">
-              TEDxAlMuntazir
-            </span>
-            <h2 className="font-title font-black text-4xl md:text-6xl uppercase text-white tracking-tighter leading-[0.8]">
-              Borrowed<br/><span className="text-brand-secondary">Time</span>
-            </h2>
-          </div>
         </div>
 
-        <div className="mt-6 md:mt-8 grid grid-cols-2 gap-4 relative z-10">
-          <div>
-            <span className="font-typewriter text-[8px] uppercase tracking-widest text-white/20 block mb-1">Access</span>
-            <p className="font-title font-bold text-white text-sm md:text-base uppercase">Full Event</p>
+        {/* Main layout */}
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <div className="lg:col-span-7">
+            <TicketStub />
           </div>
-          <div>
-            <span className="font-typewriter text-[8px] uppercase tracking-widest text-white/20 block mb-1">Date</span>
-            <p className="font-title font-bold text-white text-sm md:text-base uppercase">14.06.26</p>
-          </div>
-        </div>
-      </div>
 
-      {/* Perforated Divider */}
-      <div className="bg-[#000839] relative h-8 flex items-center">
-        <div className="absolute left-0 w-8 h-16 bg-[#050507] rounded-full -translate-x-1/2 z-10 shadow-inner" />
-        <div className="flex-1 mx-8 border-t-[3px] border-dashed border-white/10" />
-        <div className="absolute right-0 w-8 h-16 bg-[#050507] rounded-full translate-x-1/2 z-10 shadow-inner" />
-      </div>
-
-      {/* Ticket Bottom */}
-      <div className={`bg-[#f7f4ee] px-8 py-8 md:py-12 flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-500 ${isPhase3 ? 'bg-brand-secondary text-white' : 'text-[#000839]'}`}>
-        <AnimatePresence mode="wait">
-          {!isPhase3 ? (
-            <motion.div 
-              key="price"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="flex flex-col items-center gap-1"
+          <div className="lg:col-span-5 space-y-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-10%' }}
+              transition={{ duration: 0.8, ease }}
+              className="border border-brand-outline/25 rounded-[1.5rem] p-8 md:p-10 bg-white/80 backdrop-blur-sm"
             >
-              <span className="font-typewriter text-[10px] uppercase tracking-widest opacity-40">Admission Fee</span>
-              <div className="flex items-baseline gap-2">
-                <span className="font-typewriter text-xs uppercase opacity-40">Tsh</span>
-                <span className="font-title font-black text-4xl md:text-5xl tracking-tighter">30,000</span>
+              <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-brand-primary/40 block mb-6">
+                Tukiio Checkout
+              </span>
+              <p className="font-title text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-4">
+                Instant
+                <br />
+                <span className="text-brand-secondary">QR Pass</span>
+              </p>
+              <p className="font-sans text-sm text-brand-primary/60 leading-relaxed mb-8">
+                Checkout happens on Tukiio. You’ll receive your digital pass immediately for QR verification at the door.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {['Selcom', 'Airtel Money', 'HaloPesa', 'Mastercard'].map((method) => (
+                  <span
+                    key={method}
+                    className="px-4 py-2 rounded-full border border-brand-outline/40 font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/45 bg-white/50"
+                  >
+                    {method}
+                  </span>
+                ))}
               </div>
             </motion.div>
-          ) : (
-            <motion.div 
-              key="buy"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center gap-4 py-2"
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1, ease }}
+              className="grid grid-cols-2 gap-4"
             >
-              <span className="font-title font-black text-4xl md:text-5xl uppercase tracking-widest text-white">
-                BUY NOW
-              </span>
-              <ArrowUpRight size={36} className="text-white" />
+              {[
+                { label: 'Capacity', value: 'Limited' },
+                { label: 'Eligibility', value: 'Students' },
+                { label: 'Format', value: 'Digital QR' },
+                { label: 'Price', value: 'TZS 30K' },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="p-5 border-t border-brand-outline/15 overflow-hidden group hover:border-brand-secondary/50 transition-colors"
+                >
+                  <MaskReveal>
+                    <span className="font-typewriter text-[8px] uppercase tracking-[0.4em] text-brand-primary/35 block mb-2">
+                      {stat.label}
+                    </span>
+                    <span className="font-title text-xl font-black uppercase text-brand-primary group-hover:text-brand-secondary transition-colors">
+                      {stat.value}
+                    </span>
+                  </MaskReveal>
+                </div>
+              ))}
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="flex flex-col sm:flex-row gap-4 pt-4"
+            >
+              <Link
+                to="/agenda"
+                className="flex-1 text-center py-4 rounded-full border border-brand-outline/40 font-typewriter text-[9px] uppercase tracking-[0.35em] text-brand-primary/60 hover:border-brand-secondary hover:text-brand-secondary transition-all"
+              >
+                View Agenda
+              </Link>
+              <Link
+                to="/faq"
+                className="flex-1 text-center py-4 rounded-full bg-brand-secondary/20 border border-brand-secondary/40 font-typewriter text-[9px] uppercase tracking-[0.35em] text-brand-secondary hover:bg-brand-secondary hover:text-white transition-all"
+              >
+                Read FAQ
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Marquee strip */}
+      <section className="hidden md:block relative z-10 border-y border-brand-outline/25 py-6 overflow-hidden">
+        <div className="flex animate-marquee whitespace-nowrap gap-16 font-typewriter text-[9px] uppercase tracking-[0.6em] text-brand-primary/30">
+          {[...Array(4)].map((_, i) => (
+            <span key={i} className="flex gap-16 shrink-0 items-center">
+              <span>Tickets launching soon</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+              <span>Students only</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+              <span>June 14 2026</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+              <span>Borrowed time — don&apos;t wait</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* Bottom CTA band */}
+      <section className="relative z-10 py-32 px-6 md:px-16 text-center">
+        <MaskReveal>
+          <p className="font-editorial text-3xl md:text-5xl italic text-brand-primary/55 max-w-2xl mx-auto leading-tight mb-10">
+            &ldquo;The clock is already running. Your seat is being held in the queue.&rdquo;
+          </p>
+        </MaskReveal>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="inline-flex items-center gap-4 px-8 py-4 rounded-full border border-brand-outline/25 bg-white/70 backdrop-blur-sm"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-secondary opacity-60" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-secondary" />
+          </span>
+          <span className="font-typewriter text-[10px] uppercase tracking-[0.4em] text-brand-primary/55">
+            Sales activate shortly — check back
+          </span>
+        </motion.div>
+      </section>
     </div>
   );
 }

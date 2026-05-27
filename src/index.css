@@ -22,7 +22,8 @@
 
   @media (max-width: 767px) {
     html {
-      scroll-behavior: smooth;
+      /* Lenis handles smooth scrolling; native smooth can cause jank */
+      scroll-behavior: auto;
     }
   }
 
