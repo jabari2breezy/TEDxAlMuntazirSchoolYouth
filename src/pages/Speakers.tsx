@@ -71,7 +71,10 @@ function SpeakerRow({ speaker, i, onOpen }: { speaker: Speaker; i: number; onOpe
       <div className="md:col-span-10 relative z-10">
         <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-12">
           <div className="flex items-center justify-between md:block">
-            <h3 className="text-3xl md:text-6xl font-title font-black tracking-tighter text-brand-primary uppercase flex flex-wrap gap-x-3 md:gap-x-4 overflow-hidden">
+            <h3 
+              className="text-3xl md:text-6xl font-title font-black tracking-tighter text-white uppercase flex flex-wrap gap-x-3 md:gap-x-4 overflow-hidden"
+              style={{ textShadow: '0 0 10px rgba(0,109,56,0.6), 0 0 20px rgba(0,109,56,0.4)' }}
+            >
               {speaker.name.split(' ').map((word, wordIndex) => (
                 <div key={wordIndex} className="flex">
                   {word.split('').map((char, index) => (
@@ -134,12 +137,8 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
           <X size={20} className="md:w-6 md:h-6" />
         </button>
 
-        <div
-          ref={modalScrollRef}
-          className="flex-1 overflow-y-auto custom-scrollbar"
-          data-lenis-prevent
-        >
-          <div className="p-4 md:p-6 pt-14 md:pt-16" style={{ transform: "translateZ(40px)" }}>
+        <div className="flex-1 overflow-hidden flex flex-col">
+          <div className="p-4 md:p-6 pt-14 md:pt-16 shrink-0" style={{ transform: "translateZ(40px)" }}>
             <SpeakerParallaxShowcase
               name={speaker.name}
               topic={speaker.topic}
@@ -148,16 +147,16 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
             />
           </div>
 
-          <div className="p-6 md:p-12 pt-0 space-y-10 border-t border-brand-outline/15">
+          <div className="p-6 md:p-12 pt-0 space-y-6 md:space-y-8 border-t border-brand-outline/15 overflow-hidden flex-1 flex flex-col">
             <motion.section initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ transform: "translateZ(20px)" }}>
               <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-6">Topic Title</h4>
               <p className="font-editorial text-3xl italic text-brand-primary leading-tight">"{speaker.topic}"</p>
             </motion.section>
 
-            <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="relative group/bio" style={{ transform: "translateZ(10px)" }}>
-              <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-6">The Narrative</h4>
-              <div className="p-8 rounded-3xl bg-white/60 border border-brand-outline/15 backdrop-blur-md shadow-inner">
-                <div className="font-sans text-lg text-brand-primary/90 leading-relaxed max-w-2xl space-y-4">
+            <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="relative group/bio flex-1 min-h-0 flex flex-col" style={{ transform: "translateZ(10px)" }}>
+              <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-4 shrink-0">The Narrative</h4>
+              <div className="p-6 md:p-8 rounded-3xl bg-white/60 border border-brand-outline/15 backdrop-blur-md shadow-inner flex-1 overflow-y-auto custom-scrollbar">
+                <div className="font-sans text-sm md:text-lg text-brand-primary/90 leading-relaxed max-w-2xl space-y-4">
                   <p className="first-letter:text-5xl first-letter:font-editorial first-letter:float-left first-letter:mr-3 first-letter:leading-none first-letter:text-brand-secondary">
                     {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence, challenging us to rethink how we choose to spend the time we possess."}
                   </p>
@@ -192,6 +191,17 @@ export default function Speakers() {
       window.navigator.vibrate(10);
     }
   };
+
+  useEffect(() => {
+    if (selectedSpeaker) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedSpeaker]);
 
   useEffect(() => {
     fetch('/api/speakers')

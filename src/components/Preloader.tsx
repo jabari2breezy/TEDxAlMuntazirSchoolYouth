@@ -12,9 +12,14 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Lock scrolling
+    window.scrollTo(0, 0);
+    document.body.style.overflow = 'hidden';
+
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({
         onComplete: () => {
+          document.body.style.overflow = '';
           setIsMounted(false);
           onComplete();
         }

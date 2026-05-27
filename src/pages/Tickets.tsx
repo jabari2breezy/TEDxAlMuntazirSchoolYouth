@@ -39,6 +39,8 @@ export default function Tickets() {
     ['#f3f3f4', '#e2e2e4', '#050507', '#000839']
   );
 
+  const section2TextColor = useTransform(scrollYProgress, [0.2, 0.5], ['#000839', '#ffffff']);
+
   return (
     <div className="bg-brand-background">
       <div ref={containerRef} className="h-[400vh] relative">
@@ -99,16 +101,21 @@ export default function Tickets() {
 
               {/* Bottom section */}
               <div className="bg-white px-6 md:px-12 py-8 flex flex-col items-center">
-                <div className="w-full mb-6">
-                  <div className="h-16 w-full flex gap-1 justify-between">
-                    {[...Array(30)].map((_, i) => (
-                      <div key={i} className="h-full bg-[#000839]" style={{ width: `${Math.random() * 4 + 2}px` }} />
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-end gap-2 text-[#000839]">
+                <div className="flex items-end gap-2 text-[#000839] mb-6">
                   <span className="font-typewriter text-[10px] uppercase tracking-widest opacity-40 pb-2">Tsh</span>
                   <span className="font-title font-black text-5xl tracking-tighter">30,000</span>
+                </div>
+                
+                {/* Purchase Button inside the Ticket */}
+                <div className="w-full relative z-50">
+                  <a 
+                    href={TICKETS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center px-8 py-4 bg-[#000839] text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.2em] hover:bg-brand-secondary transition-all active:scale-95 shadow-md"
+                  >
+                    Purchase Now
+                  </a>
                 </div>
               </div>
             </div>
@@ -129,16 +136,16 @@ export default function Tickets() {
 
             {/* Section 2: What's Included */}
             <motion.div 
-              style={{ opacity: section2Opacity }}
+              style={{ opacity: section2Opacity, color: section2TextColor }}
               className="absolute inset-0 flex flex-col md:flex-row items-center justify-between px-6 md:px-24"
             >
               <div className="w-full md:w-1/3 space-y-6 pt-[10vh] md:pt-0">
-                <h3 className="font-title font-black text-4xl uppercase tracking-tighter text-[#000839]">What's<br/>Included</h3>
+                <h3 className="font-title font-black text-4xl uppercase tracking-tighter">What's<br/>Included</h3>
                 <ul className="space-y-4">
                   {INCLUDED_ITEMS.map((item, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary mt-2 shrink-0" />
-                      <span className="font-sans text-sm md:text-base font-medium text-[#000839]/80">{item}</span>
+                      <span className="font-sans text-sm md:text-base font-medium opacity-80">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -178,19 +185,12 @@ export default function Tickets() {
               style={{ opacity: section4Opacity }}
               className="absolute inset-0 flex flex-col items-center justify-end pb-[15vh] text-white pointer-events-none"
             >
-              <h2 className="text-4xl md:text-6xl font-title font-black tracking-tighter uppercase mb-8 text-center drop-shadow-lg">
+              <h2 className="text-4xl md:text-6xl font-title font-black tracking-tighter uppercase mb-4 text-center drop-shadow-lg">
                 Time is ticking.
               </h2>
-              <div className="pointer-events-auto">
-                <a 
-                  href={TICKETS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-10 py-5 bg-white text-[#000839] rounded-full font-typewriter text-xs uppercase tracking-[0.2em] hover:bg-brand-secondary hover:text-white transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
-                >
-                  Purchase Ticket
-                </a>
-              </div>
+              <p className="font-typewriter text-xs uppercase tracking-[0.3em] text-white/50 text-center">
+                Click the ticket to purchase
+              </p>
             </motion.div>
 
           </div>
