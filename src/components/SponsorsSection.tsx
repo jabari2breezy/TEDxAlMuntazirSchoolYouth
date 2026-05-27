@@ -22,7 +22,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
     maxWidth: 'max-w-[min(100%,520px)]',
     sponsors: [
       { src: '/sponsors/etg.png', alt: 'ETG' },
-      { src: '/sponsors/asas@2x.png', alt: 'ASAS' },
+      { src: '/sponsors/asas-hd.png', alt: 'ASAS' },
     ],
   },
   {

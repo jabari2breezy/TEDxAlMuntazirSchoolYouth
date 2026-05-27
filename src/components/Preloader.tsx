@@ -12,14 +12,23 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Lock scrolling
+    // Hard lock scroll immediately — covers iOS Safari bounce + Lenis
     window.scrollTo(0, 0);
+    document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.top = '0';
 
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({
         onComplete: () => {
+          // Restore scrolling
+          document.documentElement.style.overflow = '';
           document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.top = '';
           setIsMounted(false);
           onComplete();
         }
@@ -67,7 +76,15 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      // Always restore on unmount
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    };
   }, [onComplete]);
 
   if (!isMounted) return null;
@@ -75,7 +92,23 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   return (
     <div 
       ref={containerRef}
-      className="fixed inset-0 z-[9999] bg-[#050507] overflow-hidden flex items-center justify-center pointer-events-auto will-change-transform"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        // Use dvh for mobile browsers that account for the address bar
+        height: '100dvh',
+        zIndex: 9999,
+        backgroundColor: '#050507',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        willChange: 'transform',
+        pointerEvents: 'auto',
+      }}
     >
       {/* Background grain texture */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
@@ -92,7 +125,13 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       </div>
 
       {/* The Masking Layer containing the big typography */}
-      <div className="mask-layer absolute inset-0 bg-[#000839] flex flex-col justify-center px-6 md:px-16" style={{ clipPath: "circle(0% at 50% 50%)" }}>
+      <div
+        className="mask-layer absolute bg-[#000839] flex flex-col justify-center px-6 md:px-16"
+        style={{
+          clipPath: "circle(0% at 50% 50%)",
+          top: 0, left: 0, right: 0, bottom: 0,
+        }}
+      >
         {/* Subtle grid in background of the mask layer */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
         

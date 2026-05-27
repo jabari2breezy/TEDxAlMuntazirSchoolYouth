@@ -33,8 +33,10 @@ export default function Tickets() {
   const ticketY = useTransform(scrollYProgress, [0, 0.2, 0.5], [50, -20, targetY]);
 
   // Section Opacities
-  const section1Opacity = useTransform(scrollYProgress, [0, 0.08, 0.12], [1, 1, 0]);
-  const section1Y = useTransform(scrollYProgress, [0, 0.12], [0, -40]);
+  // section1 must hit 0 well before ticket settles (at 0.5)
+  const section1Opacity = useTransform(scrollYProgress, [0, 0.07, 0.14], [1, 1, 0]);
+  const section1Y = useTransform(scrollYProgress, [0, 0.14], [0, -80]);
+  const section1PointerEvents = useTransform(scrollYProgress, [0, 0.07], ['auto', 'none']);
   const section2Opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.95], [0, 1, 1]);
 
   // Background Colors
@@ -116,9 +118,9 @@ export default function Tickets() {
 
           {/* OVERLAYS (Floating Content Sections) */}
           <div className="absolute inset-0 pointer-events-none z-30">
-            {/* Section 1: Intro */}
+            {/* Section 1: Intro — fades out + slides up early */}
             <motion.div 
-              style={{ opacity: section1Opacity, y: section1Y }}
+              style={{ opacity: section1Opacity, y: section1Y, pointerEvents: section1PointerEvents }}
               className="absolute inset-0 flex flex-col items-center justify-start pt-[15vh]"
             >
               <h1 className="text-5xl md:text-[8vw] font-title font-black tracking-tighter uppercase text-[#000839] leading-[0.85] text-center drop-shadow-sm">
