@@ -3,6 +3,7 @@ import { Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import React, { useRef, useEffect, useState } from 'react';
 import FloatingBackground from '../components/FloatingBackground';
+import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
 import PrecisionButton from '../components/PrecisionButton';
@@ -238,17 +239,8 @@ export default function Home() {
       {/* Hero Section */}
       <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#050507] text-white">
         <div className="absolute inset-0 z-0 bg-[#08080a]">
-          {/* WebGL blob only on desktop — too heavy for mobile GPU */}
-          {!isMobile && (
-            <div className="absolute inset-0" dangerouslySetInnerHTML={{ __html: '' }} />
-          )}
+          <FluidBackground />
           <div className="absolute inset-0 bg-gradient-to-b from-[#050507]/90 via-[#050507]/50 to-[#050507]" />
-          {/* Mobile: pure CSS radial gradient replaces 3D canvas */}
-          {isMobile && (
-            <div className="absolute inset-0" style={{
-              background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,109,56,0.18) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,8,57,0.25) 0%, transparent 70%)'
-            }} />
-          )}
         </div>
         
         {/* Large Decorative "X" Background */}
@@ -276,7 +268,7 @@ export default function Home() {
           </motion.div>
 
           <motion.div variants={itemVariants} className="hero-text flex flex-col md:flex-row gap-8 items-center">
-            <PrecisionButton href={TICKETS_URL} target="_blank" rel="noopener noreferrer" variant="light">
+            <PrecisionButton to={TICKETS_URL} variant="light">
               Get Your Tickets
             </PrecisionButton>
             <Link to="/theme" className="group flex items-center gap-4 font-typewriter text-[11px] uppercase tracking-[0.4em] text-white hover:text-brand-secondary transition-colors">

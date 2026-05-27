@@ -30,7 +30,7 @@ export default function Footer() {
               <Link to="/agenda" className="hover:text-brand-secondary transition-colors">Agenda</Link>
               <Link to="/faq" className="hover:text-brand-secondary transition-colors">FAQs</Link>
               <Link to="/about" className="hover:text-brand-secondary transition-colors">About</Link>
-              <a href={TICKETS_URL} target="_blank" rel="noopener noreferrer" className="hover:text-brand-secondary transition-colors">Tickets</a>
+              <Link to={TICKETS_URL} className="hover:text-brand-secondary transition-colors">Tickets</Link>
             </div>
           </div>
 
