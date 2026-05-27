@@ -101,21 +101,9 @@ export default function Tickets() {
 
               {/* Bottom section */}
               <div className="bg-white px-6 md:px-12 py-8 flex flex-col items-center">
-                <div className="flex items-end gap-2 text-[#000839] mb-6">
+                <div className="flex items-end gap-2 text-[#000839]">
                   <span className="font-typewriter text-[10px] uppercase tracking-widest opacity-40 pb-2">Tsh</span>
                   <span className="font-title font-black text-5xl tracking-tighter">30,000</span>
-                </div>
-                
-                {/* Purchase Button inside the Ticket */}
-                <div className="w-full relative z-50">
-                  <a 
-                    href={TICKETS_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center px-8 py-4 bg-[#000839] text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.2em] hover:bg-brand-secondary transition-all active:scale-95 shadow-md"
-                  >
-                    Purchase Now
-                  </a>
                 </div>
               </div>
             </div>
@@ -183,14 +171,26 @@ export default function Tickets() {
             {/* Section 4: Final CTA */}
             <motion.div 
               style={{ opacity: section4Opacity }}
-              className="absolute inset-0 flex flex-col items-center justify-end pb-[15vh] text-white pointer-events-none"
+              className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-50"
             >
-              <h2 className="text-4xl md:text-6xl font-title font-black tracking-tighter uppercase mb-4 text-center drop-shadow-lg">
-                Time is ticking.
-              </h2>
-              <p className="font-typewriter text-xs uppercase tracking-[0.3em] text-white/50 text-center">
-                Click the ticket to purchase
-              </p>
+              <div className="absolute inset-0 bg-[#000839]/80 backdrop-blur-md pointer-events-auto" />
+              <div className="relative z-10 flex flex-col items-center gap-12 pointer-events-auto mt-[20vh] md:mt-0">
+                <h2 className="text-5xl md:text-8xl font-title font-black tracking-tighter uppercase text-center drop-shadow-2xl text-white leading-[0.8]">
+                  Don't Waste<br/>
+                  <span className="italic font-editorial lowercase text-brand-secondary">Your Time.</span>
+                </h2>
+                <a 
+                  href={TICKETS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative px-12 py-6 bg-white text-[#000839] rounded-full overflow-hidden shadow-[0_0_60px_rgba(255,255,255,0.2)] transition-all hover:scale-105 active:scale-95"
+                >
+                  <div className="absolute inset-0 bg-brand-secondary translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.76,0,0.24,1]" />
+                  <span className="relative z-10 font-typewriter text-sm uppercase tracking-[0.3em] font-bold group-hover:text-white transition-colors duration-500">
+                    Secure Your Spot
+                  </span>
+                </a>
+              </div>
             </motion.div>
 
           </div>
