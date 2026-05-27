@@ -27,7 +27,7 @@ export default function PrecisionButton({
 }: PrecisionButtonProps) {
   const [active, setActive] = useState(false);
   const [coord, setCoord] = useState('00.00');
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   useEffect(() => {
     if (active) {

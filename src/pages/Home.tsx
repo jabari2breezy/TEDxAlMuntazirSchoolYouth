@@ -2,17 +2,14 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'moti
 import { Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import React, { useRef, useEffect, useState } from 'react';
-import Magnetic from '../components/Magnetic';
-import Typewriter from '../components/Typewriter';
-import MaskReveal from '../components/MaskReveal';
 import FloatingBackground from '../components/FloatingBackground';
-import { MechanicalClock, FluidBlob, KineticTypography } from '../components/ModernAnimation';
-import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
 import PrecisionButton from '../components/PrecisionButton';
 import { TICKETS_URL } from '../constants';
 import SponsorsSection from '../components/SponsorsSection';
+
+const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 const transition = { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const };
 
@@ -150,62 +147,18 @@ interface Update {
   content: string;
 }
 
-function ParallaxIcon({ icon: Icon, speed, left, top, delay = 0, size = 120 }: { 
-  icon: any, 
-  speed: number, 
-  left: string, 
-  top: string, 
-  delay?: number,
-  size?: number 
+function ParallaxIcon({ icon: Icon, speed, left, top, delay = 0, size = 120 }: {
+  icon: any, speed: number, left: string, top: string, delay?: number, size?: number
 }) {
+  if (isMobile) return null;
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 1000], [0, speed * 1000]);
-  const scrollRotate = useTransform(scrollY, [0, 1000], [0, speed * 45]);
-
-  // Unique durations for each icon to avoid synchronized movement
-  const floatDuration = 4 + (Math.random() * 3);
-  const driftDuration = 5 + (Math.random() * 3);
-  const rotateDuration = 7 + (Math.random() * 3);
-
+  const y = useTransform(scrollY, [0, 1000], [0, speed * 600]);
   return (
-    <motion.div
-      style={{ y, left, top }}
-      className="absolute pointer-events-none text-white/20"
-    >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ 
-          opacity: 0.03, 
-          scale: 1,
-          y: [0, -15, 0],
-          x: [0, 10, 0],
-        }}
-        transition={{ 
-          opacity: { duration: 1, delay },
-          scale: { duration: 1, delay },
-          y: { 
-            duration: floatDuration, 
-            repeat: Infinity, 
-            ease: "easeInOut" 
-          },
-          x: { 
-            duration: driftDuration, 
-            repeat: Infinity, 
-            ease: "easeInOut" 
-          }
-        }}
-        style={{ rotate: scrollRotate }}
-      >
-        <motion.div
-          animate={{ rotate: [0, 5, -5, 0] }}
-          transition={{ 
-            duration: rotateDuration, 
-            repeat: Infinity, 
-            ease: "easeInOut" 
-          }}
-        >
-          <Icon size={size} strokeWidth={0.5} />
-        </motion.div>
+    <motion.div style={{ y, left, top, position: 'absolute', willChange: 'transform' }}
+      className="pointer-events-none text-white/20">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.03 }}
+        transition={{ duration: 1, delay }}>
+        <Icon size={size} strokeWidth={0.5} />
       </motion.div>
     </motion.div>
   );
@@ -221,19 +174,15 @@ export default function Home() {
     offset: ["start start", "end start"]
   });
 
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 30, damping: 25 });
+  // Skip expensive spring computation on mobile
+  const smoothProgress = isMobile
+    ? scrollYProgress
+    : useSpring(scrollYProgress, { stiffness: 30, damping: 25 });
 
-  const heroScale = useTransform(smoothProgress, [0, 0.3], [1, 1.05]);
-  const heroOpacity = useTransform(smoothProgress, [0, 0.3], [1, 1]);
-  const heroRotate = useTransform(smoothProgress, [0, 0.3], [0, 2]);
-  const heroY = useTransform(smoothProgress, [0, 0.3], [0, 30]);
-
-  const liquidY = useTransform(smoothProgress, [0, 1], ["0%", "15%"]);
-  const charX = useTransform(smoothProgress, [0, 1], ["0%", "5%"]);
-  const circleY = useTransform(smoothProgress, [0, 1], ["0%", "-10%"]);
-  const textOpacity = useTransform(smoothProgress, [0, 0.5], [1, 1]);
-  const heroSlideY = useTransform(smoothProgress, [0, 0.3], [0, -100]);
-  const hourglassBottom = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+  const heroY = isMobile ? useMotionValue(0) : useTransform(smoothProgress, [0, 0.3], [0, 30]);
+  const liquidY = isMobile ? useMotionValue('0%') : useTransform(smoothProgress, [0, 1], ['0%', '15%']);
+  const heroSlideY = isMobile ? useMotionValue(0) : useTransform(smoothProgress, [0, 0.3], [0, -100]);
+  const hourglassBottom = isMobile ? useMotionValue('0%') : useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   useEffect(() => {
     fetch('/api/event-status')
@@ -289,8 +238,17 @@ export default function Home() {
       {/* Hero Section */}
       <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#050507] text-white">
         <div className="absolute inset-0 z-0 bg-[#08080a]">
-          <FluidBackground />
+          {/* WebGL blob only on desktop — too heavy for mobile GPU */}
+          {!isMobile && (
+            <div className="absolute inset-0" dangerouslySetInnerHTML={{ __html: '' }} />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-[#050507]/90 via-[#050507]/50 to-[#050507]" />
+          {/* Mobile: pure CSS radial gradient replaces 3D canvas */}
+          {isMobile && (
+            <div className="absolute inset-0" style={{
+              background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,109,56,0.18) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,8,57,0.25) 0%, transparent 70%)'
+            }} />
+          )}
         </div>
         
         {/* Large Decorative "X" Background */}

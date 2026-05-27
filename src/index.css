@@ -134,3 +134,42 @@
 .vertical-text {
   writing-mode: vertical-rl;
 }
+
+/* ─── Mobile Performance Layer ────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Stop 3d transforms from creating new compositing layers unnecessarily */
+  * {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Prevent bounce scroll janks on iOS */
+  html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Kill expensive backdrop-blur on mobile */
+  .glass-panel {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255,255,255,0.06) !important;
+  }
+
+  /* Tone down noise overlay cost on mobile */
+  body::after {
+    display: none;
+  }
+
+  /* Ensure framer-motion transforms stay GPU composited */
+  [data-framer-motion], [style*="transform"] {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+}
+
+/* ─── touch-action optimisation for drag elements ────────────── */
+.drag-scroll {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
