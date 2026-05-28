@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
 import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight } from 'lucide-react';
 import { TICKETS_URL } from '../constants';
 import InteractiveBackground from '../components/InteractiveBackground';
@@ -39,11 +39,11 @@ export default function Tickets() {
   const section1PointerEvents = useTransform(scrollYProgress, [0, 0.07], ['auto', 'none']);
   const section2Opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.95], [0, 1, 1]);
 
-  // Background Colors
+  // Background Colors — frosted matte olive green
   const bgColor = useTransform(
     scrollYProgress,
-    [0, 0.4, 0.8, 1],
-    ['#f3f3f4', '#050507', '#050507', '#050507']
+    [0, 0.3, 0.6, 1],
+    ['#f3f3f4', '#1e2e1e', '#1a2a1a', '#1a2a1a']
   );
 
   return (
@@ -58,6 +58,16 @@ export default function Tickets() {
           <motion.div style={{ opacity: useTransform(scrollYProgress, [0.4, 0.5], [0, 1]) }} className="absolute inset-0 pointer-events-none z-0">
             <InteractiveBackground />
           </motion.div>
+
+          {/* Floating glow behind ticket */}
+          <motion.div
+            className="absolute w-[300px] md:w-[500px] h-[300px] md:h-[500px] rounded-full bg-brand-secondary/5 blur-[100px] pointer-events-none z-10"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          />
 
           {/* The Main Ticket Product (Center Stage) */}
           <motion.div
@@ -131,31 +141,55 @@ export default function Tickets() {
 
             {/* Section 2: What's Included */}
             <motion.div 
-              style={{ opacity: section2Opacity }}
+              style={{ opacity: section2Opacity, y: useTransform(scrollYProgress, [0.35, 0.5], [40, 0]) }}
               className="absolute inset-x-0 bottom-6 md:bottom-auto md:right-24 md:left-auto md:top-1/2 md:-translate-y-1/2 flex flex-col items-center md:items-start px-6 md:px-0 z-30 pointer-events-none"
             >
-              <div className="w-full max-w-[320px] md:max-w-md space-y-4 md:space-y-6 text-white pointer-events-auto bg-black/40 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 md:p-0 rounded-2xl border border-white/10 md:border-none shadow-lg md:shadow-none">
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full max-w-[320px] md:max-w-md space-y-4 md:space-y-6 text-white pointer-events-auto bg-black/30 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none p-6 md:p-0 rounded-2xl border border-white/10 md:border-none shadow-lg md:shadow-none"
+              >
                 <h3 className="font-title font-black text-2xl md:text-5xl uppercase tracking-tighter leading-none text-center md:text-left text-white">
                   What's<br className="hidden md:block"/><span className="text-brand-secondary md:text-white"> Included</span>
                 </h3>
                 <ul className="space-y-2 md:space-y-3">
                   {INCLUDED_ITEMS.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#e62b1e] mt-2 shrink-0 animate-pulse" />
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.3 + i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      className="flex items-start gap-2.5"
+                    >
+                      <motion.div
+                        className="w-1.5 h-1.5 rounded-full bg-brand-secondary mt-2 shrink-0"
+                        animate={{ scale: [1, 1.5, 1], opacity: [1, 0.7, 1] }}
+                        transition={{ duration: 2, delay: i * 0.2, repeat: Infinity, ease: "easeInOut" }}
+                      />
                       <span className="font-sans text-xs md:text-base font-medium text-white/90 leading-relaxed">{item}</span>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </motion.div>
       </div>
 
       {/* Static CTA Section (Directly above the footer and 100% visible) */}
-      <section className="relative min-h-[80vh] bg-[#050507] flex flex-col items-center justify-center px-6 py-24 overflow-hidden border-t border-white/5 z-20">
-        {/* Glow effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-brand-secondary/10 blur-[120px] pointer-events-none" />
+      <section className="relative min-h-[80vh] bg-[#1a2a1a] flex flex-col items-center justify-center px-6 py-24 overflow-hidden border-t border-white/5 z-20">
+        {/* Animated glow effect */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-brand-secondary/10 blur-[120px] pointer-events-none"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
         
         <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center space-y-10">
           <motion.div
@@ -165,10 +199,37 @@ export default function Tickets() {
             transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
             className="space-y-4"
           >
-            <span className="font-typewriter text-xs md:text-sm uppercase tracking-[0.4em] text-brand-secondary">TEDxAlmuntazirSchoolsYouth</span>
+            <motion.span
+              initial={{ opacity: 0, letterSpacing: '2em' }}
+              whileInView={{ opacity: 1, letterSpacing: '0.4em' }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="font-typewriter text-xs md:text-sm uppercase tracking-[0.4em] text-brand-secondary block"
+            >
+              TEDxAlmuntazirSchoolsYouth
+            </motion.span>
             <h2 className="text-5xl md:text-8xl font-title font-black tracking-tighter uppercase text-white leading-[0.85] drop-shadow-2xl">
-              Don't Waste<br/>
-              <span className="italic font-editorial lowercase text-[#e62b1e]">Your Time.</span>
+              <span className="inline-block overflow-hidden">
+                <motion.span
+                  initial={{ y: '100%' }}
+                  whileInView={{ y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="inline-block"
+                >
+                  Don't Waste
+                </motion.span>
+              </span>
+              <br/>
+              <motion.span
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="italic font-editorial lowercase text-brand-secondary"
+              >
+                Your Time.
+              </motion.span>
             </h2>
           </motion.div>
 
@@ -193,7 +254,7 @@ export default function Tickets() {
               href="https://tukiio.com/event/tedxalmuntazirschoolsyouth"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center gap-4 px-10 md:px-14 py-5 md:py-6 bg-[#e62b1e] text-white rounded-full overflow-hidden shadow-[0_0_50px_rgba(230,43,30,0.3)] hover:shadow-[0_0_80px_rgba(230,43,30,0.5)] transition-all duration-500 hover:scale-105 active:scale-98"
+              className="group relative inline-flex items-center gap-4 px-10 md:px-14 py-5 md:py-6 bg-brand-secondary text-white rounded-full overflow-hidden shadow-[0_0_50px_rgba(0,109,56,0.3)] hover:shadow-[0_0_80px_rgba(0,109,56,0.5)] transition-all duration-500 hover:scale-105 active:scale-98"
             >
               {/* Liquid overlay sliding up on hover */}
               <div className="absolute inset-0 bg-[#000839] translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.76,0,0.24,1]" />
@@ -201,7 +262,13 @@ export default function Tickets() {
               <span className="relative z-10 font-typewriter text-xs md:text-sm uppercase tracking-[0.25em] font-black transition-colors duration-500 group-hover:text-white">
                 BUY TICKETS ON TUKIIO
               </span>
-              <ArrowUpRight size={18} className="relative z-10 transition-transform duration-500 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 text-white shrink-0" />
+              <motion.span
+                animate={{ x: [0, 3, 0], y: [0, -3, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                className="relative z-10"
+              >
+                <ArrowUpRight size={18} className="text-white shrink-0" />
+              </motion.span>
             </a>
           </motion.div>
         </div>

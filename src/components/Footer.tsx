@@ -1,5 +1,6 @@
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { SOCIALS, TICKETS_URL } from '../constants';
 import Logo from './Logo';
 
@@ -7,7 +8,13 @@ export default function Footer() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-    <footer className="px-6 md:px-16 py-32 border-t border-brand-outline relative overflow-hidden bg-brand-surface/40 backdrop-blur-md">
+    <motion.footer
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: '-10%' }}
+      transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+      className="px-6 md:px-16 py-32 border-t border-brand-outline relative overflow-hidden bg-brand-surface/40 backdrop-blur-md"
+    >
       <div className="absolute inset-0 liquid-bg opacity-5 -z-10" />
       
       <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-start gap-20 relative z-10">
@@ -80,6 +87,6 @@ export default function Footer() {
           Dar Es Salaam, Tanzania
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }

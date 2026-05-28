@@ -105,14 +105,21 @@ export default function Team() {
                 <span className="font-typewriter text-[9px] text-brand-secondary opacity-50 tracking-widest">{group.members.length} Units</span>
               </h4>
               <div className="space-y-3">
-                {group.members.map((m) => (
-                  <div key={m.name} className="flex justify-between items-baseline hover:pl-2 transition-all duration-300">
+                {group.members.map((m, mIdx) => (
+                  <motion.div
+                    key={m.name}
+                    initial={{ opacity: 0, x: -15 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: mIdx * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="flex justify-between items-baseline hover:pl-2 transition-all duration-300"
+                  >
                     <div className="flex gap-2 items-center text-brand-primary">
                       <span className={`font-sans text-lg ${m.lead ? 'font-bold' : 'opacity-60'}`}>{m.name}</span>
                       {m.lead && <span className="text-[10px] bg-brand-secondary text-white px-2 py-0.5 rounded-full uppercase font-bold tracking-tighter shrink-0">{m.title || 'Lead'}</span>}
                     </div>
                     <span className="font-typewriter text-[10px] text-brand-primary/20 shrink-0">{m.year ? `Year ${m.year}` : ''}</span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>

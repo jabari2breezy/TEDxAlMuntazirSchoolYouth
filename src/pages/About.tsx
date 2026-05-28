@@ -69,18 +69,38 @@ export default function About() {
                 text: "Our event is run entirely by students, for the community of Dar es Salaam. We are exploring the theme of 'Borrowed Time' and how we individually and collectively choose to spend the moments we have."
               }
             ].map((item, i) => (
-              <div key={item.title} className="space-y-6">
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10%' }}
+                transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 1, 0.5, 1] }}
+                className="space-y-6"
+              >
                 <div className="flex items-center gap-4">
                   <span className="font-typewriter text-[10px] text-brand-secondary">0{i+1}</span>
-                  <div className="h-[1px] flex-grow bg-brand-outline" />
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: i * 0.15, ease: [0.25, 1, 0.5, 1] }}
+                    className="h-[1px] flex-grow bg-brand-outline origin-left"
+                  />
                 </div>
                 <h3 className="text-4xl font-title font-black tracking-tighter uppercase text-brand-primary break-all sm:break-words">{item.title}</h3>
                 <p className="font-editorial text-xl text-brand-primary/60 leading-tight italic">{item.text}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
 
-          <div id="contact" className="space-y-16">
+          <motion.div
+            id="contact"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+            className="space-y-16"
+          >
             <div className="p-12 border border-brand-outline bg-brand-surface space-y-8 rounded-[3rem] shadow-sm">
               <Mail className="text-brand-secondary" size={32} />
               <h2 className="text-4xl font-title font-black tracking-tighter uppercase leading-none text-brand-primary">Get <br /> Involved.</h2>
@@ -135,7 +155,7 @@ export default function About() {
             <div className="font-typewriter text-[10px] text-brand-primary/40 uppercase tracking-[0.2em] leading-relaxed max-w-sm">
               <span className="text-brand-secondary">Note:</span> Everyone has a story to tell, and we are here to provide the platform.
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Team section moved to /team */}
