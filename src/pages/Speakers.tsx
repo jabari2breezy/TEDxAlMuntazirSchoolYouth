@@ -36,6 +36,7 @@ function SpeakerRow({ speaker, i, onOpen }: { speaker: Speaker; i: number; onOpe
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [plusHovered, setPlusHovered] = useState(false);
 
   function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
     const { left, top } = currentTarget.getBoundingClientRect();
@@ -44,14 +45,19 @@ function SpeakerRow({ speaker, i, onOpen }: { speaker: Speaker; i: number; onOpe
   }
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.8, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
       ref={rowRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`group relative grid grid-cols-1 md:grid-cols-12 gap-8 py-16 border-b border-brand-outline px-6 -mx-6 rounded-[2rem] items-center overflow-hidden transition-colors duration-500 ${
+      className={`group relative grid grid-cols-1 md:grid-cols-12 gap-8 py-16 border-b border-brand-outline px-6 -mx-6 rounded-[2rem] items-center overflow-hidden ${
         speaker.name === 'Speaker TBA' ? 'opacity-75' : ''
       }`}
+      whileHover={{ scale: 1.01, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
     >
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-[2rem] opacity-0 transition duration-300 group-hover:opacity-100"
@@ -96,15 +102,25 @@ function SpeakerRow({ speaker, i, onOpen }: { speaker: Speaker; i: number; onOpe
       </div>
       <div className="md:col-span-1 flex justify-start md:justify-end relative z-10 mt-4 md:mt-0">
         <Magnetic strength={0.4}>
-          <button 
+          <motion.button
             onClick={onOpen}
+            onMouseEnter={() => setPlusHovered(true)}
+            onMouseLeave={() => setPlusHovered(false)}
+            whileHover={{ scale: 1.08, rotate: 90 }}
+            whileTap={{ scale: 0.92 }}
+            animate={plusHovered ? { rotate: 90 } : { rotate: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="w-16 h-16 rounded-full border-2 border-brand-outline flex items-center justify-center text-brand-primary hover:bg-brand-secondary hover:border-brand-secondary hover:text-white transition-colors"
           >
-            <Plus size={24} />
-          </button>
+            <motion.div
+              animate={plusHovered ? { rotate: 0 } : { rotate: 0 }}
+            >
+              <Plus size={24} />
+            </motion.div>
+          </motion.button>
         </Magnetic>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -123,6 +139,7 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
+      onTouchMove={(e) => e.stopPropagation()}
       className="fixed inset-0 z-[500] flex flex-col md:block bg-black md:bg-brand-primary/30 md:backdrop-blur-sm"
     >
       {/* ─── MOBILE LAYOUT ─── */}
@@ -346,12 +363,27 @@ export default function Speakers() {
 
   useEffect(() => {
     if (selectedSpeaker) {
+      const scrollY = window.scrollY;
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.dataset.scrollY = String(scrollY);
     } else {
+      const scrollY = Number(document.body.dataset.scrollY || 0);
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
     }
     return () => {
+      const scrollY = Number(document.body.dataset.scrollY || 0);
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
     };
   }, [selectedSpeaker]);
 
