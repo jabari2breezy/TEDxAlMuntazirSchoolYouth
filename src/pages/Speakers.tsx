@@ -352,18 +352,18 @@ export default function Speakers() {
               </div>
             </motion.div>
           ) : speaker ? (
-            /* ═══ THEATER VIEW ═══ */
+            /* ═══ THEATER VIEW - FULL SCREEN ═══ */
             <motion.div
               key={`theater-${activeIndex}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden"
+              className="fixed inset-0 w-full h-screen flex flex-col md:flex-row overflow-hidden z-[200]"
               onTouchMove={(e) => e.stopPropagation()}
             >
               {/* Left / Top: Editorial Aesthetic (Navy gradient box) */}
-              <div className="relative w-full md:w-[48%] min-h-[40vh] md:min-h-full bg-gradient-to-br from-brand-primary via-brand-primary to-brand-primary/80 flex flex-col justify-center items-center p-6 md:p-12 lg:p-16 shrink-0">
+              <div className="relative w-full md:w-[48%] h-[50vh] md:h-full bg-gradient-to-br from-brand-primary via-brand-primary to-brand-primary/80 flex flex-col justify-center items-center p-6 md:p-12 lg:p-16 overflow-y-auto">
                 {/* Decorative grid */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
                   backgroundImage: 'linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px)',
@@ -467,7 +467,7 @@ export default function Speakers() {
               </div>
 
               {/* Right / Bottom: Abstract Content Panel (White) */}
-              <div className="relative w-full md:w-[52%] min-h-[55vh] md:min-h-full bg-white/95 backdrop-blur-sm flex flex-col justify-center p-6 md:p-12 lg:p-16 overflow-y-auto md:overflow-hidden shrink-0">
+              <div className="relative w-full md:w-[52%] h-[50vh] md:h-full bg-white/95 backdrop-blur-sm flex flex-col justify-center p-6 md:p-12 lg:p-16 overflow-y-auto">
                 {/* Decorative accent line */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-secondary/30 to-transparent" />
 
@@ -511,7 +511,7 @@ export default function Speakers() {
                     <p className="font-editorial text-xs md:text-base text-brand-primary/50 italic leading-relaxed mb-3 md:mb-4">
                       Presentation Overview
                     </p>
-                    <p className="font-sans text-[11px] md:text-sm text-brand-primary/60 leading-[1.6] md:leading-[1.8] line-clamp-4 md:line-clamp-8">
+                    <p className="font-sans text-[11px] md:text-sm text-brand-primary/60 leading-[1.6] md:leading-[1.8]">
                       {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence. Their perspective challenges us to rethink how we choose to spend the time we possess."}
                     </p>
                   </motion.div>
@@ -561,71 +561,44 @@ export default function Speakers() {
         </AnimatePresence>
       </div>
 
-      {/* ═══ BOTTOM PAGINATION DOCK ═══ */}
-      <motion.div
-        layout
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className={`relative z-30 border-t border-brand-outline/20 bg-white/80 backdrop-blur-lg ${
-          isTheater ? 'shrink-0' : 'mt-auto'
-        }`}
-      >
-        <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-4 md:py-6 flex items-center justify-between gap-4">
-          {/* Left: Brand / Name */}
-          <div className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/25 font-semibold whitespace-nowrap">
-            {isTheater ? (
-              <motion.span
-                key={`dock-name-${activeIndex}`}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {speaker?.name || 'TEDx'}
-              </motion.span>
-            ) : (
-              'TEDxAlMuntazirSchoolYouth'
-            )}
-          </div>
+      {/* ═══ BOTTOM PAGINATION DOCK - HIDDEN ON MOBILE THEATER ═══ */}
+      {!isTheater && (
+        <motion.div
+          layout
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-30 border-t border-brand-outline/20 bg-white/80 backdrop-blur-lg mt-auto"
+        >
+          <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-4 md:py-6 flex items-center justify-between gap-4">
+            {/* Left: Brand / Name */}
+            <div className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/25 font-semibold whitespace-nowrap">
+              TEDxAlMuntazirSchoolYouth
+            </div>
 
-          {/* Center: Dot Navigation */}
-          <div className="flex items-center gap-1.5 md:gap-2">
-            {speakersData.map((_, idx) => (
-              <motion.button
-                key={idx}
-                onClick={() => goToSpeaker(idx)}
-                className={`h-1.5 md:h-2 rounded-full transition-all duration-500 ${
-                  activeIndex === idx
-                    ? 'w-6 md:w-8 bg-brand-secondary'
-                    : 'w-1.5 md:w-2 bg-brand-outline/40 hover:bg-brand-outline/70'
-                }`}
-                aria-label={`Go to speaker ${idx + 1}`}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              />
-            ))}
+            {/* Center: Dot Navigation */}
+            <div className="flex items-center gap-1.5 md:gap-2">
+              {speakersData.map((_, idx) => (
+                <motion.button
+                  key={idx}
+                  onClick={() => goToSpeaker(idx)}
+                  className={`h-1.5 md:h-2 rounded-full transition-all duration-500 ${
+                    activeIndex === idx
+                      ? 'w-6 md:w-8 bg-brand-secondary'
+                      : 'w-1.5 md:w-2 bg-brand-outline/40 hover:bg-brand-outline/70'
+                  }`}
+                  aria-label={`Go to speaker ${idx + 1}`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                />
+              ))}
+            </div>
 
-            {/* Reset button */}
-            {isTheater && (
-              <motion.button
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                onClick={() => setActiveIndex(null)}
-                className="ml-2 md:ml-3 font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.3em] text-brand-primary/30 hover:text-brand-secondary transition-colors whitespace-nowrap"
-              >
-                Close
-              </motion.button>
-            )}
+            {/* Right: Counter */}
+            <div className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/20 font-semibold whitespace-nowrap">
+              [ {filteredSpeakers.length} ]
+            </div>
           </div>
-
-          {/* Right: Counter */}
-          <div className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/20 font-semibold whitespace-nowrap">
-            {isTheater
-              ? `[ ${activeIndex! + 1} / ${speakersData.length} ]`
-              : `[ ${filteredSpeakers.length} ]`
-            }
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
