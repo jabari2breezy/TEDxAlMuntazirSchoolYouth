@@ -6,7 +6,6 @@ import Magnetic from '../components/Magnetic';
 import MaskReveal from '../components/MaskReveal';
 import InteractiveBackground from '../components/InteractiveBackground';
 import FloatingBackground from '../components/FloatingBackground';
-import SpeakerTopicVisual from '../components/SpeakerTopicVisual';
 
 const transition = { duration: 1.2, ease: [0.76, 0, 0.24, 1] as const };
 
@@ -139,91 +138,111 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.4 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black/40 backdrop-blur-md z-40"
+        className="fixed inset-0 bg-black/60 backdrop-blur-xl z-40"
       />
 
-      {/* Side drawer */}
+      {/* Side drawer — dark brutalist */}
       <motion.div
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
-        transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+        transition={{ type: 'spring', damping: 30, stiffness: 260 }}
         onTouchMove={(e) => e.stopPropagation()}
-        className="fixed top-0 right-0 h-full w-[75%] sm:w-[50%] md:w-[420px] bg-white z-50 shadow-2xl flex flex-col overflow-hidden"
+        className="fixed top-0 right-0 h-full w-[85vw] sm:w-[65vw] md:w-[440px] bg-neutral-950/90 backdrop-blur-3xl z-50 shadow-2xl flex flex-col overflow-hidden"
       >
-        {/* Top bar */}
-        <div className="flex items-center justify-between shrink-0 px-6 pt-6 pb-4 border-b border-brand-outline/20">
-          <span className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-brand-primary/40 font-semibold">
-            Speaker Profile
+        {/* Header — structural CT-ID */}
+        <div className="flex items-center justify-between shrink-0 px-7 pt-7 pb-4 border-b border-neutral-800">
+          <span className="font-typewriter text-[9px] tracking-[0.25em] text-neutral-500 font-medium">
+            [ CT-ID // {speaker.id.padStart(3, '0')} ]
           </span>
           <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            whileHover={{ rotate: 90 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25 }}
+            whileHover={{ opacity: 0.6 }}
             onClick={onClose}
-            className="w-9 h-9 rounded-full border border-brand-outline/30 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary hover:border-brand-primary/30 transition-colors"
+            className="flex items-center gap-2 group"
           >
-            <X size={14} />
+            <span className="font-typewriter text-[9px] tracking-[0.3em] text-neutral-500 group-hover:text-neutral-300 transition-colors">CLOSE</span>
+            <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors group-hover:rotate-90 transition-transform duration-300 inline-block">
+              <X size={12} />
+            </span>
           </motion.button>
         </div>
 
         {/* Content — no scroll */}
-        <div className="flex-1 flex flex-col justify-center px-6 py-6 gap-5 overflow-hidden">
-          {/* Portrait thumbnail */}
+        <div className="flex-1 flex flex-col justify-center px-7 py-8 gap-6 overflow-hidden">
+          {/* Parallax image */}
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full aspect-[4/3] max-h-[180px] rounded-xl overflow-hidden bg-gradient-to-br from-brand-secondary/10 to-brand-primary/10 border border-brand-outline/10"
+            initial={{ scale: 1.05, clipPath: 'inset(0 100% 0 0)' }}
+            animate={{ scale: 1, clipPath: 'inset(0 0% 0 0)' }}
+            transition={{ delay: 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full aspect-[4/3] max-h-[200px] overflow-hidden bg-neutral-900"
           >
             {speaker.image && !isTBA ? (
-              <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
+              <motion.img
+                initial={{ scale: 1.3 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.1, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                src={speaker.image}
+                alt={speaker.name}
+                className="w-full h-full object-cover origin-bottom grayscale contrast-125"
+                draggable={false}
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <span className="font-title text-7xl text-brand-primary/10">{speaker.name[0]}</span>
+                <span className="font-title text-7xl text-neutral-700">{speaker.name[0]}</span>
               </div>
             )}
           </motion.div>
 
           {/* Segment badge */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary shrink-0" />
-              <span className="font-typewriter text-[7px] uppercase tracking-[0.35em] text-brand-secondary/70 font-semibold">
+              <span className="w-1 h-1 bg-brand-secondary shrink-0" />
+              <span className="font-typewriter text-[7px] uppercase tracking-[0.35em] text-brand-secondary/60 font-semibold">
                 0{segmentIdx} / {segmentLabel}
               </span>
             </div>
           </motion.div>
 
-          {/* Name */}
+          {/* Name — staggered word reveal */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h2 className="text-2xl md:text-3xl font-title font-black uppercase text-brand-primary leading-[0.9] tracking-tighter">
+            <h2 className="text-3xl md:text-4xl font-title font-black uppercase text-white leading-[0.9] tracking-tighter flex flex-wrap gap-x-3 overflow-hidden">
               {nameWords.map((word, i) => (
-                <span key={i} className="inline-block mr-2">{word}</span>
+                <span key={i} className="inline-block overflow-hidden">
+                  <motion.span
+                    initial={{ y: '100%' }}
+                    animate={{ y: 0 }}
+                    transition={{ delay: 0.3 + i * 0.07, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="inline-block"
+                  >
+                    {word}
+                  </motion.span>
+                </span>
               ))}
             </h2>
           </motion.div>
 
           {/* Topic */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.35, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="relative pl-3">
-              <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-brand-secondary/30 rounded-full" />
-              <p className="font-editorial text-base italic text-brand-primary/60 leading-snug">
+            <div className="relative pl-4">
+              <div className="absolute left-0 top-1 bottom-1 w-px bg-brand-secondary/40" />
+              <p className="font-editorial text-base md:text-lg italic text-neutral-400 leading-snug">
                 "{speaker.topic}"
               </p>
             </div>
@@ -231,22 +250,22 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
 
           {/* Bio — clamped */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.4, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="flex items-center gap-3 mb-2">
-              <span className="font-typewriter text-[6px] uppercase tracking-[0.35em] text-brand-primary/30">The Narrative</span>
-              <div className="h-px flex-1 bg-brand-outline/20" />
+              <span className="font-typewriter text-[6px] uppercase tracking-[0.35em] text-neutral-600">The Narrative</span>
+              <div className="h-px flex-1 bg-neutral-800" />
             </div>
-            <p className="font-sans text-xs md:text-sm text-brand-primary/60 leading-[1.7] line-clamp-5 sm:line-clamp-6">
+            <p className="font-sans text-xs md:text-sm text-neutral-400 leading-[1.7] line-clamp-5 sm:line-clamp-6">
               {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence."}
             </p>
           </motion.div>
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 text-[9px] font-typewriter text-brand-primary/20 text-center border-t border-brand-outline/20 py-4 px-6">
+        <div className="shrink-0 text-[8px] font-typewriter tracking-[0.4em] text-neutral-700 text-center border-t border-neutral-800 py-4 px-7">
           TEDxAlMuntazirSchoolYouth
         </div>
       </motion.div>
@@ -328,94 +347,105 @@ export default function Speakers() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-40 pb-32 min-h-screen relative overflow-hidden"
+      className="min-h-screen relative bg-black"
     >
-      <InteractiveBackground />
-      <FloatingBackground />
-      
-      <div className="px-6 md:px-16 max-w-screen-2xl mx-auto relative z-10">
-        <header className="mb-32 flex flex-col md:flex-row md:items-end justify-between gap-12">
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={transition}
-            className="max-w-4xl"
-          >
-            <div className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase mb-12">The Guest List</div>
-            <h1 className="text-8xl md:text-[12vw] font-title font-black tracking-tighter leading-[0.75] uppercase flex flex-col text-brand-primary">
-              <MaskReveal delay={0.2}>The</MaskReveal>
-              <MaskReveal delay={0.4} className="italic font-editorial lowercase -ml-6 text-brand-secondary">Assembly.</MaskReveal>
-            </h1>
-          </motion.div>
-          <div className="max-w-xs font-editorial text-2xl text-brand-primary/40 italic leading-tight">
-            Meet the people asking: What are you doing with the time you’ve got?
-          </div>
-        </header>
+      <motion.main
+        animate={{
+          scale: selectedSpeaker ? 0.95 : 1,
+          x: selectedSpeaker ? '-4%' : '0%',
+          borderRadius: selectedSpeaker ? '24px' : '0px',
+        }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="origin-right min-h-screen overflow-hidden will-change-transform"
+        style={{ backfaceVisibility: 'hidden' }}
+      >
+        <InteractiveBackground />
+        <FloatingBackground />
         
-        {/* Dynamic Filter / Search */}
-        <div className="flex flex-col lg:flex-row gap-12 mb-20 border-y border-brand-outline py-12 px-8 -mx-8 bg-white/5 backdrop-blur-sm rounded-xl relative z-20">
-          <div className="flex flex-wrap gap-8">
-            {['all', ...SEGMENTS.map(s => s.id)].map(id => (
-              <button
-                key={id}
-                onClick={() => {
-                  setSelectedSegment(id);
-                  hapticTick();
-                }}
-                className={`py-3 font-typewriter text-[11px] uppercase tracking-[0.4em] transition-all relative ${
-                  selectedSegment === id ? 'text-brand-secondary' : 'text-brand-primary/40 hover:text-brand-primary'
-                }`}
-              >
-                {id === 'all' ? 'Everything' : SEGMENTS.find(s => s.id === id)?.title}
-                {selectedSegment === id && (
-                  <motion.div layoutId="filter-underline" className="absolute -bottom-2 left-0 right-0 h-[2px] bg-brand-secondary" />
-                )}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative flex-grow max-w-md border-l border-brand-outline pl-12 hidden lg:block">
-            <Search className="absolute left-16 top-1/2 -translate-y-1/2 text-brand-primary/20" size={16} />
-            <input 
-              type="text"
-              placeholder="Find a talk..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent border-none py-4 px-12 font-sans text-brand-primary focus:outline-none placeholder:text-brand-primary/20 placeholder:font-typewriter placeholder:text-[10px] placeholder:uppercase placeholder:tracking-[0.4em]"
-            />
-          </div>
-        </div>
-
-        {/* Typographic List */}
-        <div className="space-y-4">
-          {isLoading ? (
-            <div className="py-20 text-center font-typewriter text-brand-primary/20 animate-pulse tracking-[0.5em] uppercase">
-              Retrieving the Assembly...
-            </div>
-          ) : (
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-4"
+        <div className="pt-40 pb-32 px-6 md:px-16 max-w-screen-2xl mx-auto relative z-10">
+          <header className="mb-32 flex flex-col md:flex-row md:items-end justify-between gap-12">
+            <motion.div
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={transition}
+              className="max-w-4xl"
             >
-              <div className="space-y-4">
-                {filteredSpeakers.map((speaker, i) => (
-                  <SpeakerRow
-                    key={speaker.id}
-                    speaker={speaker}
-                    i={i}
-                    onOpen={() => {
-                      setSelectedSpeaker(speaker);
-                      hapticTick();
-                    }}
-                  />
-                ))}
-              </div>
+              <div className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase mb-12">The Guest List</div>
+              <h1 className="text-8xl md:text-[12vw] font-title font-black tracking-tighter leading-[0.75] uppercase flex flex-col text-brand-primary">
+                <MaskReveal delay={0.2}>The</MaskReveal>
+                <MaskReveal delay={0.4} className="italic font-editorial lowercase -ml-6 text-brand-secondary">Assembly.</MaskReveal>
+              </h1>
             </motion.div>
-          )}
+            <div className="max-w-xs font-editorial text-2xl text-brand-primary/40 italic leading-tight">
+              Meet the people asking: What are you doing with the time you've got?
+            </div>
+          </header>
+          
+          {/* Dynamic Filter / Search */}
+          <div className="flex flex-col lg:flex-row gap-12 mb-20 border-y border-brand-outline py-12 px-8 -mx-8 bg-white/5 backdrop-blur-sm rounded-xl relative z-20">
+            <div className="flex flex-wrap gap-8">
+              {['all', ...SEGMENTS.map(s => s.id)].map(id => (
+                <button
+                  key={id}
+                  onClick={() => {
+                    setSelectedSegment(id);
+                    hapticTick();
+                  }}
+                  className={`py-3 font-typewriter text-[11px] uppercase tracking-[0.4em] transition-all relative ${
+                    selectedSegment === id ? 'text-brand-secondary' : 'text-brand-primary/40 hover:text-brand-primary'
+                  }`}
+                >
+                  {id === 'all' ? 'Everything' : SEGMENTS.find(s => s.id === id)?.title}
+                  {selectedSegment === id && (
+                    <motion.div layoutId="filter-underline" className="absolute -bottom-2 left-0 right-0 h-[2px] bg-brand-secondary" />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative flex-grow max-w-md border-l border-brand-outline pl-12 hidden lg:block">
+              <Search className="absolute left-16 top-1/2 -translate-y-1/2 text-brand-primary/20" size={16} />
+              <input 
+                type="text"
+                placeholder="Find a talk..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-transparent border-none py-4 px-12 font-sans text-brand-primary focus:outline-none placeholder:text-brand-primary/20 placeholder:font-typewriter placeholder:text-[10px] placeholder:uppercase placeholder:tracking-[0.4em]"
+              />
+            </div>
+          </div>
+
+          {/* Typographic List */}
+          <div className="space-y-4">
+            {isLoading ? (
+              <div className="py-20 text-center font-typewriter text-brand-primary/20 animate-pulse tracking-[0.5em] uppercase">
+                Retrieving the Assembly...
+              </div>
+            ) : (
+              <motion.div 
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-4"
+              >
+                <div className="space-y-4">
+                  {filteredSpeakers.map((speaker, i) => (
+                    <SpeakerRow
+                      key={speaker.id}
+                      speaker={speaker}
+                      i={i}
+                      onOpen={() => {
+                        setSelectedSpeaker(speaker);
+                        hapticTick();
+                      }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </div>
         </div>
-      </div>
+      </motion.main>
 
       <AnimatePresence>
         {selectedSpeaker && (
