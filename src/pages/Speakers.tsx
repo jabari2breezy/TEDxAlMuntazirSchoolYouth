@@ -109,8 +109,6 @@ function SpeakerRow({ speaker, i, onOpen }: { speaker: Speaker; i: number; onOpe
 }
 
 function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClose: () => void; SEGMENTS: any[] }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
   const segment = SEGMENTS.find((s: any) => s.id === speaker.segmentId);
   const segmentLabel = segment?.title || '';
   const segmentNum = segment?.number || '';
@@ -132,134 +130,153 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
         className="absolute inset-0"
       />
 
-      {/* Card — stationary, only description scrolls */}
+      {/* Card — no scroll, everything fits in viewport */}
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, scale: 0.96, y: 10 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         onClick={(e) => e.stopPropagation()}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-16px)] md:w-full max-w-2xl lg:max-w-4xl max-h-[90dvh] bg-white/75 backdrop-blur-2xl rounded-[2rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.15)] border border-white/60 flex flex-col pointer-events-auto"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-16px)] md:w-full max-w-2xl lg:max-w-4xl bg-white/80 backdrop-blur-2xl rounded-[2rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.15)] border border-white/60 pointer-events-auto max-h-[95dvh]"
       >
-        {/* Subtle paper grain texture */}
+        {/* Subtle paper grain */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply rounded-[inherit]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
 
-        {/* Close button */}
+        {/* Close */}
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ delay: 0.3 }}
           onClick={onClose}
-          className="absolute top-4 right-4 md:top-6 md:right-6 z-50 w-9 h-9 md:w-10 md:h-10 rounded-full bg-brand-primary/5 hover:bg-brand-primary/10 border border-brand-primary/10 flex items-center justify-center text-brand-primary/50 hover:text-brand-primary transition-all active:scale-90 group"
+          className="absolute top-3 right-3 md:top-5 md:right-5 z-50 w-8 h-8 md:w-9 md:h-9 rounded-full bg-brand-primary/5 hover:bg-brand-primary/10 border border-brand-primary/10 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary transition-all group"
         >
-          <X size={15} className="group-hover:rotate-90 transition-transform duration-500" />
+          <X size={14} className="group-hover:rotate-90 transition-transform duration-500" />
         </motion.button>
 
-        {/* Fixed top section — Portrait + Name + Topic (never scrolls) */}
-        <div className="shrink-0">
-          <div className="relative">
-            {/* Decorative number */}
-            <div className="absolute -top-6 -right-6 md:-top-10 md:-right-8 text-[120px] md:text-[180px] font-title font-black text-brand-primary/[0.03] leading-none pointer-events-none select-none">
+        {/* ─── Content (no scroll) ─── */}
+        <div className="flex flex-col md:flex-row h-full">
+          {/* ─── MOBILE: inline portrait row ─── */}
+          <div className="flex md:hidden items-center gap-3 p-4 pb-2 shrink-0">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-brand-secondary/20 shrink-0 bg-gradient-to-br from-brand-secondary/10 to-brand-primary/10"
+            >
+              {speaker.image && !isTBA ? (
+                <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="font-title text-lg text-brand-primary/20">{speaker.name[0]}</span>
+                </div>
+              )}
+            </motion.div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary shrink-0" />
+                <span className="font-typewriter text-[6px] uppercase tracking-[0.3em] text-brand-primary/50 font-semibold">
+                  0{segmentIdx} / {segmentLabel}
+                </span>
+              </div>
+              <h2 className="text-lg font-title font-black uppercase text-brand-primary leading-[0.95] tracking-tighter">
+                {nameWords.map((word, i) => (
+                  <span key={i} className="inline-block mr-1.5">{word}</span>
+                ))}
+              </h2>
+            </div>
+          </div>
+
+          {/* ─── DESKTOP: full-height portrait column ─── */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden md:block relative w-[45%] lg:w-[42%] shrink-0"
+          >
+            <div className="h-full min-h-[360px] lg:min-h-[400px] rounded-l-[3rem] overflow-hidden bg-gradient-to-br from-brand-secondary/10 to-brand-primary/10">
+              {speaker.image && !isTBA ? (
+                <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="font-title text-9xl text-brand-primary/10">{speaker.name[0]}</span>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              <div className="absolute top-6 left-6">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+                  <span className="font-typewriter text-[7px] uppercase tracking-[0.3em] text-white font-semibold">
+                    0{segmentIdx} / {segmentLabel}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ─── Content column ─── */}
+          <div className="flex-1 p-4 md:p-8 lg:p-10 flex flex-col justify-center min-w-0 gap-2 md:gap-3">
+            {/* Decorative number (desktop) */}
+            <div className="hidden md:block absolute -top-4 -right-4 text-[120px] font-title font-black text-brand-primary/[0.03] leading-none pointer-events-none select-none">
               {segmentNum}
             </div>
 
-            <div className="p-6 md:p-10 pb-0 md:pb-0">
-              <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
-                {/* Portrait — circular, small, artistic */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.15, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative shrink-0"
-                >
-                  <div className="w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden ring-2 ring-brand-secondary/20 shadow-lg">
-                    {speaker.image && !isTBA ? (
-                      <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-brand-secondary/20 to-brand-primary/20 flex items-center justify-center">
-                        <span className="font-title text-2xl text-brand-primary/30">{speaker.name[0]}</span>
-                      </div>
-                    )}
-                  </div>
-                  {/* Segment dot */}
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-brand-secondary border-2 border-white shadow-sm flex items-center justify-center">
-                    <span className="text-[7px] font-bold text-white">{segmentIdx}</span>
-                  </div>
-                </motion.div>
-
-                {/* Name + Meta */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex-1 min-w-0 pt-1"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.3em] text-brand-secondary/70 font-semibold">
-                      0{segmentIdx} / {segmentLabel}
-                    </span>
-                    <div className="h-px flex-1 bg-brand-outline/50" />
-                  </div>
-                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-title font-black uppercase text-brand-primary leading-[0.9] tracking-tighter">
-                    {nameWords.map((word, i) => (
-                      <span key={i} className="inline-block mr-3 md:mr-4">{word}</span>
-                    ))}
-                  </h2>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="mx-6 md:mx-10 mt-6 md:mt-8 border-t border-brand-outline/40" />
-
-          {/* Topic — Pull quote style (fixed, not scrolling) */}
-          <div className="px-6 md:px-10 pt-6 md:pt-8">
-            <div className="relative pl-6 md:pl-10">
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-secondary/30 rounded-full" />
-              <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-brand-primary/30 block mb-2">Topic</span>
-              <p className="font-editorial text-xl md:text-3xl italic text-brand-primary/70 leading-snug">
-                "{speaker.topic}"
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll-only section — Bio + Visual Art */}
-        <div
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar px-6 md:px-10 pb-6 md:pb-10"
-        >
-          <div className="space-y-8 md:space-y-10 pt-8 md:pt-10">
-            {/* Bio — Editorial body */}
+            {/* Desktop name */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.45, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="hidden md:block"
             >
-              <div className="flex items-center gap-4 mb-5">
-                <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-brand-primary/30">The Narrative</span>
-                <div className="h-px flex-1 bg-brand-outline/40" />
-              </div>
-              <div className="bg-brand-surface/60 border border-brand-outline/30 rounded-2xl md:rounded-3xl p-6 md:p-10 shadow-sm">
-                <p className="font-sans text-sm md:text-base lg:text-lg text-brand-primary/70 leading-[1.8] md:leading-[1.9] first-letter:text-3xl md:first-letter:text-4xl first-letter:font-editorial first-letter:float-left first-letter:mr-2 md:first-letter:mr-3 first-letter:leading-none first-letter:text-brand-secondary">
-                  {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence, challenging us to rethink how we choose to spend the time we possess."}
+              <h2 className="text-4xl lg:text-5xl font-title font-black uppercase text-brand-primary leading-[0.9] tracking-tighter mb-3">
+                {nameWords.map((word, i) => (
+                  <span key={i} className="inline-block mr-3">{word}</span>
+                ))}
+              </h2>
+            </motion.div>
+
+            {/* Topic */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="relative pl-3 md:pl-5">
+                <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-brand-secondary/40 rounded-full" />
+                <p className="font-editorial text-sm md:text-xl lg:text-2xl italic text-brand-primary/60 leading-snug">
+                  "{speaker.topic}"
                 </p>
               </div>
             </motion.div>
 
-            {/* Topic Visual Art */}
+            {/* Bio — compact */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.4, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              <SpeakerTopicVisual
-                name={speaker.name}
-                topic={speaker.topic}
-                image={speaker.image}
-              />
+              <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                <span className="font-typewriter text-[5px] md:text-[7px] uppercase tracking-[0.35em] text-brand-primary/30">The Narrative</span>
+                <div className="h-px flex-1 bg-brand-outline/30" />
+              </div>
+              <p className="font-sans text-[10px] md:text-sm text-brand-primary/60 leading-[1.5] md:leading-[1.7] line-clamp-2 md:line-clamp-4">
+                {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence."}
+              </p>
+            </motion.div>
+
+            {/* Visual Art — compact */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="scale-[0.4] md:scale-[0.65] lg:scale-75 origin-left -ml-16 md:-ml-8 lg:-ml-6 -mb-10 md:-mb-6 lg:-mb-4">
+                <SpeakerTopicVisual
+                  name={speaker.name}
+                  topic={speaker.topic}
+                  image={speaker.image}
+                />
+              </div>
             </motion.div>
           </div>
         </div>
