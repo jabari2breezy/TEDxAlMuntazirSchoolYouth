@@ -119,7 +119,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         <div className="flex items-baseline gap-2 text-white font-typewriter">
           <span className="text-sm opacity-50 tracking-[0.3em]">LOADING</span>
           <span className="loading-counter text-6xl md:text-8xl font-light tracking-tighter">000</span>
-          <span className="text-sm opacity-50 tracking-[0.3em]">SYS</span>
+          <span className="text-sm opacity-50 tracking-[0.3em]">%</span>
         </div>
         <div className="w-px h-12 bg-white/20" />
       </div>

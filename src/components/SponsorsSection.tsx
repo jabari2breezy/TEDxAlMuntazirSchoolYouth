@@ -21,7 +21,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
     logoHeight: 'h-28 sm:h-32 md:h-40 lg:h-48',
     maxWidth: 'max-w-[min(100%,520px)]',
     sponsors: [
-      { src: '/sponsors/etg.png', alt: 'ETG' },
+      { src: '/sponsors/etg-hd.png', alt: 'ETG' },
       { src: '/sponsors/asas-hd.png', alt: 'ASAS' },
     ],
   },

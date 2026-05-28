@@ -133,12 +133,8 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
           <X size={20} className="md:w-6 md:h-6" />
         </button>
 
-        <div
-          ref={modalScrollRef}
-          className="flex-1 overflow-y-auto custom-scrollbar"
-          data-lenis-prevent
-        >
-          <div className="p-4 md:p-6 pt-14 md:pt-16">
+        <div className="flex flex-col h-full max-h-[92vh]">
+          <div className="p-4 md:p-6 pt-14 md:pt-16 shrink-0">
             <SpeakerParallaxShowcase
               name={speaker.name}
               topic={speaker.topic}
@@ -147,16 +143,23 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
             />
           </div>
 
-          <div className="p-6 md:p-12 pt-0 space-y-10 border-t border-brand-outline/15">
+          <div className="px-6 md:px-12 pb-0 border-t border-brand-outline/15 shrink-0">
             <motion.section
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
+              className="py-6"
             >
-              <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-6">Topic Title</h4>
+              <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-4">Topic Title</h4>
               <p className="font-editorial text-3xl italic text-brand-primary leading-tight">"{speaker.topic}"</p>
             </motion.section>
+          </div>
 
+          <div
+            ref={modalScrollRef}
+            className="overflow-y-auto custom-scrollbar px-6 md:px-12 pb-6 md:pb-12"
+            data-lenis-prevent
+          >
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

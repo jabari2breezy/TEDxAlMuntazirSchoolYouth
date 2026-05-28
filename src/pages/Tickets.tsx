@@ -34,7 +34,7 @@ export default function Tickets() {
 
   // Section Opacities
   // section1 must hit 0 well before ticket settles (at 0.5)
-  const section1Opacity = useTransform(scrollYProgress, [0, 0.07, 0.14], [1, 1, 0]);
+  const section1Opacity = useTransform(scrollYProgress, [0, 0.07, 0.14, 1], [1, 1, 0, 0]);
   const section1Y = useTransform(scrollYProgress, [0, 0.14], [0, -80]);
   const section1PointerEvents = useTransform(scrollYProgress, [0, 0.07], ['auto', 'none']);
   const section2Opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.95], [0, 1, 1]);

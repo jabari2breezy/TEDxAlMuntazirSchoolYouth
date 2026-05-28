@@ -34,6 +34,7 @@ export default function Footer() {
               <Link to="/agenda" className="hover:text-brand-secondary transition-colors">Agenda</Link>
               <Link to="/faq" className="hover:text-brand-secondary transition-colors">FAQs</Link>
               <Link to="/about" className="hover:text-brand-secondary transition-colors">About</Link>
+              <Link to="/team" className="hover:text-brand-secondary transition-colors">The Team</Link>
               <Link to={TICKETS_URL} className="hover:text-brand-secondary transition-colors">Tickets</Link>
             </div>
           </div>

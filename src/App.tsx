@@ -12,6 +12,7 @@ import About from './pages/About';
 import Agenda from './pages/Agenda';
 import FAQ from './pages/FAQ';
 import Tickets from './pages/Tickets';
+import Team from './pages/Team';
 import Checkout from './pages/Checkout';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
@@ -50,6 +51,7 @@ function AnimatedRoutes() {
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/tickets" element={<Tickets />} />
+          <Route path="/team" element={<Team />} />
           <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </motion.div>

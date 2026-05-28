@@ -33,7 +33,8 @@ export default function Navbar() {
     { name: 'Agenda', href: '/agenda', id: '04', sub: 'Time Unfolding' },
     { name: 'FAQ', href: '/faq', id: '05', sub: 'The Answers' },
     { name: 'About', href: '/about', id: '06', sub: 'Our Philosophy' },
-    { name: 'Tickets', href: TICKETS_URL, id: '07', sub: 'Secure Your Seat' },
+    { name: 'The Team', href: '/team', id: '07', sub: 'The Architects' },
+    { name: 'Tickets', href: TICKETS_URL, id: '08', sub: 'Secure Your Seat' },
   ];
 
   return (
@@ -60,6 +61,7 @@ export default function Navbar() {
           { name: 'Speakers', href: '/speakers' },
           { name: 'FAQ', href: '/faq' },
           { name: 'About', href: '/about' },
+          { name: 'Team', href: '/team' },
           { name: 'Tickets', href: TICKETS_URL },
         ].map((item) => (
           item.href.startsWith('http') ? (

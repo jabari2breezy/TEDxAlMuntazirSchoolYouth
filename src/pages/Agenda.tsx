@@ -130,7 +130,7 @@ export default function Agenda() {
                 transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] as const }}
                 className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12"
               >
-                <span className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase shrink-0">Section {sIndex + 1} / {section.label}</span>
+                <span className="font-title text-5xl md:text-7xl font-black uppercase text-brand-secondary tracking-tighter shrink-0">0{sIndex + 1} — {section.label}</span>
                 <motion.div
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
