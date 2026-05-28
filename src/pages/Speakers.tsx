@@ -109,89 +109,178 @@ function SpeakerRow({ speaker, i, onOpen }: { speaker: Speaker; i: number; onOpe
 }
 
 function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClose: () => void; SEGMENTS: any[] }) {
-  const modalScrollRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+  const imageX = useTransform(mouseX, [0, 1], [-15, 15]);
+  const imageY = useTransform(mouseY, [0, 1], [-15, 15]);
+  const overlayX = useTransform(mouseX, [0, 1], [-5, 5]);
+  const overlayY = useTransform(mouseY, [0, 1], [-5, 5]);
+
+  const segment = SEGMENTS.find((s: any) => s.id === speaker.segmentId);
+  const segmentLabel = segment?.title || '';
+  const segmentNum = segment?.number || '';
+
+  function handleMouseMove(e: React.MouseEvent) {
+    const rect = modalRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set((e.clientX - rect.left) / rect.width);
+    mouseY.set((e.clientY - rect.top) / rect.height);
+  }
+
+  const isTBA = speaker.name === 'Speaker TBA' || speaker.topic === 'Topic to be announced';
+
   return (
-    <div className="fixed inset-0 z-[500] flex items-center justify-center p-4 md:p-8">
-      <motion.div 
+    <div className="fixed inset-0 z-[500] flex">
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onClick={onClose}
-        className="absolute inset-0 bg-brand-primary/20 backdrop-blur-md cursor-pointer"
+        className="absolute inset-0 bg-[#050507]"
       />
       <motion.div
-        initial={{ scale: 0.92, opacity: 0, y: 40 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.92, opacity: 0, y: 40 }}
-        transition={{ type: "spring", damping: 25, stiffness: 200, mass: 1 }}
-        className="relative w-full max-w-4xl bg-brand-background/95 backdrop-blur-2xl rounded-[2.5rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.12)] border border-brand-outline/20 flex flex-col h-auto max-h-[92vh] pointer-events-auto overflow-hidden overscroll-contain"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ delay: 0.15 }}
+        className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-secondary/5 pointer-events-none"
+      />
+
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 md:top-10 md:right-10 z-[60] w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/15 flex items-center justify-center text-white transition-all active:scale-90 group"
       >
-        <button 
-          onClick={onClose}
-          className="absolute top-6 right-6 md:top-8 md:right-8 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/80 backdrop-blur-md hover:bg-white flex items-center justify-center text-brand-primary z-50 transition-all active:scale-90 border border-brand-outline/20 shadow-sm"
+        <X size={20} className="group-hover:rotate-90 transition-transform duration-500" />
+      </button>
+
+      <div
+        ref={modalRef}
+        onMouseMove={handleMouseMove}
+        className="relative z-10 w-full h-full flex flex-col lg:flex-row overflow-hidden"
+      >
+        {/* Left — Image Panel */}
+        <motion.div
+          initial={{ x: '-100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '-100%' }}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+          className="relative w-full lg:w-[45%] xl:w-[50%] h-[50vh] lg:h-full shrink-0 overflow-hidden"
         >
-          <X size={20} className="md:w-6 md:h-6" />
-        </button>
-
-        <div className="flex flex-col h-full max-h-[92vh]">
-          <div className="p-4 md:p-6 pt-14 md:pt-16 shrink-0">
-            <SpeakerParallaxShowcase
-              name={speaker.name}
-              topic={speaker.topic}
-              segmentLabel={SEGMENTS.find((s: any) => s.id === speaker.segmentId)?.title}
-              scrollContainerRef={modalScrollRef}
-            />
-          </div>
-
-          <div className="px-6 md:px-12 pb-0 border-t border-brand-outline/15 shrink-0">
-            <motion.section
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="py-6"
-            >
-              <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-4">Topic Title</h4>
-              <p className="font-editorial text-3xl italic text-brand-primary leading-tight">"{speaker.topic}"</p>
-            </motion.section>
-          </div>
-
-          <div
-            ref={modalScrollRef}
-            className="overflow-y-auto custom-scrollbar px-6 md:px-12 pb-6 md:pb-12"
-            data-lenis-prevent
+          <motion.div
+            className="absolute inset-0 bg-brand-primary/10"
+            style={{ x: imageX, y: imageY }}
           >
-            <motion.section
+            {speaker.image && !isTBA && (
+              <img
+                src={speaker.image}
+                alt={speaker.name}
+                className="w-full h-full object-cover object-center scale-110"
+                draggable={false}
+              />
+            )}
+          </motion.div>
+          <motion.div
+            className="absolute inset-0"
+            style={{ x: overlayX, y: overlayY }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-[#050507] via-[#050507]/60 to-transparent lg:via-[#050507]/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-transparent to-[#050507]/30" />
+          </motion.div>
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:3rem_3rem] pointer-events-none" />
+          <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20">
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="relative group/bio"
+              transition={{ delay: 0.6, duration: 0.8 }}
             >
-              <h4 className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/40 border-b border-brand-outline/20 pb-4 mb-6">The Narrative</h4>
-              <div className="p-8 rounded-3xl bg-white/60 border border-brand-outline/15 backdrop-blur-md shadow-inner">
-                <div className="font-sans text-lg text-brand-primary/90 leading-relaxed max-w-2xl space-y-4">
-                  <p className="first-letter:text-5xl first-letter:font-editorial first-letter:float-left first-letter:mr-3 first-letter:leading-none first-letter:text-brand-secondary">
+              <span className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[1em] text-white/30 block mb-3">
+                {segmentLabel}
+              </span>
+              <span className="font-title text-7xl md:text-9xl lg:text-[10vw] font-black text-white/5 leading-none tracking-tighter">
+                {segmentNum}
+              </span>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Right — Content Panel */}
+        <motion.div
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+          className="flex-1 flex flex-col min-h-0 relative"
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-primary/5 via-transparent to-brand-secondary/5 pointer-events-none" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          <div
+            ref={contentRef}
+            className="flex-1 overflow-y-auto custom-scrollbar px-8 md:px-16 lg:px-20 py-12 md:py-16 lg:py-20"
+            data-lenis-prevent
+          >
+            <div className="max-w-2xl space-y-14">
+              {/* Name */}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden"
+              >
+                <span className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-white/20 block mb-6">
+                  0{SEGMENTS.findIndex((s: any) => s.id === speaker.segmentId) + 1} / {segmentLabel?.toUpperCase()}
+                </span>
+                <h2 className="text-5xl md:text-7xl lg:text-8xl font-title font-black uppercase text-white leading-[0.85] tracking-tighter">
+                  {speaker.name.split(' ').map((word, i) => (
+                    <span key={i} className="block">{word}</span>
+                  ))}
+                </h2>
+              </motion.div>
+
+              {/* Topic */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="relative pl-8 md:pl-12 border-l-2 border-brand-secondary/50"
+              >
+                <span className="font-typewriter text-[8px] uppercase tracking-[0.5em] text-white/20 block mb-3">Topic</span>
+                <p className="font-editorial text-2xl md:text-4xl italic text-white/80 leading-tight">
+                  "{speaker.topic}"
+                </p>
+              </motion.div>
+
+              {/* Bio */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="font-typewriter text-[8px] uppercase tracking-[0.5em] text-white/20 block mb-6">The Narrative</span>
+                <div className="space-y-6">
+                  <p className="font-sans text-base md:text-lg text-white/70 leading-[1.9] first-letter:text-5xl first-letter:font-editorial first-letter:float-left first-letter:mr-4 first-letter:leading-none first-letter:text-brand-secondary">
                     {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence, challenging us to rethink how we choose to spend the time we possess."}
                   </p>
                 </div>
-              </div>
-            </motion.section>
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="pt-4 flex justify-end"
-            >
-              <button 
-                onClick={onClose}
-                className="px-10 py-5 bg-brand-primary text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.2em] hover:bg-brand-secondary transition-all active:scale-95 shadow-lg shadow-brand-primary/10"
+              </motion.div>
+
+              {/* Topic Visual Art */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
-                Close Journal
-              </button>
-            </motion.div>
+                <SpeakerTopicVisual
+                  name={speaker.name}
+                  topic={speaker.topic}
+                  image={speaker.image}
+                />
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }
