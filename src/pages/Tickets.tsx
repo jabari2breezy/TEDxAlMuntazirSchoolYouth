@@ -39,19 +39,17 @@ export default function Tickets() {
   const section1PointerEvents = useTransform(scrollYProgress, [0, 0.07], ['auto', 'none']);
   const section2Opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.95], [0, 1, 1]);
 
-  // Background Colors — frosted green
+  // Background Colors — frosted matte olive green
   const bgColor = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6, 1],
-    ['#f3f3f4', '#2d5a2d', '#1f4620', '#1f4620']
+    ['#f3f3f4', '#1e2e1e', '#1a2a1a', '#1a2a1a']
   );
 
   return (
-    <div className="bg-[#2d5a2d]">
-      {/* Multiple layer grain texture - very prominent crumpled paper effect */}
-      <div className="fixed inset-0 pointer-events-none z-50 mix-blend-multiply opacity-40" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise1%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%228%22 stitchTiles=%22stitch%22 seed=%221%22/%3E%3CfeDisplacementMap in=%22SourceGraphic%22 scale=%2240%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise1)%22/%3E%3C/svg%3E")' }} />
-      <div className="fixed inset-0 pointer-events-none z-50 mix-blend-overlay opacity-35" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 128 128%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise2%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%222.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22 seed=%222%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise2)%22/%3E%3C/svg%3E")' }} />
-      <div className="fixed inset-0 pointer-events-none z-50 mix-blend-hard-light opacity-25" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 512 512%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise3%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.4%22 numOctaves=%227%22 stitchTiles=%22stitch%22 seed=%223%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise3)%22/%3E%3C/svg%3E")' }} />
+    <div className="bg-[#1a2a1a]">
+      {/* Grain texture overlay - increased opacity for more noticeable texture */}
+      <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       {/* Scroll-hijacked 3D ticket experience */}
       <div ref={containerRef} className="h-[300vh] relative">
         <motion.div 
@@ -183,21 +181,21 @@ export default function Tickets() {
         </motion.div>
       </div>
 
-       {/* Static CTA Section (Directly above the footer and 100% visible) */}
-       <section className="relative min-h-[80vh] bg-[#1f4620] flex flex-col items-center justify-center px-6 py-24 overflow-hidden border-t border-white/5 z-20">
-         {/* Animated glow effect */}
-         <motion.div
-           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-brand-secondary/10 blur-[120px] pointer-events-none"
-           animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
-           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-         />
-         
+      {/* Static CTA Section (Directly above the footer and 100% visible) */}
+      <section className="relative min-h-[80vh] bg-[#1a2a1a] flex flex-col items-center justify-center px-6 py-24 overflow-hidden border-t border-white/5 z-20">
+        {/* Animated glow effect */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-brand-secondary/10 blur-[120px] pointer-events-none"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
          {/* Subtle grid pattern */}
          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
-         {/* Grain overlay */}
-         <div className="absolute inset-0 opacity-[0.35] pointer-events-none mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise4%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.2%22 numOctaves=%225%22 stitchTiles=%22stitch%22 seed=%224%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise4)%22/%3E%3C/svg%3E")' }} />
-         
-         <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center space-y-10">
+         {/* Grain overlay - increased opacity for more texture */}
+         <div className="absolute inset-0 opacity-[0.14] pointer-events-none mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
+        
+        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center space-y-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

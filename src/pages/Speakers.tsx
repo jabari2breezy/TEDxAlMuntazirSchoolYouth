@@ -10,6 +10,7 @@ interface Speaker {
   topic: string;
   segmentId: string;
   bio?: string;
+  talk_description?: string;
 }
 
 const AUTO_INTERVAL = 5000;
@@ -21,7 +22,7 @@ export default function Speakers() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
-  const [theaterMenuOpen, setTheaterMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -52,6 +53,13 @@ export default function Speakers() {
       document.body.style.top = '';
       document.body.style.width = '';
     };
+  }, [isTheater]);
+
+  // Auto-open menu in theater mode
+  useEffect(() => {
+    if (isTheater) {
+      setMenuOpen(true);
+    }
   }, [isTheater]);
 
   const goNext = useCallback(() => {
@@ -139,7 +147,7 @@ export default function Speakers() {
 
   if (speakersData.length === 0) {
     return (
-      <div className="h-screen w-full bg-brand-primary flex items-center justify-center">
+      <div className="h-[100dvh] w-full bg-brand-primary flex items-center justify-center">
         <div className="font-typewriter text-white/20 animate-pulse tracking-[0.5em] uppercase text-sm">
           Loading the assembly...
         </div>
@@ -148,12 +156,12 @@ export default function Speakers() {
   }
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-brand-primary">
+    <div className="relative w-full h-[100dvh] overflow-hidden bg-brand-primary">
       <FloatingBackground />
 
       {/* ═══ MAIN HERO ═══ */}
       <div
-        className="relative z-10 w-full h-screen flex flex-col"
+        className="relative z-10 w-full h-[100dvh] flex flex-col"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -189,29 +197,28 @@ export default function Speakers() {
             </motion.div>
           </AnimatePresence>
 
-           {/* Speaker name - Roulette style */}
-           <div className="relative w-full text-center overflow-hidden px-2 md:px-0" style={{ minHeight: 'clamp(80px, 22vw, 200px)' }}>
-             <div className="relative w-full h-full flex items-center justify-center">
-               <div className="relative w-full" style={{ perspective: '1000px' }}>
-                 <AnimatePresence mode="wait" custom={direction}>
-                   <motion.div
-                     key={currentIndex}
-                     custom={direction}
-                     initial={{ rotateX: direction > 0 ? 90 : -90, opacity: 0 }}
-                     animate={{ rotateX: 0, opacity: 1 }}
-                     exit={{ rotateX: direction > 0 ? -90 : 90, opacity: 0 }}
-                     transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
-                     style={{ transformOrigin: 'center' }}
-                     className="w-full"
-                   >
-                     <h1 className="text-[clamp(32px,16vw,160px)] md:text-[10vw] lg:text-[8.5vw] font-title font-black uppercase leading-[0.8] tracking-tighter text-white max-w-full">
-                       {speaker?.name || ''}
-                     </h1>
-                   </motion.div>
-                 </AnimatePresence>
-               </div>
-             </div>
-           </div>
+          {/* Speaker name - Roulette animation with fixed truncation */}
+          <div className="relative w-full text-center overflow-hidden" style={{ minHeight: 'clamp(80px, 22vw, 200px)' }}>
+            <AnimatePresence mode="popLayout" custom={direction}>
+              <motion.h1
+                key={currentIndex}
+                custom={direction}
+                initial={{ y: '100%', opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: '-100%', opacity: 0 }}
+                transition={{ duration: 0.65, ease: [0.76, 0, 0.24, 1] }}
+                className="text-[clamp(3rem,16vw,12vw)] font-title font-black uppercase leading-[0.8] tracking-tighter text-white break-words"
+                style={{
+                  WebkitLineClamp: 2,
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  wordBreak: 'break-word'
+                }}
+              >
+                {speaker?.name || ''}
+              </motion.h1>
+            </AnimatePresence>
+          </div>
 
           {/* Topic */}
           <div className="relative w-full text-center overflow-hidden mt-2 md:mt-6" style={{ minHeight: 'clamp(28px, 7vw, 60px)' }}>
@@ -219,9 +226,9 @@ export default function Speakers() {
               <motion.p
                 key={`topic-${currentIndex}`}
                 custom={direction}
-                initial={{ y: direction > 0 ? '110%' : '-110%', opacity: 0 }}
+                initial={{ y: '100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: direction > 0 ? '-110%' : '110%', opacity: 0 }}
+                exit={{ y: '-100%', opacity: 0 }}
                 transition={{ duration: 0.55, delay: 0.08, ease: [0.76, 0, 0.24, 1] }}
                 className="font-editorial text-[5vw] md:text-[2.5vw] lg:text-[2vw] italic text-white/45 leading-snug"
               >
@@ -236,9 +243,9 @@ export default function Speakers() {
               <motion.p
                 key={`bio-${currentIndex}`}
                 custom={direction}
-                initial={{ y: direction > 0 ? '110%' : '-110%', opacity: 0 }}
+                initial={{ y: '100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: direction > 0 ? '-110%' : '110%', opacity: 0 }}
+                exit={{ y: '-100%', opacity: 0 }}
                 transition={{ duration: 0.45, delay: 0.16, ease: [0.76, 0, 0.24, 1] }}
                 className="font-sans text-[3.5vw] md:text-[1.1vw] lg:text-[0.95vw] text-white/55 leading-[1.6] md:leading-[1.7] line-clamp-2 md:line-clamp-3"
               >
@@ -311,74 +318,19 @@ export default function Speakers() {
         </div>
       </div>
 
-       {/* ═══ THEATER OVERLAY ═══ */}
-       <AnimatePresence>
-         {isTheater && theaterSpeaker && (
-           <motion.div
-             key={`theater-${activeIndex}`}
-             initial={{ opacity: 0 }}
-             animate={{ opacity: 1 }}
-             exit={{ opacity: 0 }}
-             transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-             className="fixed inset-0 w-full h-screen flex flex-col md:flex-row overflow-hidden z-[200]"
-           >
-             {/* Menu Pill (Top center) */}
-             <motion.div
-               initial={{ opacity: 0, y: -20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.4, duration: 0.5 }}
-               className="absolute top-6 left-1/2 -translate-x-1/2 z-30 md:hidden"
-             >
-               <motion.button
-                 whileHover={{ scale: 1.05 }}
-                 whileTap={{ scale: 0.95 }}
-                 onClick={() => setTheaterMenuOpen(!theaterMenuOpen)}
-                 className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-secondary/10 border border-brand-secondary/50 hover:bg-brand-secondary/20 transition-all duration-300"
-               >
-                 <Menu size={16} className="text-brand-secondary" />
-                 <span className="font-typewriter text-[7px] uppercase tracking-[0.2em] text-brand-secondary font-semibold">Menu</span>
-               </motion.button>
-
-               {/* Menu Panel (horizontal dropdown) */}
-               <AnimatePresence>
-                 {theaterMenuOpen && (
-                   <motion.div
-                     initial={{ opacity: 0, y: -10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     exit={{ opacity: 0, y: -10 }}
-                     transition={{ duration: 0.3 }}
-                     className="absolute top-14 left-1/2 -translate-x-1/2 w-56 bg-brand-primary border border-white/10 rounded-lg p-4 shadow-2xl"
-                   >
-                     <div className="flex flex-col gap-3">
-                       <button
-                         onClick={() => {
-                           setActiveIndex(null);
-                           setTheaterMenuOpen(false);
-                         }}
-                         className="w-full text-left px-3 py-2 text-sm text-white/60 hover:text-white hover:bg-white/5 rounded transition-all"
-                       >
-                         Close Theater
-                       </button>
-                       <div className="h-px bg-white/10" />
-                       <button
-                         onClick={() => setTheaterMenuOpen(false)}
-                         className="w-full text-left px-3 py-2 text-sm text-white/60 hover:text-white hover:bg-white/5 rounded transition-all"
-                       >
-                         Settings
-                       </button>
-                       <button
-                         onClick={() => setTheaterMenuOpen(false)}
-                         className="w-full text-left px-3 py-2 text-sm text-white/60 hover:text-white hover:bg-white/5 rounded transition-all"
-                       >
-                         Share Speaker
-                       </button>
-                     </div>
-                   </motion.div>
-                 )}
-               </AnimatePresence>
-             </motion.div>
+      {/* ═══ THEATER OVERLAY ═══ */}
+      <AnimatePresence>
+        {isTheater && theaterSpeaker && (
+          <motion.div
+            key={`theater-${activeIndex}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 w-full h-[100dvh] flex flex-col md:flex-row overflow-hidden z-[200]"
+          >
             {/* Left / Top: Navy */}
-            <div className="relative w-full md:w-[45%] h-[55vh] md:h-full bg-brand-primary flex flex-col justify-center px-6 md:px-16 lg:px-20 overflow-y-auto">
+            <div className="relative w-full md:w-[45%] h-[55vh] md:h-[100dvh] bg-brand-primary flex flex-col justify-center px-6 md:px-16 lg:px-20 overflow-y-auto">
               {/* Close */}
               <motion.button
                 initial={{ opacity: 0 }}
@@ -389,6 +341,19 @@ export default function Speakers() {
                 className="absolute top-5 md:top-10 left-5 md:left-10 z-20 w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white transition-all duration-300"
               >
                 <X size={14} />
+              </motion.button>
+
+              {/* Menu toggle on mobile */}
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="md:hidden absolute top-5 right-5 z-20 w-8 h-8 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white transition-all duration-300"
+              >
+                <Menu size={14} />
               </motion.button>
 
               {/* Watermark */}
@@ -421,10 +386,10 @@ export default function Speakers() {
                 <div className="overflow-hidden">
                   <motion.h2
                     key={`theater-name-${activeIndex}`}
-                    initial={{ y: '110%' }}
+                    initial={{ y: '100%' }}
                     animate={{ y: 0 }}
                     transition={{ duration: 0.75, delay: 0.15, ease: [0.76, 0, 0.24, 1] }}
-                    className="text-3xl md:text-5xl lg:text-6xl font-title font-black uppercase leading-[0.85] tracking-tighter text-white"
+                    className="text-3xl md:text-5xl lg:text-6xl font-title font-black uppercase leading-[0.85] tracking-tighter text-white break-words"
                   >
                     {theaterSpeaker.name}
                   </motion.h2>
@@ -449,116 +414,106 @@ export default function Speakers() {
                   className="pt-4 md:pt-6 border-t border-white/8"
                 >
                   <div className="flex items-center gap-3 mb-3 md:mb-4">
-                    <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.3em] text-white/25">The Narrative</span>
+                    <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.3em] text-white/25">Speaker Bio</span>
                     <div className="h-px flex-1 bg-white/8" />
                   </div>
-                  <p className="font-sans text-xs md:text-sm text-white/45 leading-[1.7] line-clamp-3 md:line-clamp-5">
+                  <p className="font-sans text-xs md:text-sm text-white/45 leading-[1.7]">
                     {theaterSpeaker.bio || 'This speaker will be sharing transformative insights on the intersection of humanity and time.'}
                   </p>
                 </motion.div>
               </div>
             </div>
 
-             {/* Right / Bottom: White panel */}
-             <div className="relative w-full md:w-[55%] h-[45vh] md:h-full bg-[#f8f8f6] flex flex-col px-6 md:px-16 lg:px-20 overflow-y-auto">
-               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-secondary/20 to-transparent" />
+            {/* Right / Bottom: White panel with scrollable content */}
+            <div className="relative w-full md:w-[55%] h-[45vh] md:h-[100dvh] bg-[#f8f8f6] flex flex-col px-6 md:px-16 lg:px-20 overflow-y-auto">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-secondary/20 to-transparent" />
 
-               {/* Close button (mobile only) */}
-               <motion.button
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 transition={{ delay: 0.3 }}
-                 whileHover={{ scale: 1.1, rotate: 90 }}
-                 onClick={() => setActiveIndex(null)}
-                 className="md:hidden absolute top-5 right-5 z-20 w-8 h-8 rounded-full border border-brand-primary/15 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary transition-all duration-300"
-               >
-                 <X size={14} />
-               </motion.button>
+              <div className="flex-1 flex flex-col justify-center">
+                <div className="space-y-5 md:space-y-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                  >
+                    <p className="font-typewriter text-[7px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/25 mb-3 md:mb-5">
+                      Speaker Information
+                    </p>
+                    <div className="grid grid-cols-2 gap-6 md:gap-10">
+                      <div>
+                        <p className="font-sans text-[10px] md:text-xs text-brand-primary/35 mb-1">Segment</p>
+                        <p className="font-title text-lg md:text-2xl text-brand-secondary font-black uppercase tracking-tight">{theaterSegmentLabel}</p>
+                      </div>
+                      <div>
+                        <p className="font-sans text-[10px] md:text-xs text-brand-primary/35 mb-1">Position</p>
+                        <p className="font-title text-lg md:text-2xl text-brand-primary font-black uppercase tracking-tight">0{theaterSegmentIdx}</p>
+                      </div>
+                    </div>
+                  </motion.div>
 
-               <div className="space-y-5 md:space-y-8 py-6 md:py-8">
-                 <motion.div
-                   initial={{ opacity: 0, y: 20 }}
-                   animate={{ opacity: 1, y: 0 }}
-                   transition={{ delay: 0.3, duration: 0.5 }}
-                 >
-                   <p className="font-typewriter text-[7px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/25 mb-3 md:mb-5">
-                     Speaker Information
-                   </p>
-                   <div className="grid grid-cols-2 gap-6 md:gap-10">
-                     <div>
-                       <p className="font-sans text-[10px] md:text-xs text-brand-primary/35 mb-1">Segment</p>
-                       <p className="font-title text-lg md:text-2xl text-brand-secondary font-black uppercase tracking-tight">{theaterSegmentLabel}</p>
-                     </div>
-                     <div>
-                       <p className="font-sans text-[10px] md:text-xs text-brand-primary/35 mb-1">Position</p>
-                       <p className="font-title text-lg md:text-2xl text-brand-primary font-black uppercase tracking-tight">0{theaterSegmentIdx}</p>
-                     </div>
-                   </div>
-                 </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.45, duration: 0.5 }}
+                    className="pt-5 md:pt-8 border-t border-brand-outline/15"
+                  >
+                    <p className="font-typewriter text-[7px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/25 mb-3 md:mb-5">
+                      Presentation Overview
+                    </p>
+                    <p className="font-editorial text-xs md:text-sm text-brand-primary/40 italic leading-relaxed mb-3 md:mb-4">
+                      About This Talk
+                    </p>
+                    <p className="font-sans text-xs md:text-sm text-brand-primary/55 leading-[1.7] md:leading-[1.8]">
+                      {theaterSpeaker.talk_description || 'This speaker will be sharing transformative insights on the intersection of humanity and time.'}
+                    </p>
+                  </motion.div>
 
-                 <motion.div
-                   initial={{ opacity: 0, y: 20 }}
-                   animate={{ opacity: 1, y: 0 }}
-                   transition={{ delay: 0.45, duration: 0.5 }}
-                   className="pt-5 md:pt-8 border-t border-brand-outline/15"
-                 >
-                   <p className="font-typewriter text-[7px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/25 mb-3 md:mb-5">
-                     Full Narrative
-                   </p>
-                   <p className="font-editorial text-xs md:text-sm text-brand-primary/40 italic leading-relaxed mb-3 md:mb-4">
-                     Presentation Overview
-                   </p>
-                   <p className="font-sans text-xs md:text-sm text-brand-primary/55 leading-[1.7] md:leading-[1.8]">
-                     {theaterSpeaker.bio || 'This speaker will be sharing transformative insights on the intersection of humanity and time.'}
-                   </p>
-                 </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.55, duration: 0.5 }}
+                    className="pt-5 md:pt-8 border-t border-brand-outline/15 flex items-center justify-between"
+                  >
+                    <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.25em] text-brand-primary/15">
+                      TEDxAlMuntazirSchoolYouth 2026
+                    </span>
+                    <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.25em] text-brand-primary/15">
+                      [ {activeIndex! + 1} / {speakersData.length} ]
+                    </span>
+                  </motion.div>
 
-                 <motion.div
-                   initial={{ opacity: 0 }}
-                   animate={{ opacity: 1 }}
-                   transition={{ delay: 0.55, duration: 0.5 }}
-                   className="pt-5 md:pt-8 border-t border-brand-outline/15 flex items-center justify-between"
-                 >
-                   <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.25em] text-brand-primary/15">
-                     TEDxAlMuntazirSchoolYouth 2026
-                   </span>
-                   <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.25em] text-brand-primary/15">
-                     [ {activeIndex! + 1} / {speakersData.length} ]
-                   </span>
-                 </motion.div>
+                  {/* Desktop nav in white panel */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="hidden md:flex items-center gap-4 pt-5 border-t border-brand-outline/15"
+                  >
+                    <button onClick={theaterGoPrev} className="w-10 h-10 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 hover:text-brand-primary transition-all active:scale-90">
+                      <ChevronLeft size={14} />
+                    </button>
+                    <span className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/20">
+                      {activeIndex! + 1} / {speakersData.length}
+                    </span>
+                    <button onClick={theaterGoNext} className="w-10 h-10 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 hover:text-brand-primary transition-all active:scale-90">
+                      <ChevronRight size={14} />
+                    </button>
+                  </motion.div>
 
-                 {/* Desktop nav in white panel */}
-                 <motion.div
-                   initial={{ opacity: 0 }}
-                   animate={{ opacity: 1 }}
-                   transition={{ delay: 0.5 }}
-                   className="hidden md:flex items-center gap-4 pt-5 border-t border-brand-outline/15"
-                 >
-                   <button onClick={theaterGoPrev} className="w-10 h-10 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 hover:text-brand-primary transition-all active:scale-90">
-                     <ChevronLeft size={14} />
-                   </button>
-                   <span className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/20">
-                     {activeIndex! + 1} / {speakersData.length}
-                   </span>
-                   <button onClick={theaterGoNext} className="w-10 h-10 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 hover:text-brand-primary transition-all active:scale-90">
-                     <ChevronRight size={14} />
-                   </button>
-                 </motion.div>
-
-                 {/* Mobile nav */}
-                 <div className="md:hidden flex items-center justify-center gap-4 pt-4 pb-4">
-                   <button onClick={theaterGoPrev} className="w-9 h-9 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 active:scale-90 transition-all">
-                     <ChevronLeft size={14} />
-                   </button>
-                   <span className="font-typewriter text-[7px] uppercase tracking-[0.2em] text-brand-primary/20">
-                     {activeIndex! + 1} / {speakersData.length}
-                   </span>
-                   <button onClick={theaterGoNext} className="w-9 h-9 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 active:scale-90 transition-all">
-                     <ChevronRight size={14} />
-                   </button>
-                 </div>
-               </div>
-             </div>
+                  {/* Mobile nav */}
+                  <div className="md:hidden flex items-center justify-center gap-4 pt-4 pb-8">
+                    <button onClick={theaterGoPrev} className="w-9 h-9 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 active:scale-90 transition-all">
+                      <ChevronLeft size={14} />
+                    </button>
+                    <span className="font-typewriter text-[7px] uppercase tracking-[0.2em] text-brand-primary/20">
+                      {activeIndex! + 1} / {speakersData.length}
+                    </span>
+                    <button onClick={theaterGoNext} className="w-9 h-9 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 active:scale-90 transition-all">
+                      <ChevronRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
