@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { SEGMENTS, SPEAKERS } from '../constants';
-import { X, ChevronLeft, ChevronRight, ArrowUpRight, Menu } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import FloatingBackground from '../components/FloatingBackground';
 
 interface Speaker {
@@ -9,8 +9,8 @@ interface Speaker {
   name: string;
   topic: string;
   segmentId: string;
-  bio?: string;
-  talk_description?: string;
+  bio: string;
+  talk_description: string;
 }
 
 const AUTO_INTERVAL = 5000;
@@ -22,13 +22,18 @@ export default function Speakers() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
+  
+  // Meltuk interactive tab state for mobile theater mode: 'bio' | 'talk'
+  const [activeTab, setActiveTab] = useState<'bio' | 'talk'>('bio');
+
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const isTheater = activeIndex !== null;
 
-  useEffect(() => { setSpeakersData(SPEAKERS); }, []);
+  useEffect(() => { 
+    setSpeakersData(SPEAKERS as Speaker[]); 
+  }, []);
 
   // Body lock
   useEffect(() => {
@@ -53,13 +58,6 @@ export default function Speakers() {
       document.body.style.top = '';
       document.body.style.width = '';
     };
-  }, [isTheater]);
-
-  // Auto-open menu in theater mode
-  useEffect(() => {
-    if (isTheater) {
-      setMenuOpen(true);
-    }
   }, [isTheater]);
 
   const goNext = useCallback(() => {
@@ -96,10 +94,17 @@ export default function Speakers() {
 
   // Keyboard nav
   const theaterGoNext = useCallback(() => {
-    if (activeIndex !== null) setActiveIndex((activeIndex + 1) % speakersData.length);
+    if (activeIndex !== null) {
+      setActiveIndex((activeIndex + 1) % speakersData.length);
+      setActiveTab('bio'); // reset tab on change
+    }
   }, [activeIndex, speakersData.length]);
+  
   const theaterGoPrev = useCallback(() => {
-    if (activeIndex !== null) setActiveIndex((activeIndex - 1 + speakersData.length) % speakersData.length);
+    if (activeIndex !== null) {
+      setActiveIndex((activeIndex - 1 + speakersData.length) % speakersData.length);
+      setActiveTab('bio'); // reset tab on change
+    }
   }, [activeIndex, speakersData.length]);
 
   useEffect(() => {
@@ -124,7 +129,10 @@ export default function Speakers() {
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
-  const openTheater = () => setActiveIndex(currentIndex);
+  const openTheater = () => {
+    setActiveTab('bio');
+    setActiveIndex(currentIndex);
+  };
 
   // Swipe
   const touchStartX = useRef(0);
@@ -138,7 +146,6 @@ export default function Speakers() {
   const nextSpeaker = speakersData[(currentIndex + 1) % speakersData.length];
   const segment = speaker ? SEGMENTS.find(s => s.id === speaker.segmentId) : null;
   const segmentLabel = segment?.title || '';
-  const segmentIdx = speaker ? SEGMENTS.findIndex(s => s.id === speaker.segmentId) + 1 : 0;
 
   const theaterSpeaker = isTheater && activeIndex !== null ? speakersData[activeIndex] : null;
   const theaterSegment = theaterSpeaker ? SEGMENTS.find(s => s.id === theaterSpeaker.segmentId) : null;
@@ -197,22 +204,23 @@ export default function Speakers() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Speaker name - Roulette animation with fixed truncation */}
-          <div className="relative w-full text-center overflow-hidden" style={{ minHeight: 'clamp(80px, 22vw, 200px)' }}>
+          {/* Speaker name - Vertical Roulette Roll Animation */}
+          <div className="relative w-full text-center overflow-hidden flex items-center justify-center" style={{ minHeight: 'clamp(80px, 18vw, 180px)' }}>
             <AnimatePresence mode="popLayout" custom={direction}>
               <motion.h1
                 key={currentIndex}
                 custom={direction}
-                initial={{ y: '100%', opacity: 0 }}
+                initial={{ y: direction > 0 ? '100%' : '-100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: '-100%', opacity: 0 }}
-                transition={{ duration: 0.65, ease: [0.76, 0, 0.24, 1] }}
-                className="text-[clamp(3rem,16vw,12vw)] font-title font-black uppercase leading-[0.8] tracking-tighter text-white break-words"
+                exit={{ y: direction > 0 ? '-100%' : '100%', opacity: 0 }}
+                transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+                className="text-[10vw] md:text-[8vw] lg:text-[7vw] font-title font-black uppercase leading-[0.85] tracking-tighter text-white break-words w-full"
                 style={{
-                  WebkitLineClamp: 2,
                   display: '-webkit-box',
+                  WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
-                  wordBreak: 'break-word'
+                  wordBreak: 'break-word',
+                  overflow: 'hidden'
                 }}
               >
                 {speaker?.name || ''}
@@ -221,16 +229,16 @@ export default function Speakers() {
           </div>
 
           {/* Topic */}
-          <div className="relative w-full text-center overflow-hidden mt-2 md:mt-6" style={{ minHeight: 'clamp(28px, 7vw, 60px)' }}>
+          <div className="relative w-full text-center overflow-hidden mt-2 md:mt-4" style={{ minHeight: 'clamp(28px, 6vw, 50px)' }}>
             <AnimatePresence mode="popLayout" custom={direction}>
               <motion.p
                 key={`topic-${currentIndex}`}
                 custom={direction}
-                initial={{ y: '100%', opacity: 0 }}
+                initial={{ y: direction > 0 ? '100%' : '-100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: '-100%', opacity: 0 }}
-                transition={{ duration: 0.55, delay: 0.08, ease: [0.76, 0, 0.24, 1] }}
-                className="font-editorial text-[5vw] md:text-[2.5vw] lg:text-[2vw] italic text-white/45 leading-snug"
+                exit={{ y: direction > 0 ? '-100%' : '100%', opacity: 0 }}
+                transition={{ duration: 0.6, delay: 0.05, ease: [0.76, 0, 0.24, 1] }}
+                className="font-editorial text-[5vw] md:text-[2.2vw] lg:text-[1.8vw] italic text-white/45 leading-snug"
               >
                 &ldquo;{speaker?.topic || ''}&rdquo;
               </motion.p>
@@ -238,16 +246,16 @@ export default function Speakers() {
           </div>
 
           {/* Bio */}
-          <div className="relative w-full text-center overflow-hidden mt-3 md:mt-8 max-w-xl mx-auto" style={{ minHeight: 'clamp(48px, 10vw, 80px)' }}>
+          <div className="relative w-full text-center overflow-hidden mt-3 md:mt-6 max-w-xl mx-auto" style={{ minHeight: 'clamp(48px, 8vw, 70px)' }}>
             <AnimatePresence mode="popLayout" custom={direction}>
               <motion.p
                 key={`bio-${currentIndex}`}
                 custom={direction}
-                initial={{ y: '100%', opacity: 0 }}
+                initial={{ y: direction > 0 ? '100%' : '-100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: '-100%', opacity: 0 }}
-                transition={{ duration: 0.45, delay: 0.16, ease: [0.76, 0, 0.24, 1] }}
-                className="font-sans text-[3.5vw] md:text-[1.1vw] lg:text-[0.95vw] text-white/55 leading-[1.6] md:leading-[1.7] line-clamp-2 md:line-clamp-3"
+                exit={{ y: direction > 0 ? '-100%' : '100%', opacity: 0 }}
+                transition={{ duration: 0.5, delay: 0.1, ease: [0.76, 0, 0.24, 1] }}
+                className="font-sans text-[3.5vw] md:text-[1.1vw] lg:text-[0.95vw] text-white/55 leading-[1.6] md:leading-[1.7] line-clamp-2"
               >
                 {speaker?.bio || 'This speaker will be sharing transformative insights on the intersection of humanity and time.'}
               </motion.p>
@@ -259,7 +267,7 @@ export default function Speakers() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={openTheater}
-            className="mt-4 md:mt-10 group relative inline-flex items-center gap-2 md:gap-3 px-5 md:px-8 py-2.5 md:py-4 border border-white/15 rounded-full hover:border-brand-secondary/50 hover:bg-brand-secondary/10 transition-all duration-500"
+            className="mt-6 md:mt-10 group relative inline-flex items-center gap-2 md:gap-3 px-5 md:px-8 py-2.5 md:py-4 border border-white/15 rounded-full hover:border-brand-secondary/50 hover:bg-brand-secondary/10 transition-all duration-500"
           >
             <span className="font-typewriter text-[7px] md:text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-white/80 transition-colors duration-500">
               View Profile
@@ -318,200 +326,226 @@ export default function Speakers() {
         </div>
       </div>
 
-      {/* ═══ THEATER OVERLAY ═══ */}
+      {/* ═══ THEATER OVERLAY (MELTUK.COM AESTHETIC) ═══ */}
       <AnimatePresence>
         {isTheater && theaterSpeaker && (
           <motion.div
             key={`theater-${activeIndex}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 w-full h-[100dvh] flex flex-col md:flex-row overflow-hidden z-[200]"
+            initial={{ opacity: 0, y: '30px' }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: '30px' }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 w-full h-[100dvh] bg-[#f7f4ee] flex flex-col overflow-hidden z-[200] text-[#000839]"
           >
-            {/* Left / Top: Navy */}
-            <div className="relative w-full md:w-[45%] h-[55vh] md:h-[100dvh] bg-brand-primary flex flex-col justify-center px-6 md:px-16 lg:px-20 overflow-y-auto">
-              {/* Close */}
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                onClick={() => setActiveIndex(null)}
-                className="absolute top-5 md:top-10 left-5 md:left-10 z-20 w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white transition-all duration-300"
-              >
-                <X size={14} />
-              </motion.button>
+            {/* Elegant thin top border or timeline pattern */}
+            <div className="w-full h-px bg-[#000839]/10 shrink-0" />
 
-              {/* Menu toggle on mobile */}
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden absolute top-5 right-5 z-20 w-8 h-8 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white transition-all duration-300"
-              >
-                <Menu size={14} />
-              </motion.button>
-
-              {/* Watermark */}
-              <div className="absolute bottom-8 md:bottom-16 left-6 md:left-16 lg:left-20 right-6 md:right-16 pointer-events-none select-none overflow-hidden">
-                <motion.span
-                  key={`theater-watermark-${activeIndex}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.06 }}
-                  transition={{ delay: 0.2, duration: 0.6 }}
-                  className="text-[18vw] md:text-[10vw] font-title font-black uppercase leading-none tracking-tighter text-white whitespace-nowrap block"
-                >
-                  {theaterSpeaker.name}
-                </motion.span>
+            {/* 1. TOP SECTION: Auto-Expanded Speaker Pill Selection Menu (Meltuk Style) */}
+            <div className="w-full flex items-center justify-between px-6 py-4 border-b border-[#000839]/10 bg-[#f7f4ee] shrink-0 relative z-30">
+              <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2.5 mr-4 py-1">
+                {speakersData.map((s, idx) => (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      setActiveIndex(idx);
+                      setActiveTab('bio');
+                    }}
+                    className={`px-3 py-1.5 rounded-full text-[9px] font-sans font-semibold uppercase tracking-[0.15em] transition-all duration-300 whitespace-nowrap border ${
+                      idx === activeIndex
+                        ? 'bg-[#000839] text-[#f7f4ee] border-[#000839] scale-[1.03]'
+                        : 'border-[#000839]/10 text-[#000839]/50 hover:text-[#000839] hover:border-[#000839]/30'
+                    }`}
+                  >
+                    {idx + 1}. {s.name.split(' ')[0].toLowerCase()}
+                  </button>
+                ))}
               </div>
 
-              <div className="relative z-10 space-y-5 md:space-y-8">
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                  className="flex items-center gap-3"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
-                  <span className="font-typewriter text-[7px] md:text-[9px] uppercase tracking-[0.35em] text-brand-secondary/70 font-semibold">
-                    0{theaterSegmentIdx} / {theaterSegmentLabel}
-                  </span>
-                  <div className="h-px flex-1 bg-white/10" />
-                </motion.div>
+              {/* Close Button */}
+              <motion.button
+                whileHover={{ scale: 1.05, rotate: 90 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setActiveIndex(null)}
+                className="w-9 h-9 rounded-full border border-[#000839]/10 flex items-center justify-center text-[#000839]/60 hover:text-[#000839] hover:border-[#000839]/30 transition-all duration-300 shrink-0"
+              >
+                <X size={13} />
+              </motion.button>
+            </div>
 
-                <div className="overflow-hidden">
-                  <motion.h2
-                    key={`theater-name-${activeIndex}`}
-                    initial={{ y: '100%' }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 0.75, delay: 0.15, ease: [0.76, 0, 0.24, 1] }}
-                    className="text-3xl md:text-5xl lg:text-6xl font-title font-black uppercase leading-[0.85] tracking-tighter text-white break-words"
-                  >
-                    {theaterSpeaker.name}
-                  </motion.h2>
-                </div>
+            {/* 2. MAIN CENTER BODY (Viewport locked, no global scrolling, perfect layout heights) */}
+            <div className="flex-1 min-h-0 flex flex-col md:flex-row relative z-10">
+              
+              {/* Left Side: Speaker Title & Identity Card */}
+              <div className="w-full md:w-[45%] border-b md:border-b-0 md:border-r border-[#000839]/10 flex flex-col justify-center p-6 md:p-12 lg:p-16 shrink-0 md:shrink">
+                <div className="space-y-4 md:space-y-6">
+                  {/* Segment Tag */}
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.25em] text-[#000839]/50">
+                      segment 0{theaterSegmentIdx} / {theaterSegmentLabel.toLowerCase()}
+                    </span>
+                  </div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35, duration: 0.5 }}
-                >
-                  <div className="relative pl-4 md:pl-5 border-l-[1.5px] border-brand-secondary/50">
-                    <p className="font-editorial text-sm md:text-xl lg:text-2xl italic text-white/50 leading-snug">
+                  {/* Speaker Name: Lowercase Meltuk Serif Italic */}
+                  <div className="overflow-hidden">
+                    <motion.h2
+                      key={`theater-name-${activeIndex}`}
+                      initial={{ y: '100%' }}
+                      animate={{ y: 0 }}
+                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                      className="font-editorial italic lowercase text-4xl md:text-5xl lg:text-6xl text-[#000839] tracking-tight leading-[0.9]"
+                    >
+                      {theaterSpeaker.name.toLowerCase()}
+                    </motion.h2>
+                  </div>
+
+                  {/* Topic Line */}
+                  <div className="relative pl-4 border-l border-[#000839]/20">
+                    <p className="font-editorial italic text-base md:text-lg lg:text-xl text-[#000839]/75 leading-snug">
                       &ldquo;{theaterSpeaker.topic}&rdquo;
                     </p>
                   </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45, duration: 0.5 }}
-                  className="pt-4 md:pt-6 border-t border-white/8"
-                >
-                  <div className="flex items-center gap-3 mb-3 md:mb-4">
-                    <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.3em] text-white/25">Speaker Bio</span>
-                    <div className="h-px flex-1 bg-white/8" />
-                  </div>
-                  <p className="font-sans text-xs md:text-sm text-white/45 leading-[1.7]">
-                    {theaterSpeaker.bio || 'This speaker will be sharing transformative insights on the intersection of humanity and time.'}
-                  </p>
-                </motion.div>
+                </div>
               </div>
-            </div>
 
-            {/* Right / Bottom: White panel with scrollable content */}
-            <div className="relative w-full md:w-[55%] h-[45vh] md:h-[100dvh] bg-[#f8f8f6] flex flex-col px-6 md:px-16 lg:px-20 overflow-y-auto">
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-secondary/20 to-transparent" />
-
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="space-y-5 md:space-y-8">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
+              {/* Right Side: Narrative Canvas */}
+              <div className="flex-1 flex flex-col justify-between min-h-0 p-6 md:p-12 lg:p-16 bg-[#f5f2eb]">
+                
+                {/* Mobile Tab Filter Switcher (Meltuk Style) - Shown only on Mobile */}
+                <div className="md:hidden flex items-center p-1 bg-[#000839]/5 rounded-full border border-[#000839]/5 mb-6 shrink-0">
+                  <button
+                    onClick={() => setActiveTab('bio')}
+                    className={`flex-1 py-2 text-center text-[10px] font-sans font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-300 relative ${
+                      activeTab === 'bio' ? 'text-[#f7f4ee]' : 'text-[#000839]/60'
+                    }`}
                   >
-                    <p className="font-typewriter text-[7px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/25 mb-3 md:mb-5">
-                      Speaker Information
-                    </p>
-                    <div className="grid grid-cols-2 gap-6 md:gap-10">
-                      <div>
-                        <p className="font-sans text-[10px] md:text-xs text-brand-primary/35 mb-1">Segment</p>
-                        <p className="font-title text-lg md:text-2xl text-brand-secondary font-black uppercase tracking-tight">{theaterSegmentLabel}</p>
+                    {activeTab === 'bio' && (
+                      <motion.div
+                        layoutId="active-tab-glow"
+                        className="absolute inset-0 bg-[#000839] rounded-full z-[-1]"
+                        transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                      />
+                    )}
+                    the <span className="font-editorial italic lowercase">biography</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('talk')}
+                    className={`flex-1 py-2 text-center text-[10px] font-sans font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-300 relative ${
+                      activeTab === 'talk' ? 'text-[#f7f4ee]' : 'text-[#000839]/60'
+                    }`}
+                  >
+                    {activeTab === 'talk' && (
+                      <motion.div
+                        layoutId="active-tab-glow"
+                        className="absolute inset-0 bg-[#000839] rounded-full z-[-1]"
+                        transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                      />
+                    )}
+                    about the <span className="font-editorial italic lowercase">discourse</span>
+                  </button>
+                </div>
+
+                {/* Narrative Grid Content (Side-by-side on Desktop, Viewport-locked single-tab on Mobile) */}
+                <div className="flex-1 min-h-0 relative">
+                  
+                  {/* DESKTOP CONTENT GRID */}
+                  <div className="hidden md:grid grid-cols-2 gap-10 lg:gap-16 h-full items-start overflow-hidden">
+                    {/* Bio Column */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 border-b border-[#000839]/10 pb-2">
+                        <span className="font-typewriter text-[9px] uppercase tracking-[0.25em] text-[#000839]/40">
+                          the <span className="font-editorial italic lowercase">biography</span>
+                        </span>
                       </div>
-                      <div>
-                        <p className="font-sans text-[10px] md:text-xs text-brand-primary/35 mb-1">Position</p>
-                        <p className="font-title text-lg md:text-2xl text-brand-primary font-black uppercase tracking-tight">0{theaterSegmentIdx}</p>
-                      </div>
+                      <p className="font-sans text-xs lg:text-[13px] text-[#000839]/70 leading-relaxed max-h-[35vh] overflow-y-auto no-scrollbar">
+                        {theaterSpeaker.bio}
+                      </p>
                     </div>
-                  </motion.div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.45, duration: 0.5 }}
-                    className="pt-5 md:pt-8 border-t border-brand-outline/15"
-                  >
-                    <p className="font-typewriter text-[7px] md:text-[9px] uppercase tracking-[0.35em] text-brand-primary/25 mb-3 md:mb-5">
-                      Presentation Overview
-                    </p>
-                    <p className="font-editorial text-xs md:text-sm text-brand-primary/40 italic leading-relaxed mb-3 md:mb-4">
-                      About This Talk
-                    </p>
-                    <p className="font-sans text-xs md:text-sm text-brand-primary/55 leading-[1.7] md:leading-[1.8]">
-                      {theaterSpeaker.talk_description || 'This speaker will be sharing transformative insights on the intersection of humanity and time.'}
-                    </p>
-                  </motion.div>
+                    {/* Talk Column */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 border-b border-[#000839]/10 pb-2">
+                        <span className="font-typewriter text-[9px] uppercase tracking-[0.25em] text-[#000839]/40">
+                          about the <span className="font-editorial italic lowercase">discourse</span>
+                        </span>
+                      </div>
+                      <p className="font-editorial italic text-sm lg:text-[15px] text-[#000839]/85 leading-relaxed max-h-[35vh] overflow-y-auto no-scrollbar">
+                        {theaterSpeaker.talk_description}
+                      </p>
+                    </div>
+                  </div>
 
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.55, duration: 0.5 }}
-                    className="pt-5 md:pt-8 border-t border-brand-outline/15 flex items-center justify-between"
-                  >
-                    <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.25em] text-brand-primary/15">
-                      TEDxAlMuntazirSchoolYouth 2026
-                    </span>
-                    <span className="font-typewriter text-[6px] md:text-[8px] uppercase tracking-[0.25em] text-brand-primary/15">
-                      [ {activeIndex! + 1} / {speakersData.length} ]
-                    </span>
-                  </motion.div>
+                  {/* MOBILE INTERACTIVE SWAPPER */}
+                  <div className="md:hidden h-full flex flex-col justify-start">
+                    <AnimatePresence mode="wait">
+                      {activeTab === 'bio' ? (
+                        <motion.div
+                          key="bio-panel"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 10 }}
+                          transition={{ duration: 0.3, ease: 'easeOut' }}
+                          className="space-y-2 flex-1 flex flex-col min-h-0 justify-center"
+                        >
+                          <div className="flex items-center gap-2 border-b border-[#000839]/5 pb-1 shrink-0">
+                            <span className="font-typewriter text-[8px] uppercase tracking-[0.2em] text-[#000839]/30">
+                              curated background
+                            </span>
+                          </div>
+                          <p className="font-sans text-[12px] text-[#000839]/75 leading-relaxed overflow-y-auto no-scrollbar max-h-[22vh]">
+                            {theaterSpeaker.bio}
+                          </p>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="talk-panel"
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          transition={{ duration: 0.3, ease: 'easeOut' }}
+                          className="space-y-2 flex-1 flex flex-col min-h-0 justify-center"
+                        >
+                          <div className="flex items-center gap-2 border-b border-[#000839]/5 pb-1 shrink-0">
+                            <span className="font-typewriter text-[8px] uppercase tracking-[0.2em] text-[#000839]/30">
+                              presentation synopsis
+                            </span>
+                          </div>
+                          <p className="font-editorial italic text-[14px] text-[#000839]/85 leading-relaxed overflow-y-auto no-scrollbar max-h-[22vh]">
+                            {theaterSpeaker.talk_description}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
 
-                  {/* Desktop nav in white panel */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="hidden md:flex items-center gap-4 pt-5 border-t border-brand-outline/15"
-                  >
-                    <button onClick={theaterGoPrev} className="w-10 h-10 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 hover:text-brand-primary transition-all active:scale-90">
-                      <ChevronLeft size={14} />
+                </div>
+
+                {/* 3. FOOTER CONTROLS: Absolute Minimalist Navigation Block */}
+                <div className="pt-4 border-t border-[#000839]/10 flex items-center justify-between shrink-0 mt-4">
+                  <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.2em] text-[#000839]/30">
+                    tedx 2026 / global assembly
+                  </span>
+                  
+                  {/* Slide controls */}
+                  <div className="flex items-center gap-6">
+                    <button 
+                      onClick={theaterGoPrev} 
+                      className="w-8 h-8 rounded-full border border-[#000839]/10 flex items-center justify-center text-[#000839]/40 hover:text-[#000839] hover:border-[#000839]/30 transition-all active:scale-90 shrink-0"
+                    >
+                      <ChevronLeft size={12} />
                     </button>
-                    <span className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/20">
-                      {activeIndex! + 1} / {speakersData.length}
+                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-[#000839]/40">
+                      0{activeIndex + 1} / 0{speakersData.length}
                     </span>
-                    <button onClick={theaterGoNext} className="w-10 h-10 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 hover:text-brand-primary transition-all active:scale-90">
-                      <ChevronRight size={14} />
-                    </button>
-                  </motion.div>
-
-                  {/* Mobile nav */}
-                  <div className="md:hidden flex items-center justify-center gap-4 pt-4 pb-8">
-                    <button onClick={theaterGoPrev} className="w-9 h-9 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 active:scale-90 transition-all">
-                      <ChevronLeft size={14} />
-                    </button>
-                    <span className="font-typewriter text-[7px] uppercase tracking-[0.2em] text-brand-primary/20">
-                      {activeIndex! + 1} / {speakersData.length}
-                    </span>
-                    <button onClick={theaterGoNext} className="w-9 h-9 rounded-full border border-brand-outline/20 flex items-center justify-center text-brand-primary/30 active:scale-90 transition-all">
-                      <ChevronRight size={14} />
+                    <button 
+                      onClick={theaterGoNext} 
+                      className="w-8 h-8 rounded-full border border-[#000839]/10 flex items-center justify-center text-[#000839]/40 hover:text-[#000839] hover:border-[#000839]/30 transition-all active:scale-90 shrink-0"
+                    >
+                      <ChevronRight size={12} />
                     </button>
                   </div>
                 </div>
+
               </div>
             </div>
           </motion.div>
