@@ -173,3 +173,18 @@
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ─── Custom Scrollbar ──────────────────────────────────────── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 8, 57, 0.12);
+  border-radius: 99px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 8, 57, 0.2);
+}
