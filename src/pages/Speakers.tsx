@@ -359,11 +359,11 @@ export default function Speakers() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1 flex flex-col md:flex-row overflow-hidden"
+              className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden"
               onTouchMove={(e) => e.stopPropagation()}
             >
               {/* Left / Top: Editorial Aesthetic (Navy gradient box) */}
-              <div className="relative w-full md:w-[48%] bg-gradient-to-br from-brand-primary via-brand-primary to-brand-primary/80 flex flex-col justify-center items-center p-8 md:p-12 md:p-16">
+              <div className="relative w-full md:w-[48%] min-h-[40vh] md:min-h-full bg-gradient-to-br from-brand-primary via-brand-primary to-brand-primary/80 flex flex-col justify-center items-center p-6 md:p-12 lg:p-16 shrink-0">
                 {/* Decorative grid */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
                   backgroundImage: 'linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px)',
@@ -377,22 +377,22 @@ export default function Speakers() {
                   transition={{ delay: 0.2 }}
                   whileHover={{ rotate: 90 }}
                   onClick={() => setActiveIndex(null)}
-                  className="absolute top-6 md:top-8 left-6 md:left-8 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/60 hover:text-white active:scale-90 transition-all"
+                  className="absolute top-4 md:top-8 left-4 md:left-8 z-20 w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/60 hover:text-white active:scale-90 transition-all"
                 >
-                  <X size={16} />
+                  <X size={14} className="md:w-4 md:h-4" />
                 </motion.button>
 
                 {/* Content */}
-                <div className="relative z-10 w-full max-w-lg text-white space-y-6 md:space-y-8">
+                <div className="relative z-10 w-full max-w-lg text-white space-y-4 md:space-y-8">
                   {/* Segment badge */}
                   <motion.div
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.15, duration: 0.5 }}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-2 md:gap-3"
                   >
-                    <span className="w-2 h-2 rounded-full bg-brand-secondary shrink-0" />
-                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-brand-secondary/80 font-semibold">
+                    <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-brand-secondary shrink-0" />
+                    <span className="font-typewriter text-[7px] md:text-[9px] uppercase tracking-[0.35em] md:tracking-[0.4em] text-brand-secondary/80 font-semibold">
                       0{segmentIdx} / {segmentLabel}
                     </span>
                     <div className="h-px flex-1 bg-white/10" />
@@ -405,7 +405,7 @@ export default function Speakers() {
                       initial={{ y: '110%' }}
                       animate={{ y: 0 }}
                       transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                      className="text-4xl md:text-5xl lg:text-6xl font-title font-black uppercase leading-[0.85] tracking-tighter"
+                      className="text-2xl md:text-5xl lg:text-6xl font-title font-black uppercase leading-[0.85] tracking-tighter"
                     >
                       {speaker.name}
                     </motion.h2>
@@ -417,9 +417,9 @@ export default function Speakers() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <div className="relative pl-4 md:pl-6">
+                    <div className="relative pl-2 md:pl-6">
                       <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-brand-secondary/50 rounded-full" />
-                      <p className="font-editorial text-lg md:text-2xl italic text-white/70 leading-snug">
+                      <p className="font-editorial text-sm md:text-2xl italic text-white/70 leading-snug">
                         "{speaker.topic}"
                       </p>
                     </div>
@@ -431,11 +431,11 @@ export default function Speakers() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.35, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="font-typewriter text-[7px] uppercase tracking-[0.35em] text-white/30">The Narrative</span>
+                    <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                      <span className="font-typewriter text-[6px] md:text-[7px] uppercase tracking-[0.3em] md:tracking-[0.35em] text-white/30">The Narrative</span>
                       <div className="h-px flex-1 bg-white/10" />
                     </div>
-                    <p className="font-sans text-sm md:text-base text-white/60 leading-[1.8] line-clamp-4 md:line-clamp-6">
+                    <p className="font-sans text-xs md:text-base text-white/60 leading-[1.7] md:leading-[1.8] line-clamp-3 md:line-clamp-6">
                       {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence."}
                     </p>
                   </motion.div>
@@ -467,31 +467,31 @@ export default function Speakers() {
               </div>
 
               {/* Right / Bottom: Abstract Content Panel (White) */}
-              <div className="relative w-full md:w-[52%] bg-white/95 backdrop-blur-sm flex flex-col justify-center p-8 md:p-12 lg:p-16 overflow-hidden">
+              <div className="relative w-full md:w-[52%] min-h-[55vh] md:min-h-full bg-white/95 backdrop-blur-sm flex flex-col justify-center p-6 md:p-12 lg:p-16 overflow-y-auto md:overflow-hidden shrink-0">
                 {/* Decorative accent line */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-secondary/30 to-transparent" />
 
                 {/* Secondary details grid */}
-                <div className="relative z-10 space-y-6 md:space-y-8">
+                <div className="relative z-10 space-y-4 md:space-y-8">
                   {/* Role / Speaker title */}
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3, duration: 0.5 }}
                   >
-                    <p className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-brand-primary/30 mb-2">
+                    <p className="font-typewriter text-[8px] md:text-[10px] uppercase tracking-[0.35em] md:tracking-[0.4em] text-brand-primary/30 mb-2 md:mb-3">
                       Speaker Information
                     </p>
-                    <div className="grid grid-cols-2 gap-6 md:gap-8">
+                    <div className="grid grid-cols-2 gap-4 md:gap-8">
                       <div>
-                        <p className="font-sans text-xs md:text-sm text-brand-primary/40 mb-1">Segment</p>
-                        <p className="font-title text-lg md:text-xl text-brand-secondary font-black uppercase tracking-tight">
+                        <p className="font-sans text-[10px] md:text-sm text-brand-primary/40 mb-1">Segment</p>
+                        <p className="font-title text-base md:text-xl text-brand-secondary font-black uppercase tracking-tight">
                           {segmentLabel}
                         </p>
                       </div>
                       <div>
-                        <p className="font-sans text-xs md:text-sm text-brand-primary/40 mb-1">Position</p>
-                        <p className="font-title text-lg md:text-xl text-brand-primary font-black uppercase tracking-tight">
+                        <p className="font-sans text-[10px] md:text-sm text-brand-primary/40 mb-1">Position</p>
+                        <p className="font-title text-base md:text-xl text-brand-primary font-black uppercase tracking-tight">
                           0{segmentIdx}
                         </p>
                       </div>
@@ -503,15 +503,15 @@ export default function Speakers() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.5 }}
-                    className="border-t border-brand-outline/20 pt-6 md:pt-8"
+                    className="border-t border-brand-outline/20 pt-4 md:pt-8"
                   >
-                    <p className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.4em] text-brand-primary/30 mb-3 md:mb-4">
+                    <p className="font-typewriter text-[8px] md:text-[10px] uppercase tracking-[0.35em] md:tracking-[0.4em] text-brand-primary/30 mb-2 md:mb-4">
                       Full Narrative
                     </p>
-                    <p className="font-editorial text-sm md:text-base text-brand-primary/50 italic leading-relaxed mb-4">
+                    <p className="font-editorial text-xs md:text-base text-brand-primary/50 italic leading-relaxed mb-3 md:mb-4">
                       Presentation Overview
                     </p>
-                    <p className="font-sans text-xs md:text-sm text-brand-primary/60 leading-[1.8] line-clamp-5 md:line-clamp-8">
+                    <p className="font-sans text-[11px] md:text-sm text-brand-primary/60 leading-[1.6] md:leading-[1.8] line-clamp-4 md:line-clamp-8">
                       {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence. Their perspective challenges us to rethink how we choose to spend the time we possess."}
                     </p>
                   </motion.div>
@@ -521,12 +521,12 @@ export default function Speakers() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.5 }}
-                    className="border-t border-brand-outline/20 pt-6 md:pt-8 flex items-center justify-between"
+                    className="border-t border-brand-outline/20 pt-4 md:pt-8 flex items-center justify-between"
                   >
-                    <p className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/20">
+                    <p className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.25em] md:tracking-[0.3em] text-brand-primary/20">
                       TEDxAlMuntazirSchoolYouth 2026
                     </p>
-                    <span className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/20">
+                    <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.25em] md:tracking-[0.3em] text-brand-primary/20">
                       [ {activeIndex! + 1} / {speakersData.length} ]
                     </span>
                   </motion.div>
@@ -537,22 +537,22 @@ export default function Speakers() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.45 }}
-                  className="md:hidden flex items-center justify-center gap-4 mt-8 pt-6 border-t border-brand-outline/20"
+                  className="md:hidden flex items-center justify-center gap-3 md:gap-4 mt-6 md:mt-8 pt-4 md:pt-6 border-t border-brand-outline/20"
                 >
                   <button
                     onClick={goPrev}
-                    className="w-10 h-10 rounded-full border border-brand-outline/30 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary transition-all active:scale-90"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-brand-outline/30 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary transition-all active:scale-90"
                   >
-                    <ChevronLeft size={16} />
+                    <ChevronLeft size={14} className="md:w-4 md:h-4" />
                   </button>
-                  <span className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/30">
+                  <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.25em] md:tracking-[0.3em] text-brand-primary/30">
                     {activeIndex! + 1} / {speakersData.length}
                   </span>
                   <button
                     onClick={goNext}
-                    className="w-10 h-10 rounded-full border border-brand-outline/30 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary transition-all active:scale-90"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-brand-outline/30 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary transition-all active:scale-90"
                   >
-                    <ChevronRight size={16} />
+                    <ChevronRight size={14} className="md:w-4 md:h-4" />
                   </button>
                 </motion.div>
               </div>
