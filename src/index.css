@@ -161,11 +161,22 @@
     display: none;
   }
 
-  /* Ensure framer-motion transforms stay GPU composited */
-  [data-framer-motion], [style*="transform"] {
+  /* Ensure all transforms stay GPU composited on mobile */
+  [style*="transform"] {
     will-change: transform;
     transform: translateZ(0);
   }
+}
+
+/* ─── Faster Tap Response on Mobile ──────────────────────────── */
+button, a, input, textarea, select, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* ─── Scrollable Container Fix for iOS ───────────────────────── */
+.ios-scroll {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
 }
 
 /* ─── touch-action optimisation for drag elements ────────────── */

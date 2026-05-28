@@ -121,7 +121,7 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
 
   return (
     <div
-      className="fixed inset-0 z-[500] flex items-center justify-center p-3 md:p-8 bg-brand-primary/30 backdrop-blur-sm"
+      className="fixed inset-0 z-[500] bg-brand-primary/30 backdrop-blur-sm"
       onClick={onClose}
     >
       {/* Backdrop */}
@@ -132,17 +132,17 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
         className="absolute inset-0"
       />
 
-      {/* Card */}
+      {/* Card — centered via absolute positioning so it never shifts on scroll */}
       <motion.div
-        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        initial={{ opacity: 0, y: 40, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 20, scale: 0.97 }}
-        transition={{ type: "spring", damping: 24, stiffness: 200, mass: 0.8 }}
+        exit={{ opacity: 0, scale: 0.96, y: 10 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl lg:max-w-4xl max-h-[90dvh] bg-white/70 backdrop-blur-2xl rounded-[2rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.15)] border border-white/60 flex flex-col pointer-events-auto"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-16px)] md:w-full max-w-2xl lg:max-w-4xl max-h-[90dvh] bg-white/75 backdrop-blur-2xl rounded-[2rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.15)] border border-white/60 flex flex-col pointer-events-auto"
       >
         {/* Subtle paper grain texture */}
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-multiply rounded-[inherit]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply rounded-[inherit]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
 
         {/* Close button */}
         <motion.button

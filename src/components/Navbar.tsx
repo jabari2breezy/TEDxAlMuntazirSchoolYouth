@@ -7,9 +7,12 @@ import { SOCIALS, TICKETS_URL } from '../constants';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [quote, setQuote] = useState<{ text: string, author: string } | null>(null);
   const location = useLocation();
   const { scrollYProgress } = useScroll();
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -43,7 +46,12 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 h-[2px] bg-brand-secondary z-[200] origin-left"
         style={{ scaleX: scrollYProgress }}
       />
-      <nav className="fixed top-0 left-0 w-full z-[100] px-6 md:px-12 py-6 flex justify-between items-center pointer-events-none mix-blend-difference text-white isolate">
+      <motion.nav
+        initial={{ y: -80, opacity: 0 }}
+        animate={mounted ? { y: 0, opacity: 1 } : { y: -80, opacity: 0 }}
+        transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+        className="fixed top-0 left-0 w-full z-[100] px-6 md:px-12 py-6 flex justify-between items-center pointer-events-none mix-blend-difference text-white isolate"
+      >
       <div className="flex items-center gap-6 pointer-events-auto">
         <Link to="/" className="flex items-baseline gap-4">
           <Logo variant="tedx" theme="dark" className="scale-75 md:scale-90 origin-left" />
@@ -110,7 +118,7 @@ export default function Navbar() {
           </div>
         </button>
       </div>
-      </nav>
+      </motion.nav>
 
       {/* Menu Overlay - Full Screen Liquid (outside blend layer) */}
       <AnimatePresence>

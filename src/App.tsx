@@ -38,9 +38,9 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <motion.div 
         key={location.pathname}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -10, scale: 0.97 }}
         transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
       >
         <Routes location={location}>
