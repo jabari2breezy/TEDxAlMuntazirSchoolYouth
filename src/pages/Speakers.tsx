@@ -21,6 +21,7 @@ export default function Speakers() {
   const [speakersData, setSpeakersData] = useState<Speaker[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const isTheater = activeIndex !== null;
 
@@ -70,7 +71,6 @@ export default function Speakers() {
   const segment = speaker ? SEGMENTS.find(s => s.id === speaker.segmentId) : null;
   const segmentLabel = segment?.title || '';
   const segmentIdx = speaker ? SEGMENTS.findIndex(s => s.id === speaker.segmentId) + 1 : 0;
-  const isTBA = speaker ? (speaker.name === 'Speaker TBA' || speaker.topic === 'Topic to be announced') : false;
 
   const goNext = () => {
     if (activeIndex === null) return;
@@ -104,63 +104,52 @@ export default function Speakers() {
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="flex-1 flex flex-col overflow-y-auto pb-32"
             >
-              <div className="px-6 md:px-16 max-w-screen-2xl mx-auto w-full relative z-10 pt-16 md:pt-32">
+              <div className="px-4 md:px-8 lg:px-12 w-full relative z-10 pt-12 md:pt-24">
                 {/* Header */}
-                <header className="mb-24 md:mb-32">
+                <header className="mb-12 md:mb-20 lg:mb-24">
                   <motion.div
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
                     className="max-w-4xl"
                   >
-                    <div className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase mb-8 md:mb-12">
+                    <div className="font-typewriter text-[9px] md:text-[10px] text-brand-secondary tracking-[1em] uppercase mb-6 md:mb-8">
                       The Guest List
                     </div>
-                    <h1 className="text-6xl md:text-[12vw] font-title font-black tracking-tighter leading-[0.75] uppercase flex flex-col text-brand-primary">
+                    <h1 className="text-5xl md:text-7xl lg:text-[10vw] font-title font-black tracking-tighter leading-[0.75] uppercase flex flex-col text-brand-primary">
                       <MaskReveal delay={0.2}>The</MaskReveal>
-                      <MaskReveal delay={0.4} className="italic font-editorial lowercase -ml-4 md:-ml-6 text-brand-secondary">
+                      <MaskReveal delay={0.4} className="italic font-editorial lowercase -ml-2 md:-ml-4 text-brand-secondary">
                         Assembly.
                       </MaskReveal>
                     </h1>
                   </motion.div>
-                  <div className="max-w-xs font-editorial text-lg md:text-2xl text-brand-primary/40 italic leading-tight mt-12">
+                  <div className="max-w-md font-editorial text-base md:text-xl text-brand-primary/40 italic leading-snug mt-8">
                     Meet the people asking: What are you doing with the time you've got?
                   </div>
                 </header>
 
-                {/* Filter Bar */}
-                <div className="flex flex-col lg:flex-row gap-8 md:gap-12 mb-16 md:mb-24 border-y border-brand-outline py-8 md:py-12 px-6 -mx-6 bg-white/3 backdrop-blur-sm rounded-xl relative z-20">
-                  <div className="flex flex-wrap gap-6 md:gap-8">
+                {/* Filter Bar - Compact */}
+                <div className="flex flex-col md:flex-row gap-6 md:gap-8 mb-12 md:mb-16 border-y border-brand-outline py-6 md:py-8 px-4 -mx-4 bg-white/2 backdrop-blur-sm rounded-lg relative z-20">
+                  <div className="flex flex-wrap gap-4 md:gap-6">
                     {['all', ...SEGMENTS.map(s => s.id)].map(id => (
                       <button
                         key={id}
                         onClick={() => setSelectedSegment(id)}
-                        className={`py-2 font-typewriter text-[10px] md:text-[11px] uppercase tracking-[0.4em] transition-all relative ${
+                        className={`py-2 font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.3em] transition-all relative ${
                           selectedSegment === id ? 'text-brand-secondary' : 'text-brand-primary/40 hover:text-brand-primary'
                         }`}
                       >
                         {id === 'all' ? 'Everything' : SEGMENTS.find(s => s.id === id)?.title}
                         {selectedSegment === id && (
-                          <motion.div layoutId="filter-underline" className="absolute -bottom-1 left-0 right-0 h-[2px] bg-brand-secondary" />
+                          <motion.div layoutId="filter-underline" className="absolute -bottom-1 left-0 right-0 h-[1px] bg-brand-secondary" />
                         )}
                       </button>
                     ))}
                   </div>
-
-                  <div className="relative flex-grow max-w-md border-l border-brand-outline pl-8 md:pl-12 hidden lg:block">
-                    <Search className="absolute left-12 md:left-16 top-1/2 -translate-y-1/2 text-brand-primary/20" size={14} />
-                    <input
-                      type="text"
-                      placeholder="Find a talk..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-transparent border-none py-3 md:py-4 px-8 md:px-12 font-sans text-sm md:text-base text-brand-primary focus:outline-none placeholder:text-brand-primary/20 placeholder:font-typewriter placeholder:text-[9px] md:text-[10px] placeholder:uppercase placeholder:tracking-[0.4em]"
-                    />
-                  </div>
                 </div>
 
-                {/* Speaker Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                {/* Speaker Grid - Full Width Massive Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-8">
                   {isLoading ? (
                     <div className="col-span-full py-20 text-center font-typewriter text-brand-primary/20 animate-pulse tracking-[0.5em] uppercase text-sm">
                       Retrieving the Assembly...
@@ -170,62 +159,194 @@ export default function Speakers() {
                       No speakers found
                     </div>
                   ) : (
-                    filteredSpeakers.map((s, i) => (
-                      <motion.div
-                        key={s.id}
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-100px' }}
-                        transition={{ duration: 0.8, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-                        onClick={() => setActiveIndex(speakersData.indexOf(s))}
-                        className="group relative border border-brand-outline/30 bg-gradient-to-br from-brand-primary/5 to-transparent backdrop-blur-sm rounded-2xl p-6 md:p-8 cursor-pointer transition-all duration-500 hover:border-brand-secondary/50 hover:bg-brand-secondary/5"
-                      >
-                        {/* Glow on hover */}
+                    filteredSpeakers.map((s, i) => {
+                      const segIdx = SEGMENTS.findIndex(seg => seg.id === s.segmentId) + 1;
+                      const isHovered = hoveredIndex === i;
+                      
+                      return (
                         <motion.div
-                          className="absolute -inset-px rounded-2xl opacity-0 blur-xl pointer-events-none"
-                          animate={{ opacity: 0 }}
-                          whileHover={{ opacity: 0.1 }}
-                          transition={{ duration: 0.3 }}
-                          style={{ background: 'linear-gradient(135deg, #006d38, #000839)' }}
-                        />
+                          key={s.id}
+                          initial={{ opacity: 0, y: 60, scale: 0.95 }}
+                          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                          viewport={{ once: true, margin: '-50px' }}
+                          transition={{ duration: 0.8, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                          onMouseEnter={() => setHoveredIndex(i)}
+                          onMouseLeave={() => setHoveredIndex(null)}
+                          onClick={() => setActiveIndex(speakersData.indexOf(s))}
+                          className="group relative h-auto min-h-[420px] md:min-h-[480px] lg:min-h-[520px] cursor-pointer overflow-hidden rounded-2xl md:rounded-3xl"
+                        >
+                          {/* Premium Border Glow */}
+                          <motion.div
+                            className="absolute inset-0 rounded-2xl md:rounded-3xl pointer-events-none"
+                            animate={{
+                              opacity: isHovered ? 1 : 0.3,
+                              borderColor: isHovered ? 'rgba(0, 109, 56, 0.6)' : 'rgba(0, 8, 57, 0.2)',
+                            }}
+                            transition={{ duration: 0.4 }}
+                            style={{
+                              border: '1.5px solid',
+                              boxShadow: isHovered 
+                                ? 'inset 0 0 60px rgba(0, 109, 56, 0.15), 0 0 80px rgba(0, 109, 56, 0.1)' 
+                                : 'inset 0 0 30px rgba(0, 8, 57, 0.05)',
+                            }}
+                          />
 
-                        {/* Content */}
-                        <div className="relative z-10 space-y-4">
-                          {/* Segment badge */}
-                          <div className="flex items-center gap-2">
-                            <span className="w-1 h-1 rounded-full bg-brand-secondary" />
-                            <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.3em] text-brand-secondary/60">
-                              0{SEGMENTS.findIndex(seg => seg.id === s.segmentId) + 1} / {segment?.title || 'SEGMENT'}
-                            </span>
+                          {/* Background with gradient mesh */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/20 via-brand-primary/5 to-brand-secondary/10" />
+                          
+                          {/* Animated grid backdrop */}
+                          <motion.div
+                            className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                            animate={{ 
+                              backgroundPosition: isHovered ? ['0% 0%', '100% 100%'] : '0% 0%'
+                            }}
+                            transition={{ duration: 8, ease: 'linear', repeat: isHovered ? Infinity : 0 }}
+                            style={{
+                              backgroundImage: 'linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px)',
+                              backgroundSize: '50px 50px',
+                            }}
+                          />
+
+                          {/* Hover gradient overlay */}
+                          <motion.div
+                            className="absolute inset-0 pointer-events-none"
+                            animate={{
+                              background: isHovered
+                                ? 'radial-gradient(400px at 50% 50%, rgba(0, 109, 56, 0.1) 0%, transparent 80%)'
+                                : 'radial-gradient(400px at 50% 50%, rgba(0, 109, 56, 0) 0%, transparent 80%)',
+                            }}
+                            transition={{ duration: 0.5 }}
+                          />
+
+                          {/* Content Container */}
+                          <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-10 lg:p-12">
+                            {/* Top Section */}
+                            <div className="space-y-6 md:space-y-8">
+                              {/* Segment Badge with line */}
+                              <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.08 + 0.2 }}
+                                className="flex items-center gap-3"
+                              >
+                                <motion.div
+                                  className="w-1.5 h-1.5 rounded-full bg-brand-secondary shrink-0"
+                                  animate={{ scale: isHovered ? 1.3 : 1 }}
+                                  transition={{ duration: 0.3 }}
+                                />
+                                <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-brand-secondary/70 font-semibold">
+                                  0{segIdx} / {SEGMENTS.find(seg => seg.id === s.segmentId)?.title || 'SEGMENT'}
+                                </span>
+                                <motion.div 
+                                  className="h-px flex-1 bg-brand-outline/20"
+                                  animate={{ 
+                                    width: isHovered ? '100%' : '0%',
+                                    background: isHovered ? 'rgba(0, 109, 56, 0.3)' : 'rgba(0, 8, 57, 0.1)',
+                                  }}
+                                  transition={{ duration: 0.4 }}
+                                />
+                              </motion.div>
+
+                              {/* Speaker Name */}
+                              <div className="overflow-hidden">
+                                <motion.h3
+                                  initial={{ y: '100%', opacity: 0 }}
+                                  whileInView={{ y: 0, opacity: 1 }}
+                                  viewport={{ once: true }}
+                                  transition={{ delay: i * 0.08 + 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                  className="text-3xl md:text-4xl lg:text-5xl font-title font-black uppercase leading-[0.9] tracking-tighter text-brand-primary"
+                                >
+                                  {s.name}
+                                </motion.h3>
+                              </div>
+
+                              {/* Topic with italic styling */}
+                              <motion.div
+                                initial={{ opacity: 0, y: 15 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.08 + 0.25, duration: 0.5 }}
+                                className="relative pl-4 md:pl-5 border-l-2 border-brand-secondary/40"
+                              >
+                                <p className="font-editorial text-lg md:text-xl lg:text-2xl italic text-brand-primary/60 leading-snug">
+                                  "{s.topic}"
+                                </p>
+                              </motion.div>
+
+                              {/* Bio snippet */}
+                              <motion.p
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.08 + 0.35, duration: 0.5 }}
+                                className="font-sans text-sm md:text-base text-brand-primary/50 leading-relaxed line-clamp-3 md:line-clamp-4"
+                              >
+                                {s.bio || "Transformative insights on the intersection of humanity and time."}
+                              </motion.p>
+                            </div>
+
+                            {/* Bottom CTA Section */}
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              viewport={{ once: true }}
+                              transition={{ delay: i * 0.08 + 0.4 }}
+                              className="flex items-center justify-between pt-6 md:pt-8 border-t border-brand-outline/20 group/cta"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.25em] text-brand-primary/30 group-hover/cta:text-brand-secondary transition-colors duration-300">
+                                  View Profile
+                                </span>
+                              </div>
+
+                              {/* Animated arrow */}
+                              <motion.div
+                                animate={{
+                                  x: isHovered ? 8 : 0,
+                                  opacity: isHovered ? 1 : 0.5,
+                                }}
+                                transition={{ duration: 0.3, ease: 'easeOut' }}
+                                className="w-6 h-6 rounded-full border border-brand-secondary/40 flex items-center justify-center group-hover/cta:border-brand-secondary/80 transition-colors duration-300"
+                              >
+                                <motion.svg
+                                  className="w-3 h-3 text-brand-secondary/60 group-hover/cta:text-brand-secondary transition-colors duration-300"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <motion.path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                                    animate={{
+                                      x: isHovered ? [0, 2, 0] : 0,
+                                    }}
+                                    transition={{
+                                      duration: 0.8,
+                                      repeat: isHovered ? Infinity : 0,
+                                      ease: 'easeInOut',
+                                    }}
+                                  />
+                                </motion.svg>
+                              </motion.div>
+                            </motion.div>
                           </div>
 
-                          {/* Name */}
-                          <div>
-                            <h3 className="text-2xl md:text-3xl font-title font-black uppercase text-brand-primary leading-tight tracking-tighter">
-                              {s.name}
-                            </h3>
-                          </div>
-
-                          {/* Topic */}
-                          <p className="font-editorial text-base md:text-lg text-brand-primary/50 italic leading-snug">
-                            "{s.topic}"
-                          </p>
-
-                          {/* Bio preview */}
-                          <p className="font-sans text-xs md:text-sm text-brand-primary/40 leading-relaxed line-clamp-2">
-                            {s.bio || "Transformative insights on the intersection of humanity and time."}
-                          </p>
-
-                          {/* Arrow indicator */}
-                          <div className="flex items-center gap-2 pt-3 md:pt-4">
-                            <div className="h-px flex-1 bg-brand-outline/20 group-hover:bg-brand-secondary/30 transition-all" />
-                            <span className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-brand-primary/30 group-hover:text-brand-secondary transition-all">
-                              Expand
-                            </span>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))
+                          {/* Subtle shine effect on hover */}
+                          <motion.div
+                            className="absolute inset-0 rounded-2xl md:rounded-3xl pointer-events-none"
+                            animate={{
+                              background: isHovered
+                                ? 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, transparent 100%)'
+                                : 'linear-gradient(135deg, rgba(255,255,255,0) 0%, transparent 50%, transparent 100%)',
+                            }}
+                            transition={{ duration: 0.4 }}
+                          />
+                        </motion.div>
+                      );
+                    })
                   )}
                 </div>
               </div>
