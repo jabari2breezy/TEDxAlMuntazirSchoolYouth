@@ -199,3 +199,12 @@ button, a, input, textarea, select, [role="button"] {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 8, 57, 0.2);
 }
+
+/* ─── Hide scrollbar ────────────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
