@@ -230,6 +230,26 @@ export default function Navbar() {
                 <a href={`mailto:${SOCIALS.email}`} className="hover:text-brand-secondary transition-colors">Inquiries</a>
               </div>
             </div>
+
+            {/* Scroll indicator at bottom of menu */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 0.6 }}
+              className="pointer-events-none sticky bottom-0 flex items-center justify-center pb-4 pt-8 bg-gradient-to-t from-brand-primary to-transparent"
+            >
+              <div className="flex flex-col items-center gap-1">
+                <span className="font-typewriter text-[6px] uppercase tracking-[0.4em] text-white/15">Scroll</span>
+                <motion.svg
+                  width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  className="text-white/20"
+                  animate={{ y: [0, 4, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <path d="M8 12L3 7h10L8 12z" fill="currentColor" />
+                </motion.svg>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

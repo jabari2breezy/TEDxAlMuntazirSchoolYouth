@@ -58,6 +58,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
       { src: '/sponsors/smiles-cars.png', alt: 'Smiles Cars' },
       { src: '/sponsors/dar-glass-works.png', alt: 'Dar es Salaam Glass Works' },
       { src: '/sponsors/amjad-motors.png', alt: 'AMJAD MOTORS International Limited' },
+      { src: '/sponsors/emerson-education.png', alt: 'Emerson Education' },
     ],
   },
 ];

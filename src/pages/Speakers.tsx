@@ -132,7 +132,7 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
         className="absolute inset-0"
       />
 
-      {/* Card — centered via absolute positioning so it never shifts on scroll */}
+      {/* Card — stationary, only description scrolls */}
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -156,12 +156,8 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
           <X size={15} className="group-hover:rotate-90 transition-transform duration-500" />
         </motion.button>
 
-        {/* Scrollable content */}
-        <div
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar"
-        >
-          {/* Top section — Portrait + Name */}
+        {/* Fixed top section — Portrait + Name + Topic (never scrolls) */}
+        <div className="shrink-0">
           <div className="relative">
             {/* Decorative number */}
             <div className="absolute -top-6 -right-6 md:-top-10 md:-right-8 text-[120px] md:text-[180px] font-title font-black text-brand-primary/[0.03] leading-none pointer-events-none select-none">
@@ -218,22 +214,24 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
           {/* Divider */}
           <div className="mx-6 md:mx-10 mt-6 md:mt-8 border-t border-brand-outline/40" />
 
-          {/* Body content */}
-          <div className="p-6 md:p-10 space-y-8 md:space-y-10">
-            {/* Topic — Pull quote style */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="relative pl-6 md:pl-10"
-            >
+          {/* Topic — Pull quote style (fixed, not scrolling) */}
+          <div className="px-6 md:px-10 pt-6 md:pt-8">
+            <div className="relative pl-6 md:pl-10">
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-secondary/30 rounded-full" />
               <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-brand-primary/30 block mb-2">Topic</span>
               <p className="font-editorial text-xl md:text-3xl italic text-brand-primary/70 leading-snug">
                 "{speaker.topic}"
               </p>
-            </motion.div>
+            </div>
+          </div>
+        </div>
 
+        {/* Scroll-only section — Bio + Visual Art */}
+        <div
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar px-6 md:px-10 pb-6 md:pb-10"
+        >
+          <div className="space-y-8 md:space-y-10 pt-8 md:pt-10">
             {/* Bio — Editorial body */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}

@@ -7,7 +7,7 @@ import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
 import PrecisionButton from '../components/PrecisionButton';
-import { TICKETS_URL } from '../constants';
+import { TICKETS_URL, SOCIALS } from '../constants';
 import SponsorsSection from '../components/SponsorsSection';
 
 const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -368,13 +368,13 @@ export default function Home() {
                >
                  WhatsApp
                </a>
-               <a 
-                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("I'm attending TEDxAlMuntazirSchoolsYouth 2026. Join me! #BorrowedTime #TEDx")}&url=${encodeURIComponent(window.location.origin)}`} 
-                 target="_blank" rel="noopener noreferrer"
-                 className="px-12 py-5 bg-transparent border border-white/20 text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all shadow-xl shadow-black/5"
-               >
-                 Twitter
-               </a>
+                <a 
+                  href={`https://instagram.com/${SOCIALS.instagram.replace('@','')}`} 
+                  target="_blank" rel="noopener noreferrer"
+                  className="px-12 py-5 bg-transparent border border-white/20 text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all shadow-xl shadow-black/5"
+                >
+                  Instagram
+                </a>
             </div>
           </motion.div>
         </div>
