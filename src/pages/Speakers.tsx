@@ -118,46 +118,43 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
   const nameWords = speaker.name.split(' ');
 
   return (
-    <>
-      {/* ─── MOBILE: full-screen editorial overlay ─── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.4 }}
-        onClick={onClose}
-        className="fixed inset-0 z-[500] md:hidden flex flex-col bg-black"
-      >
-        {/* Top: Hero portrait */}
-        <motion.div
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative h-[58%] min-h-[280px] overflow-hidden"
-        >
-          {speaker.image && !isTBA ? (
-            <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-brand-secondary/30 to-brand-primary/30 flex items-center justify-center">
-              <span className="font-title text-[160px] text-white/10">{speaker.name[0]}</span>
-            </div>
-          )}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      className="fixed inset-0 z-[500] flex flex-col md:block bg-black md:bg-brand-primary/30 md:backdrop-blur-sm"
+    >
+      {/* ─── MOBILE LAYOUT ─── */}
+      <div className="flex flex-col flex-1 md:hidden">
+        {/* Hero portrait */}
+        <div className="relative h-[58%] min-h-[280px] overflow-hidden">
+          <motion.div
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full h-full"
+          >
+            {speaker.image && !isTBA ? (
+              <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-brand-secondary/30 to-brand-primary/30 flex items-center justify-center">
+                <span className="font-title text-[160px] text-white/10">{speaker.name[0]}</span>
+              </div>
+            )}
+          </motion.div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
 
-          {/* Gradient veil */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-          {/* Close button */}
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
             onClick={onClose}
-            className="absolute top-6 right-5 z-50 w-9 h-9 rounded-full bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center text-white/80 hover:text-white active:scale-90 transition-all"
+            className="absolute top-6 right-5 z-10 w-9 h-9 rounded-full bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center text-white/80 active:scale-90 transition-all"
           >
             <X size={15} />
           </motion.button>
 
-          {/* Segment badge */}
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
@@ -172,7 +169,6 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
             </div>
           </motion.div>
 
-          {/* Name at bottom of hero */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -185,9 +181,9 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
               ))}
             </h2>
           </motion.div>
-        </motion.div>
+        </div>
 
-        {/* Bottom: Content panel */}
+        {/* Content panel */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -195,7 +191,6 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
           className="flex-1 bg-white rounded-t-3xl -mt-6 relative z-10 px-6 pt-6 pb-8 flex flex-col justify-between"
         >
           <div className="space-y-4">
-            {/* Topic */}
             <div className="relative pl-4">
               <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-brand-secondary/40 rounded-full" />
               <p className="font-editorial text-lg italic text-brand-primary/60 leading-snug">
@@ -203,7 +198,6 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
               </p>
             </div>
 
-            {/* Bio excerpt */}
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <span className="font-typewriter text-[6px] uppercase tracking-[0.35em] text-brand-primary/30">The Narrative</span>
@@ -215,30 +209,15 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
             </div>
           </div>
 
-          {/* Segment index */}
           <div className="flex items-center justify-between pt-3 border-t border-brand-outline/20 mt-auto">
-            <span className="font-typewriter text-[8px] uppercase tracking-[0.35em] text-brand-primary/20">
-              Speaker
-            </span>
-            <span className="font-title text-sm font-bold text-brand-primary/20">
-              0{segmentIdx}
-            </span>
+            <span className="font-typewriter text-[8px] uppercase tracking-[0.35em] text-brand-primary/20">Speaker</span>
+            <span className="font-title text-sm font-bold text-brand-primary/20">0{segmentIdx}</span>
           </div>
         </motion.div>
-      </motion.div>
+      </div>
 
-      {/* ─── DESKTOP: centered frosted card ─── */}
-      <div
-        className="fixed inset-0 z-[500] bg-brand-primary/30 backdrop-blur-sm max-md:hidden"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="absolute inset-0"
-        />
-
+      {/* ─── DESKTOP LAYOUT ─── */}
+      <div className="hidden md:block w-full h-full">
         <motion.div
           initial={{ opacity: 0, y: 40, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -261,7 +240,6 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
           </motion.button>
 
           <div className="flex flex-row">
-            {/* Left: Portrait */}
             <motion.div
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -288,9 +266,8 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
               </div>
             </motion.div>
 
-            {/* Right: Content */}
             <div className="flex-1 p-8 lg:p-10 flex flex-col justify-center min-w-0 gap-3">
-              <div className="hidden md:block absolute -top-4 -right-4 text-[120px] font-title font-black text-brand-primary/[0.03] leading-none pointer-events-none select-none">
+              <div className="absolute -top-4 -right-4 text-[120px] font-title font-black text-brand-primary/[0.03] leading-none pointer-events-none select-none">
                 {segmentNum}
               </div>
 
@@ -350,7 +327,7 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
           </div>
         </motion.div>
       </div>
-    </>
+    </motion.div>
   );
 }
 
