@@ -118,170 +118,239 @@ function SpeakerModal({ speaker, onClose, SEGMENTS }: { speaker: Speaker; onClos
   const nameWords = speaker.name.split(' ');
 
   return (
-    <div
-      className="fixed inset-0 z-[500] bg-brand-primary/30 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      {/* Backdrop */}
+    <>
+      {/* ─── MOBILE: full-screen editorial overlay ─── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0"
-      />
-
-      {/* Card — no scroll, everything fits in viewport */}
-      <motion.div
-        initial={{ opacity: 0, y: 40, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.96, y: 10 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        onClick={(e) => e.stopPropagation()}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-16px)] md:w-full max-w-2xl lg:max-w-4xl bg-white/80 backdrop-blur-2xl rounded-[2rem] md:rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.15)] border border-white/60 pointer-events-auto max-h-[95dvh]"
+        transition={{ duration: 0.4 }}
+        onClick={onClose}
+        className="fixed inset-0 z-[500] md:hidden flex flex-col bg-black"
       >
-        {/* Subtle paper grain */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply rounded-[inherit]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
-
-        {/* Close */}
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          transition={{ delay: 0.3 }}
-          onClick={onClose}
-          className="absolute top-3 right-3 md:top-5 md:right-5 z-50 w-8 h-8 md:w-9 md:h-9 rounded-full bg-brand-primary/5 hover:bg-brand-primary/10 border border-brand-primary/10 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary transition-all group"
+        {/* Top: Hero portrait */}
+        <motion.div
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="relative h-[58%] min-h-[280px] overflow-hidden"
         >
-          <X size={14} className="group-hover:rotate-90 transition-transform duration-500" />
-        </motion.button>
-
-        {/* ─── Content (no scroll) ─── */}
-        <div className="flex flex-col md:flex-row h-full">
-          {/* ─── MOBILE: inline portrait row ─── */}
-          <div className="flex md:hidden items-center gap-3 p-4 pb-2 shrink-0">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-brand-secondary/20 shrink-0 bg-gradient-to-br from-brand-secondary/10 to-brand-primary/10"
-            >
-              {speaker.image && !isTBA ? (
-                <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="font-title text-lg text-brand-primary/20">{speaker.name[0]}</span>
-                </div>
-              )}
-            </motion.div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary shrink-0" />
-                <span className="font-typewriter text-[6px] uppercase tracking-[0.3em] text-brand-primary/50 font-semibold">
-                  0{segmentIdx} / {segmentLabel}
-                </span>
-              </div>
-              <h2 className="text-lg font-title font-black uppercase text-brand-primary leading-[0.95] tracking-tighter">
-                {nameWords.map((word, i) => (
-                  <span key={i} className="inline-block mr-1.5">{word}</span>
-                ))}
-              </h2>
+          {speaker.image && !isTBA ? (
+            <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-brand-secondary/30 to-brand-primary/30 flex items-center justify-center">
+              <span className="font-title text-[160px] text-white/10">{speaker.name[0]}</span>
             </div>
-          </div>
+          )}
 
-          {/* ─── DESKTOP: full-height portrait column ─── */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
+          {/* Gradient veil */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+          {/* Close button */}
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden md:block relative w-[45%] lg:w-[42%] shrink-0"
+            transition={{ delay: 0.2 }}
+            onClick={onClose}
+            className="absolute top-6 right-5 z-50 w-9 h-9 rounded-full bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center text-white/80 hover:text-white active:scale-90 transition-all"
           >
-            <div className="h-full min-h-[360px] lg:min-h-[400px] rounded-l-[3rem] overflow-hidden bg-gradient-to-br from-brand-secondary/10 to-brand-primary/10">
-              {speaker.image && !isTBA ? (
-                <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="font-title text-9xl text-brand-primary/10">{speaker.name[0]}</span>
-                </div>
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-              <div className="absolute top-6 left-6">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
-                  <span className="font-typewriter text-[7px] uppercase tracking-[0.3em] text-white font-semibold">
-                    0{segmentIdx} / {segmentLabel}
-                  </span>
-                </div>
-              </div>
+            <X size={15} />
+          </motion.button>
+
+          {/* Segment badge */}
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.15, duration: 0.5 }}
+            className="absolute top-6 left-5"
+          >
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+              <span className="font-typewriter text-[7px] uppercase tracking-[0.3em] text-white/80 font-semibold">
+                0{segmentIdx} / {segmentLabel}
+              </span>
             </div>
           </motion.div>
 
-          {/* ─── Content column ─── */}
-          <div className="flex-1 p-4 md:p-8 lg:p-10 flex flex-col justify-center min-w-0 gap-2 md:gap-3">
-            {/* Decorative number (desktop) */}
-            <div className="hidden md:block absolute -top-4 -right-4 text-[120px] font-title font-black text-brand-primary/[0.03] leading-none pointer-events-none select-none">
-              {segmentNum}
+          {/* Name at bottom of hero */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute bottom-5 left-5 right-5"
+          >
+            <h2 className="text-[clamp(1.75rem,7vw,3rem)] font-title font-black uppercase text-white leading-[0.9] tracking-tighter">
+              {nameWords.map((word, i) => (
+                <span key={i} className="inline-block mr-2">{word}</span>
+              ))}
+            </h2>
+          </motion.div>
+        </motion.div>
+
+        {/* Bottom: Content panel */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex-1 bg-white rounded-t-3xl -mt-6 relative z-10 px-6 pt-6 pb-8 flex flex-col justify-between"
+        >
+          <div className="space-y-4">
+            {/* Topic */}
+            <div className="relative pl-4">
+              <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-brand-secondary/40 rounded-full" />
+              <p className="font-editorial text-lg italic text-brand-primary/60 leading-snug">
+                "{speaker.topic}"
+              </p>
             </div>
 
-            {/* Desktop name */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="hidden md:block"
-            >
-              <h2 className="text-4xl lg:text-5xl font-title font-black uppercase text-brand-primary leading-[0.9] tracking-tighter mb-3">
-                {nameWords.map((word, i) => (
-                  <span key={i} className="inline-block mr-3">{word}</span>
-                ))}
-              </h2>
-            </motion.div>
-
-            {/* Topic */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="relative pl-3 md:pl-5">
-                <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-brand-secondary/40 rounded-full" />
-                <p className="font-editorial text-sm md:text-xl lg:text-2xl italic text-brand-primary/60 leading-snug">
-                  "{speaker.topic}"
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Bio — compact */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                <span className="font-typewriter text-[5px] md:text-[7px] uppercase tracking-[0.35em] text-brand-primary/30">The Narrative</span>
+            {/* Bio excerpt */}
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="font-typewriter text-[6px] uppercase tracking-[0.35em] text-brand-primary/30">The Narrative</span>
                 <div className="h-px flex-1 bg-brand-outline/30" />
               </div>
-              <p className="font-sans text-[10px] md:text-sm text-brand-primary/60 leading-[1.5] md:leading-[1.7] line-clamp-2 md:line-clamp-4">
+              <p className="font-sans text-xs text-brand-primary/60 leading-[1.7] line-clamp-3">
                 {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence."}
               </p>
-            </motion.div>
+            </div>
+          </div>
 
-            {/* Visual Art — compact */}
+          {/* Segment index */}
+          <div className="flex items-center justify-between pt-3 border-t border-brand-outline/20 mt-auto">
+            <span className="font-typewriter text-[8px] uppercase tracking-[0.35em] text-brand-primary/20">
+              Speaker
+            </span>
+            <span className="font-title text-sm font-bold text-brand-primary/20">
+              0{segmentIdx}
+            </span>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* ─── DESKTOP: centered frosted card ─── */}
+      <div
+        className="fixed inset-0 z-[500] bg-brand-primary/30 backdrop-blur-sm max-md:hidden"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0"
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96, y: 10 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          onClick={(e) => e.stopPropagation()}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-2xl lg:max-w-4xl w-full bg-white/80 backdrop-blur-2xl rounded-[3rem] shadow-[0_32px_128px_rgba(0,8,57,0.15)] border border-white/60 pointer-events-auto"
+        >
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply rounded-[inherit]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
+
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ delay: 0.3 }}
+            onClick={onClose}
+            className="absolute top-5 right-5 z-50 w-9 h-9 rounded-full bg-brand-primary/5 hover:bg-brand-primary/10 border border-brand-primary/10 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary transition-all group"
+          >
+            <X size={14} className="group-hover:rotate-90 transition-transform duration-500" />
+          </motion.button>
+
+          <div className="flex flex-row">
+            {/* Left: Portrait */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-[45%] lg:w-[42%] shrink-0"
             >
-              <div className="scale-[0.4] md:scale-[0.65] lg:scale-75 origin-left -ml-16 md:-ml-8 lg:-ml-6 -mb-10 md:-mb-6 lg:-mb-4">
-                <SpeakerTopicVisual
-                  name={speaker.name}
-                  topic={speaker.topic}
-                  image={speaker.image}
-                />
+              <div className="h-full min-h-[360px] lg:min-h-[400px] rounded-l-[3rem] overflow-hidden bg-gradient-to-br from-brand-secondary/10 to-brand-primary/10">
+                {speaker.image && !isTBA ? (
+                  <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" draggable={false} />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="font-title text-9xl text-brand-primary/10">{speaker.name[0]}</span>
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute top-6 left-6">
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+                    <span className="font-typewriter text-[7px] uppercase tracking-[0.3em] text-white font-semibold">
+                      0{segmentIdx} / {segmentLabel}
+                    </span>
+                  </div>
+                </div>
               </div>
             </motion.div>
+
+            {/* Right: Content */}
+            <div className="flex-1 p-8 lg:p-10 flex flex-col justify-center min-w-0 gap-3">
+              <div className="hidden md:block absolute -top-4 -right-4 text-[120px] font-title font-black text-brand-primary/[0.03] leading-none pointer-events-none select-none">
+                {segmentNum}
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <h2 className="text-4xl lg:text-5xl font-title font-black uppercase text-brand-primary leading-[0.9] tracking-tighter mb-3">
+                  {nameWords.map((word, i) => (
+                    <span key={i} className="inline-block mr-3">{word}</span>
+                  ))}
+                </h2>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="relative pl-5">
+                  <div className="absolute left-0 top-1 bottom-1 w-0.5 bg-brand-secondary/40 rounded-full" />
+                  <p className="font-editorial text-xl lg:text-2xl italic text-brand-primary/60 leading-snug">
+                    "{speaker.topic}"
+                  </p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="font-typewriter text-[7px] uppercase tracking-[0.35em] text-brand-primary/30">The Narrative</span>
+                  <div className="h-px flex-1 bg-brand-outline/30" />
+                </div>
+                <p className="font-sans text-sm text-brand-primary/60 leading-[1.7] line-clamp-4">
+                  {speaker.bio || "This speaker will be sharing transformative insights on the intersection of humanity, technology, and the ticking clock of our shared existence."}
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="scale-[0.65] lg:scale-75 origin-left -ml-8 lg:-ml-6 -mb-6 lg:-mb-4">
+                  <SpeakerTopicVisual
+                    name={speaker.name}
+                    topic={speaker.topic}
+                    image={speaker.image}
+                  />
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </>
   );
 }
 
