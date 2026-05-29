@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { SEGMENTS, SPEAKERS } from '../constants';
 import FloatingBackground from '../components/FloatingBackground';
+import { MaskedReveal, MicroTag, IndexNumber, StaggerContainer, StaggerItem, LUXURY_EASE } from '../components/KineticTypography';
 
 interface Speaker {
   id: string;
@@ -246,16 +247,17 @@ function SpeakerChapter({
         <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 lg:px-24 xl:px-32 max-w-8xl mx-auto">
           <div className="w-full max-w-5xl mx-auto">
 
-            {/* Segment + Number */}
+            {/* Segment + Number — editorial micro tags */}
             <StaggerLine
               progress={cardProgress}
               offsetStart={0}
               offsetEnd={0.08}
               className="flex items-center gap-3 mb-4 md:mb-10"
             >
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: brandGreen }} />
+              <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: brandGreen }} />
+              <IndexNumber number={index + 1} />
               <span className={`font-typewriter text-[10px] md:text-[11px] uppercase tracking-[0.35em] ${mutedColor} font-semibold`}>
-                {String(segmentIdx).padStart(2, '0')} / {segmentLabel}
+                {segmentLabel}
               </span>
               <div className="h-px flex-1" style={{ backgroundColor: lineColor }} />
               <span className={`font-typewriter text-[9px] md:text-[10px] tracking-[0.2em] ${mutedColor}`}>
@@ -320,7 +322,7 @@ function SpeakerChapter({
                   </span>
                   <div className="h-px flex-1" style={{ backgroundColor: lineColor }} />
                 </div>
-                <p className={`font-editorial italic text-base md:text-base lg:text-lg leading-[1.7] ${isEven ? 'text-white/80' : 'text-[#000839]/80'}`}>
+                <p className={`font-editorial italic text-lg md:text-lg lg:text-xl leading-[1.7] ${isEven ? 'text-white/80' : 'text-[#000839]/80'}`}>
                   {speaker.talk_description}
                 </p>
               </StaggerLine>
@@ -408,7 +410,7 @@ export default function Speakers() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="font-typewriter text-[10px] uppercase tracking-[0.4em] text-brand-secondary block mb-4"
           >
-            Global Assembly
+            The Assembly
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
@@ -455,7 +457,7 @@ function HeroSection({
   const heroScale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [1, 1, 0.92, 0.88]);
   const heroY = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 0, -40, -80]);
 
-  const titleWords = 'Global Assembly'.split(' ');
+  const titleWords = 'The Assembly'.split(' ');
   const subtitle = `${speakersCount} Speakers, One Stage`;
 
   return (
@@ -492,11 +494,11 @@ function HeroSection({
             {titleWords.map((word, i) => (
               <motion.span
                 key={i}
-                initial={{ opacity: 0, y: 60 }}
-                animate={mounted ? { opacity: 1, y: 0 } : {}}
+                initial={{ y: '110%', opacity: 0 }}
+                animate={mounted ? { y: '0%', opacity: 1 } : {}}
                 transition={{
-                  duration: 0.8,
-                  delay: 0.4 + i * 0.15,
+                  duration: 0.85,
+                  delay: 0.4 + i * 0.12,
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 className="inline-block text-[14vw] md:text-[8vw] lg:text-[6.5vw] font-title font-black uppercase leading-[0.82] tracking-tighter text-white mr-[0.15em]"

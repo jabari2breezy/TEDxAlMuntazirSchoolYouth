@@ -12,7 +12,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Hard lock scroll immediately — covers iOS Safari bounce + Lenis
     window.scrollTo(0, 0);
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
@@ -23,7 +22,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({
         onComplete: () => {
-          // Restore scrolling
           document.documentElement.style.overflow = '';
           document.body.style.overflow = '';
           document.body.style.position = '';
@@ -34,51 +32,67 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         }
       });
 
-      // 1. Counter animation (Mobile safe object animation)
+      // 1. Corner metadata fades in
+      tl.fromTo('.preloader-meta',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.6, ease: 'power2.out' }
+      )
+
+      // 2. Counter animates 0 → 100
       const count = { val: 0 };
       tl.to(count, {
         val: 100,
-        duration: 2.5,
-        ease: "power3.inOut",
+        duration: 2.2,
+        ease: 'power3.inOut',
         onUpdate: function() {
           const el = document.querySelector('.loading-counter');
-          if (el) el.innerHTML = Math.round(count.val).toString().padStart(3, '0');
+          if (el) el.textContent = String(Math.round(count.val)).padStart(3, '0');
         }
-      })
-      // Fade out the counter and the lines
-      .to(".preloader-ui", {
-        opacity: 0,
-        y: -20,
-        duration: 0.8,
-        ease: "power2.inOut"
-      }, "+=0.2")
-      
-      // 2. The Reveal Mask expands revealing "BORROWED TIME"
-      .to(".mask-layer", {
-        clipPath: "circle(150% at 50% 50%)",
-        duration: 1.8,
-        ease: "power4.inOut"
-      }, "-=0.4")
-      
-      // 3. Typography scales slightly for impact
-      .fromTo(".hero-text-anim", 
-        { scale: 0.85, opacity: 0, filter: "blur(10px)" },
-        { scale: 1, opacity: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out", stagger: 0.15 },
-        "-=1.4"
+      }, '-=0.3')
+
+      // 3. Top/bottom lines expand
+      .fromTo('.preloader-line',
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.8, ease: 'power3.inOut', stagger: 0.1 },
+        '-=1.5'
       )
 
-      // 4. The Exit: Slide the entire preloader UP
+      // 4. Center text reveal — masked upward
+      .fromTo('.preloader-title-word',
+        { y: '110%', opacity: 0 },
+        { y: '0%', opacity: 1, duration: 0.9, ease: [0.16, 1, 0.3, 1], stagger: 0.12 },
+        '-=1.2'
+      )
+
+      // 5. Subtitle fades in
+      .fromTo('.preloader-subtitle',
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+        '-=0.5'
+      )
+
+      // 6. Hold for a beat
+      .to({}, { duration: 0.6 })
+
+      // 7. Everything fades out
+      .to('.preloader-content', {
+        opacity: 0,
+        y: -30,
+        duration: 0.7,
+        ease: 'power3.inOut'
+      })
+
+      // 8. Container slides up
       .to(containerRef.current, {
         yPercent: -100,
-        duration: 1.2,
-        ease: "expo.inOut"
-      }, "+=0.8");
+        duration: 1.0,
+        ease: [0.76, 0, 0.24, 1]
+      }, '-=0.3');
 
     }, containerRef);
 
     return () => {
       ctx.revert();
-      // Always restore on unmount
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
       document.body.style.position = '';
@@ -90,60 +104,77 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   if (!isMounted) return null;
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        // Use dvh for mobile browsers that account for the address bar
-        height: '100dvh',
-        zIndex: 9999,
-        backgroundColor: '#050507',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        willChange: 'transform',
-        pointerEvents: 'auto',
-      }}
+      className="fixed inset-0 z-[9999] bg-[#050507] overflow-hidden flex items-center justify-center"
+      style={{ height: '100dvh', willChange: 'transform' }}
     >
-      {/* Background grain texture */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
-
-      {/* Center UI (Counter) */}
-      <div className="preloader-ui absolute z-20 flex flex-col items-center justify-center gap-6">
-        <div className="w-px h-12 bg-white/20" />
-        <div className="flex items-baseline gap-2 text-white font-typewriter">
-          <span className="text-sm opacity-50 tracking-[0.3em]">LOADING</span>
-          <span className="loading-counter text-6xl md:text-8xl font-light tracking-tighter">000</span>
-          <span className="text-sm opacity-50 tracking-[0.3em]">%</span>
-        </div>
-        <div className="w-px h-12 bg-white/20" />
+      {/* Corner metadata — jasminegunarto.com style */}
+      <div className="preloader-meta absolute top-6 left-6 md:top-8 md:left-10 z-20 opacity-0">
+        <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-white/25">
+          TEDxAlMuntazirSchoolsYouth
+        </span>
+      </div>
+      <div className="preloader-meta absolute top-6 right-6 md:top-8 md:right-10 z-20 opacity-0">
+        <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-white/25">
+          2026
+        </span>
+      </div>
+      <div className="preloader-meta absolute bottom-6 left-6 md:bottom-8 md:left-10 z-20 opacity-0">
+        <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-white/25">
+          Dar Es Salaam, Tanzania
+        </span>
+      </div>
+      <div className="preloader-meta absolute bottom-6 right-6 md:bottom-8 md:right-10 z-20 opacity-0">
+        <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-white/25">
+          Loading
+        </span>
       </div>
 
-      {/* The Masking Layer containing the big typography */}
+      {/* Top line */}
+      <div className="preloader-line absolute top-0 left-0 right-0 h-px bg-white/10 origin-left" />
+      {/* Bottom line */}
+      <div className="preloader-line absolute bottom-0 left-0 right-0 h-px bg-white/10 origin-right" />
+
+      {/* Center content */}
+      <div className="preloader-content relative z-10 flex flex-col items-center text-center px-6">
+        {/* Counter */}
+        <div className="flex items-baseline gap-1 mb-8">
+          <span className="loading-counter font-title text-[12vw] md:text-[8vw] font-black text-white tracking-tighter leading-none">
+            000
+          </span>
+          <span className="font-typewriter text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-white/30">
+            %
+          </span>
+        </div>
+
+        {/* Title — masked reveal */}
+        <div className="overflow-hidden mb-3">
+          <div className="preloader-title-word font-title text-[11vw] md:text-[7vw] font-black uppercase text-white leading-[0.85] tracking-tighter">
+            Borrowed
+          </div>
+        </div>
+        <div className="overflow-hidden mb-6">
+          <div className="preloader-title-word font-title text-[11vw] md:text-[7vw] font-black uppercase text-brand-secondary leading-[0.85] tracking-tighter">
+            Time
+          </div>
+        </div>
+
+        {/* Subtitle */}
+        <div className="preloader-subtitle opacity-0">
+          <span className="font-editorial italic text-sm md:text-base text-white/40">
+            Ideas worth holding onto
+          </span>
+        </div>
+      </div>
+
+      {/* Grain texture */}
       <div
-        className="mask-layer absolute bg-[#000839] flex flex-col justify-center px-6 md:px-16"
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
         style={{
-          clipPath: "circle(0% at 50% 50%)",
-          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
         }}
-      >
-        {/* Subtle grid in background of the mask layer */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-        
-        <div className="relative z-10 w-full max-w-screen-2xl mx-auto flex flex-col items-center justify-center text-center">
-          <h1 className="hero-text-anim text-[16vw] md:text-[12vw] font-title font-black uppercase text-white leading-[0.85] tracking-tighter">
-            BORROWED
-          </h1>
-          <h1 className="hero-text-anim text-[16vw] md:text-[12vw] font-title font-black uppercase text-[#e62b1e] leading-[0.85] tracking-tighter -mt-2 md:-mt-6">
-            TIME
-          </h1>
-        </div>
-      </div>
+      />
     </div>
   );
 }

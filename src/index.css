@@ -222,3 +222,34 @@ button, a, input, textarea, select, [role="button"] {
   75%  { transform: translate(10px, -8px) rotate(4deg); }
   100% { transform: translate(0, 0) rotate(0deg); }
 }
+
+/* ─── Jasminegunarto-style utility classes ─── */
+.luxury-ease {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mask-reveal {
+  overflow: hidden;
+}
+
+.mask-reveal > * {
+  display: inline-block;
+}
+
+.kinetic-hover {
+  transition: letter-spacing 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kinetic-hover:hover {
+  letter-spacing: 0.08em;
+  transform: scale(1.02);
+}
+
+.editorial-border {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.editorial-border-dark {
+  border: 1px solid rgba(0, 8, 57, 0.06);
+}
