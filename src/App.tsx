@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
 import Navbar from './components/Navbar';
 import FloatingCursor from './components/FloatingCursor';
 import InteractiveBackground from './components/InteractiveBackground';
@@ -17,6 +17,18 @@ import Checkout from './pages/Checkout';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { useEffect } from 'react';
+
+/* ── Global Scroll Progress Bar ── */
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  return (
+    <motion.div
+      className="fixed top-0 left-0 right-0 h-[2px] bg-brand-secondary z-[200] origin-left"
+      style={{ scaleX }}
+    />
+  );
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -64,6 +76,7 @@ export default function App() {
     <Router>
       <SmoothScroll />
       <div className="relative selection:bg-brand-secondary selection:text-white min-h-screen flex flex-col">
+          <ScrollProgress />
           <InteractiveBackground />
           <CurtainTransition />
           <FloatingCursor />
