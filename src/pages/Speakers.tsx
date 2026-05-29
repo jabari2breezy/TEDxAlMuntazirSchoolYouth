@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { SEGMENTS, SPEAKERS } from '../constants';
+import { ArrowDown } from 'lucide-react';
 import FloatingBackground from '../components/FloatingBackground';
 import { MaskedReveal, MicroTag, IndexNumber, StaggerContainer, StaggerItem, LUXURY_EASE } from '../components/KineticTypography';
 
@@ -517,21 +518,22 @@ function HeroSection({
             &ldquo;Time is the currency of attention&rdquo;
           </motion.p>
 
+          {/* Scroll arrow */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={mounted ? { opacity: 1 } : {}}
-            transition={{ delay: 1.2, duration: 0.6 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+            transition={{ delay: 1.4, duration: 0.8 }}
+            className="mt-16 md:mt-24 flex flex-col items-center gap-3"
           >
-            <span className="font-typewriter text-[8px] uppercase tracking-[0.4em] text-white/20">
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ArrowDown size={20} className="text-white/25" strokeWidth={1.5} />
+            </motion.div>
+            <span className="font-typewriter text-[7px] uppercase tracking-[0.5em] text-white/15">
               Scroll
             </span>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              className="w-px h-6"
-              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
-            />
           </motion.div>
         </div>
       </motion.div>

@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import MaskReveal from '../components/MaskReveal';
 
-const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
+const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
 type Theme = 'past' | 'present' | 'future';
 
@@ -83,13 +83,13 @@ export default function Agenda() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.85, ease: LUXURY_EASE }}
+      transition={transition}
       className="pt-40 pb-32"
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.85, ease: LUXURY_EASE }}
+        transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] as const }}
         className="px-6 md:px-16 max-w-screen-2xl mx-auto"
       >
         <header className="mb-24 border-b border-brand-outline/30 pb-12 flex flex-col items-center text-center">
@@ -114,7 +114,7 @@ export default function Agenda() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, ease: LUXURY_EASE }}
+          transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] as const }}
           className="space-y-48"
         >
           {[
@@ -127,7 +127,7 @@ export default function Agenda() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
-                transition={{ duration: 0.85, ease: LUXURY_EASE }}
+                transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] as const }}
                 className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12"
               >
                 <span className="font-title text-5xl md:text-7xl font-black uppercase text-brand-secondary tracking-tighter shrink-0">0{sIndex + 1} — {section.label}</span>
@@ -135,7 +135,7 @@ export default function Agenda() {
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.85, ease: LUXURY_EASE }}
+                  transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] as const }}
                   className="h-px bg-brand-outline flex-grow origin-left"
                 />
                 <h2 className="text-3xl md:text-4xl font-title font-black uppercase text-brand-primary tracking-tighter shrink-0">{section.title}</h2>

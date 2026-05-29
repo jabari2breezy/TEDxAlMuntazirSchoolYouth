@@ -6,34 +6,56 @@ import InteractiveBackground from '../components/InteractiveBackground';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
-/* Glistening Stars — randomised positions, twinkling CSS animation */
-function GlisteningStars({ count = 80 }: { count?: number }) {
+/* Glistening Stars — randomised positions, twinkling with glow */
+function GlisteningStars({ count = 80, scrollProgress }: { count?: number; scrollProgress?: any }) {
   const stars = useMemo(() =>
     Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 2 + 0.5,
+      size: Math.random() * 2.5 + 0.8,
       delay: Math.random() * 5,
       duration: Math.random() * 3 + 2,
+      glowSize: Math.random() * 8 + 4,
+      parallaxOffset: Math.random() * 40 - 20,
     })),
     [count]
   );
+
+  // Parallax Y based on scroll
+  const parallaxY = scrollProgress
+    ? useTransform(scrollProgress, [0, 1], [30, -30])
+    : undefined;
+
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {stars.map(s => (
-        <div
+        <motion.div
           key={s.id}
-          className="absolute rounded-full bg-white"
+          className="absolute rounded-full"
           style={{
             left: `${s.x}%`,
             top: `${s.y}%`,
             width: s.size,
             height: s.size,
+            backgroundColor: 'white',
+            boxShadow: `0 0 ${s.glowSize}px ${s.glowSize / 2}px rgba(255,255,255,0.6), 0 0 ${s.glowSize * 2}px ${s.glowSize}px rgba(255,255,255,0.2)`,
             opacity: 0,
+            y: parallaxY ? undefined : s.parallaxOffset,
             animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
           }}
-        />
+        >
+          {parallaxY && (
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                y: parallaxY,
+                backgroundColor: 'white',
+                boxShadow: `0 0 ${s.glowSize}px ${s.glowSize / 2}px rgba(255,255,255,0.6), 0 0 ${s.glowSize * 2}px ${s.glowSize}px rgba(255,255,255,0.2)`,
+              }}
+            />
+          )}
+        </motion.div>
       ))}
     </div>
   );
@@ -74,6 +96,10 @@ export default function Tickets() {
   const section1PointerEvents = useTransform(scrollYProgress, [0, 0.07], ['auto', 'none']);
   const section2Opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.95], [0, 1, 1]);
 
+  // Price → Button transition: price fades out as button fades in
+  const priceOpacity = useTransform(scrollYProgress, [0.5, 0.65], [1, 0]);
+  const buyNowOpacity = useTransform(scrollYProgress, [0.55, 0.7], [0, 1]);
+
   // Background Colors — frosted matte black
   const bgColor = useTransform(
     scrollYProgress,
@@ -108,7 +134,7 @@ export default function Tickets() {
 
           {/* Glistening Stars on black background */}
           <motion.div style={{ opacity: useTransform(scrollYProgress, [0.25, 0.4], [0, 1]) }} className="absolute inset-0 z-5">
-            <GlisteningStars count={90} />
+            <GlisteningStars count={90} scrollProgress={scrollYProgress} />
           </motion.div>
 
           {/* The Main Ticket Product (Center Stage) */}
@@ -158,15 +184,26 @@ export default function Tickets() {
                 <div className="absolute right-0 w-6 h-12 bg-white rounded-l-full translate-x-1 shadow-inner" />
               </div>
 
-              {/* Bottom section — BUY NOW button replaces price */}
-              <div className="bg-white px-6 md:px-12 py-8 flex flex-col items-center">
+              {/* Bottom section — price transitions to BUY NOW */}
+              <div className="bg-white px-6 md:px-12 py-8 flex flex-col items-center relative">
+                {/* Price — visible at start */}
+                <motion.div
+                  style={{ opacity: priceOpacity }}
+                  className="flex items-end gap-2 text-[#000839]"
+                >
+                  <span className="font-typewriter text-[10px] uppercase tracking-widest opacity-40 pb-2">Tsh</span>
+                  <span className="font-title font-black text-5xl tracking-tighter">30,000</span>
+                </motion.div>
+
+                {/* BUY NOW — visible at end */}
                 <motion.a
                   href="https://tukiio.com/event/tedxalmuntazirschoolsyouth"
                   target="_blank"
                   rel="noopener noreferrer"
+                  style={{ opacity: buyNowOpacity }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="group inline-flex items-center gap-3 px-8 py-4 bg-[#006d38] text-white rounded-full font-typewriter text-xs md:text-sm uppercase tracking-[0.25em] font-bold shadow-[0_0_30px_rgba(0,109,56,0.3)] hover:shadow-[0_0_50px_rgba(0,109,56,0.5)] transition-all duration-500"
+                  className="group inline-flex items-center gap-3 px-8 py-4 bg-[#006d38] text-white rounded-full font-typewriter text-xs md:text-sm uppercase tracking-[0.25em] font-bold shadow-[0_0_30px_rgba(0,109,56,0.3)] hover:shadow-[0_0_50px_rgba(0,109,56,0.5)] transition-shadow duration-500"
                 >
                   Buy Now
                   <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />

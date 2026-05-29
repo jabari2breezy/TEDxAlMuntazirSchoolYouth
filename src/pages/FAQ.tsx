@@ -4,7 +4,7 @@ import { Plus, Ticket, MapPin, Lightbulb } from 'lucide-react';
 import ScrollHint from '../components/ScrollHint';
 import MaskReveal from '../components/MaskReveal';
 
-const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
+const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
 const FAQ_DATA = [
   {
@@ -97,7 +97,7 @@ export default function FAQ() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.85, ease: LUXURY_EASE }}
+      transition={transition}
       className="min-h-screen bg-white"
     >
       <div className="px-6 md:px-16 max-w-screen-2xl mx-auto pt-40 pb-32">
