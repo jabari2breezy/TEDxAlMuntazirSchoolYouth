@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { SEGMENTS, SPEAKERS } from '../constants';
-import { ChevronLeft, ChevronRight, ArrowUpRight, X } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import FloatingBackground from '../components/FloatingBackground';
 
 interface Speaker {
@@ -28,11 +28,10 @@ export default function Speakers() {
 
   const isTheater = activeIndex !== null;
 
-  useEffect(() => { 
-    setSpeakersData(SPEAKERS as Speaker[]); 
+  useEffect(() => {
+    setSpeakersData(SPEAKERS as Speaker[]);
   }, []);
 
-  // Body lock
   useEffect(() => {
     if (isTheater) {
       const scrollY = window.scrollY;
@@ -67,7 +66,6 @@ export default function Speakers() {
     setCurrentIndex(prev => (prev - 1 + speakersData.length) % speakersData.length);
   }, [speakersData.length]);
 
-  // Auto-play with progress bar
   useEffect(() => {
     if (!isAutoPlaying || isTheater || speakersData.length === 0) {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -89,13 +87,12 @@ export default function Speakers() {
     };
   }, [isAutoPlaying, isTheater, goNext, speakersData.length]);
 
-  // Keyboard nav
   const theaterGoNext = useCallback(() => {
     if (activeIndex !== null) {
       setActiveIndex((activeIndex + 1) % speakersData.length);
     }
   }, [activeIndex, speakersData.length]);
-  
+
   const theaterGoPrev = useCallback(() => {
     if (activeIndex !== null) {
       setActiveIndex((activeIndex - 1 + speakersData.length) % speakersData.length);
@@ -128,7 +125,6 @@ export default function Speakers() {
     setActiveIndex(currentIndex);
   };
 
-  // Swipe
   const touchStartX = useRef(0);
   const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -166,22 +162,19 @@ export default function Speakers() {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Top bar offset to avoid collision with logo and nav */}
-        <div className="flex items-center justify-between px-6 md:px-16 lg:px-24 pt-24 md:pt-28 shrink-0 relative z-30">
+        <div className="flex items-center justify-between px-5 md:px-16 lg:px-24 pt-5 md:pt-10 lg:pt-14 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-brand-secondary" />
-            <span className="font-typewriter text-[7px] md:text-[9px] text-white/30 tracking-[0.4em] md:tracking-[0.5em] uppercase">
+            <span className="font-typewriter text-[6px] md:text-[9px] text-white/30 tracking-[0.4em] md:tracking-[0.5em] uppercase">
               {segmentLabel}
             </span>
           </div>
-          <span className="font-typewriter text-[7px] md:text-[8px] text-white/15 tracking-[0.3em] md:tracking-[0.4em] uppercase">
+          <span className="font-typewriter text-[6px] md:text-[8px] text-white/15 tracking-[0.3em] md:tracking-[0.4em] uppercase">
             {String(currentIndex + 1).padStart(2, '0')} / {String(speakersData.length).padStart(2, '0')}
           </span>
         </div>
 
-        {/* Center content */}
         <div className="flex-1 flex flex-col justify-center items-center px-5 md:px-16 lg:px-24 relative min-h-0">
-          {/* Watermark of next speaker */}
           <AnimatePresence mode="popLayout" custom={direction}>
             <motion.div
               key={`watermark-${currentIndex}`}
@@ -198,7 +191,6 @@ export default function Speakers() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Speaker name - Vertical Roulette Roll Animation */}
           <div className="relative w-full text-center overflow-hidden flex items-center justify-center" style={{ minHeight: 'clamp(80px, 18vw, 180px)' }}>
             <AnimatePresence mode="popLayout" custom={direction}>
               <motion.h1
@@ -222,7 +214,6 @@ export default function Speakers() {
             </AnimatePresence>
           </div>
 
-          {/* Topic */}
           <div className="relative w-full text-center overflow-hidden mt-2 md:mt-4" style={{ minHeight: 'clamp(28px, 6vw, 50px)' }}>
             <AnimatePresence mode="popLayout" custom={direction}>
               <motion.p
@@ -239,7 +230,6 @@ export default function Speakers() {
             </AnimatePresence>
           </div>
 
-          {/* Bio */}
           <div className="relative w-full text-center overflow-hidden mt-3 md:mt-6 max-w-xl mx-auto" style={{ minHeight: 'clamp(48px, 8vw, 70px)' }}>
             <AnimatePresence mode="popLayout" custom={direction}>
               <motion.p
@@ -256,7 +246,6 @@ export default function Speakers() {
             </AnimatePresence>
           </div>
 
-          {/* View Profile */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -270,7 +259,6 @@ export default function Speakers() {
           </motion.button>
         </div>
 
-        {/* Progress bar */}
         {isAutoPlaying && (
           <div className="px-5 md:px-16 lg:px-24 pb-3 md:pb-5 shrink-0">
             <div className="h-[1px] bg-white/8 rounded-full overflow-hidden">
@@ -282,7 +270,6 @@ export default function Speakers() {
           </div>
         )}
 
-        {/* Bottom nav */}
         <div className="flex items-center justify-center gap-4 md:gap-6 pb-5 md:pb-10 lg:pb-14 shrink-0">
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -292,7 +279,6 @@ export default function Speakers() {
           >
             <ChevronLeft size={14} />
           </motion.button>
-
           <div className="flex items-center gap-1.5 md:gap-2">
             {speakersData.map((_, idx) => (
               <motion.button
@@ -308,7 +294,6 @@ export default function Speakers() {
               />
             ))}
           </div>
-
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -320,155 +305,168 @@ export default function Speakers() {
         </div>
       </div>
 
-      {/* ═══ THEATER OVERLAY (LUKE BAFF_AIT & SITE THEME INTEGRATION) ═══ */}
+      {/* ═══ THEATER OVERLAY (LUKEBAFFAIT.FR INSPIRED) ═══ */}
       <AnimatePresence>
         {isTheater && theaterSpeaker && (
           <motion.div
             key={`theater-${activeIndex}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 w-full h-[100dvh] bg-brand-primary flex flex-col overflow-hidden z-[200] text-white"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 w-full h-[100dvh] bg-brand-primary/95 flex flex-col overflow-hidden z-[200]"
           >
-            {/* Glowing background highlights in Luke Baffait style */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-              <motion.div 
-                className="absolute w-[40vw] h-[40vw] bg-brand-secondary/15 rounded-full blur-[100px] -top-10 -left-10"
-                animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.6, 0.4] }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <motion.div 
-                className="absolute w-[50vw] h-[50vw] bg-brand-secondary/10 rounded-full blur-[150px] -bottom-20 -right-10"
-                animate={{ scale: [1.1, 0.9, 1.1], opacity: [0.3, 0.5, 0.3] }}
-                transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-brand-primary/20 via-brand-primary/80 to-brand-primary pointer-events-none" />
-            </div>
-
-            {/* Top Bar - Lowered/Pushed down by pt-24 on mobile to prevent any collision with site logo */}
-            <div className="w-full flex items-center justify-between px-6 md:px-16 py-4 border-b border-white/10 bg-brand-primary/40 backdrop-blur-md shrink-0 relative z-30 pt-28 md:pt-32">
-              <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-3 py-1">
+            {/* Top bar with speaker pill selector */}
+            <div className="w-full flex items-center justify-between px-4 md:px-8 py-4 border-b border-white/5 bg-brand-primary/50 backdrop-blur-xl shrink-0 z-30">
+              <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2 mr-3 py-1">
                 {speakersData.map((s, idx) => (
                   <button
                     key={s.id}
-                    onClick={() => {
-                      setActiveIndex(idx);
-                    }}
-                    className={`px-4 py-1.5 rounded-full text-[10px] font-sans font-bold uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap border ${
+                    onClick={() => setActiveIndex(idx)}
+                    className={`px-3 py-1.5 rounded-full text-[8px] md:text-[9px] font-sans font-semibold uppercase tracking-[0.15em] transition-all duration-300 whitespace-nowrap border ${
                       idx === activeIndex
-                        ? 'bg-brand-secondary text-white border-brand-secondary shadow-[0_0_20px_rgba(0,109,56,0.4)] scale-[1.03]'
-                        : 'border-white/10 text-white/50 hover:text-white hover:border-white/30'
+                        ? 'bg-brand-secondary text-white border-brand-secondary'
+                        : 'border-white/10 text-white/40 hover:text-white hover:border-white/30'
                     }`}
                   >
-                    {idx + 1}. {s.name.split(' ')[0]}
+                    {idx + 1}. {s.name.split(' ')[0].toLowerCase()}
                   </button>
                 ))}
               </div>
-
-              {/* Close Button */}
               <motion.button
                 whileHover={{ scale: 1.05, rotate: 90 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveIndex(null)}
-                className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-brand-secondary hover:bg-brand-secondary/10 transition-all duration-300 shrink-0 ml-4"
+                className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-all duration-300 shrink-0"
               >
-                <X size={14} />
+                <X size={13} />
               </motion.button>
             </div>
 
-            {/* Main structural grid - Luke Baffait clean digital showcase */}
-            <div className="flex-1 min-h-0 flex flex-col p-6 md:p-16 lg:p-20 relative z-10 justify-between">
-              
-              {/* Speaker Title header section */}
-              <div className="space-y-2 md:space-y-4 shrink-0 border-l-2 border-brand-secondary pl-6 py-2">
-                {/* Segment Tag */}
-                <div className="flex items-center gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse" />
-                  <span className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.3em] text-white/40">
-                    segment 0{theaterSegmentIdx} — {theaterSegmentLabel}
-                  </span>
-                </div>
-
-                {/* Speaker Name: High impact custom layout */}
-                <h2 className="font-title font-black uppercase text-3xl md:text-5xl lg:text-6xl text-white tracking-tighter leading-none">
-                  {theaterSpeaker.name}
-                </h2>
-
-                {/* Topic Line */}
-                <p className="font-editorial italic text-base md:text-2xl text-brand-secondary leading-snug">
-                  &ldquo;{theaterSpeaker.topic}&rdquo;
-                </p>
-              </div>
-
-              {/* HIGH-END INTERACTIVE FROSTED GLASS PANEL: Displays both biography and discourse together */}
-              <div className="flex-1 min-h-0 my-6 md:my-8 flex flex-col justify-center">
-                <div className="w-full max-w-5xl mx-auto bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-[0_30px_100px_rgba(0,0,0,0.4)] relative overflow-hidden flex flex-col md:flex-row gap-8 lg:gap-14">
-                  {/* Subtle glass overlay highlight */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/[0.02] to-white/[0.05] pointer-events-none" />
-
-                  {/* left: Biography Section */}
-                  <div className="flex-1 space-y-4 flex flex-col min-h-0 justify-between">
-                    <div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-md font-typewriter text-[8px] tracking-[0.25em] text-brand-secondary uppercase mb-3 shrink-0">
-                        the speaker
-                      </div>
-                      <h4 className="font-title font-black uppercase text-lg text-white tracking-tight pb-3 border-b border-white/5">
-                        Biography
-                      </h4>
-                      <p className="font-sans text-xs md:text-[13px] text-white/70 leading-relaxed overflow-y-auto no-scrollbar max-h-[14vh] md:max-h-[22vh] pt-4 pr-2">
-                        {theaterSpeaker.bio}
-                      </p>
-                    </div>
+            {/* Main body */}
+            <div className="flex-1 min-h-0 flex flex-col md:flex-row">
+              {/* Left: Speaker Identity */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="w-full md:w-[42%] flex flex-col justify-center px-6 md:px-12 lg:px-16 py-8 md:py-0 shrink-0"
+              >
+                <div className="space-y-5 md:space-y-7">
+                  <div className="flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary" />
+                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.3em] text-brand-secondary/70">
+                      segment 0{theaterSegmentIdx} / {theaterSegmentLabel}
+                    </span>
                   </div>
 
-                  {/* Center Split Divider Line */}
-                  <div className="hidden md:block w-px bg-white/10 align-stretch self-stretch" />
-                  <div className="md:hidden h-px bg-white/10 w-full" />
+                  <div className="overflow-hidden">
+                    <motion.h2
+                      key={`theater-name-${activeIndex}`}
+                      initial={{ y: '110%' }}
+                      animate={{ y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                      className="text-4xl md:text-5xl lg:text-7xl font-title font-black uppercase leading-[0.85] tracking-tighter text-white"
+                    >
+                      {theaterSpeaker.name}
+                    </motion.h2>
+                  </div>
 
-                  {/* right: Discourse Section */}
-                  <div className="flex-1 space-y-4 flex flex-col min-h-0 justify-between">
-                    <div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-secondary/10 border border-brand-secondary/30 rounded-md font-typewriter text-[8px] tracking-[0.25em] text-brand-secondary uppercase mb-3 shrink-0">
-                        the discourse
-                      </div>
-                      <h4 className="font-title font-black uppercase text-lg text-white tracking-tight pb-3 border-b border-white/5">
-                        Talk Overview
-                      </h4>
-                      <p className="font-editorial italic text-xs md:text-[15px] text-brand-secondary/90 leading-relaxed overflow-y-auto no-scrollbar max-h-[14vh] md:max-h-[22vh] pt-4 pr-2">
-                        {theaterSpeaker.talk_description}
-                      </p>
-                    </div>
+                  <div className="relative pl-4 md:pl-5 border-l-[1.5px] border-brand-secondary/40">
+                    <p className="font-editorial italic text-base md:text-xl lg:text-2xl text-white/50 leading-snug">
+                      &ldquo;{theaterSpeaker.topic}&rdquo;
+                    </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Sleek Bottom navigation bar */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between shrink-0">
-                <span className="font-typewriter text-[8px] uppercase tracking-[0.25em] text-white/30">
-                  tedxalmuntazir / assembly 2026
-                </span>
-                
-                {/* Navigation controls */}
-                <div className="flex items-center gap-5">
-                  <button 
-                    onClick={theaterGoPrev} 
-                    className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-brand-secondary hover:bg-brand-secondary/10 transition-all active:scale-90"
-                  >
-                    <ChevronLeft size={13} />
-                  </button>
-                  <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-white/50">
-                    {String(activeIndex + 1).padStart(2, '0')} / {String(speakersData.length).padStart(2, '0')}
-                  </span>
-                  <button 
-                    onClick={theaterGoNext} 
-                    className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-brand-secondary hover:bg-brand-secondary/10 transition-all active:scale-90"
-                  >
-                    <ChevronRight size={13} />
-                  </button>
+              {/* Right: Descriptions - Glass blur white */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="flex-1 flex flex-col justify-center p-6 md:p-12 lg:p-16 min-h-0 relative overflow-hidden"
+              >
+                {/* Glass background */}
+                <div className="absolute inset-0 bg-white/5 backdrop-blur-xl border-l border-white/5 rounded-l-3xl md:rounded-l-[4rem]" />
+
+                <div className="relative z-10 space-y-6 md:space-y-8 max-w-2xl">
+                  {/* About the Speaker */}
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <motion.span
+                        initial={{ width: 0 }}
+                        animate={{ width: '2rem' }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                        className="h-[1px] bg-brand-secondary"
+                      />
+                      <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.3em] text-brand-secondary/60">
+                        About the Speaker
+                      </span>
+                    </div>
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.35 }}
+                      className="font-sans text-xs md:text-sm text-white/65 leading-relaxed md:leading-[1.8]"
+                    >
+                      {theaterSpeaker.bio}
+                    </motion.p>
+                  </div>
+
+                  {/* About Their Talk */}
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <motion.span
+                        initial={{ width: 0 }}
+                        animate={{ width: '2rem' }}
+                        transition={{ duration: 0.6, delay: 0.5 }}
+                        className="h-[1px] bg-brand-secondary"
+                      />
+                      <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.3em] text-brand-secondary/60">
+                        About Their Talk
+                      </span>
+                    </div>
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.45 }}
+                      className="font-editorial italic text-sm md:text-base text-white/75 leading-relaxed md:leading-[1.8]"
+                    >
+                      {theaterSpeaker.talk_description}
+                    </motion.p>
+                  </div>
                 </div>
-              </div>
 
+                {/* Footer controls */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="relative z-10 flex items-center justify-between pt-6 md:pt-8 mt-auto border-t border-white/5"
+                >
+                  <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.2em] text-white/20">
+                    TEDxAlMuntazirSchoolYouth 2026
+                  </span>
+                  <div className="flex items-center gap-5">
+                    <button
+                      onClick={theaterGoPrev}
+                      className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all active:scale-90"
+                    >
+                      <ChevronLeft size={12} />
+                    </button>
+                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-white/30">
+                      0{activeIndex + 1} / 0{speakersData.length}
+                    </span>
+                    <button
+                      onClick={theaterGoNext}
+                      className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-all active:scale-90"
+                    >
+                      <ChevronRight size={12} />
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
             </div>
           </motion.div>
         )}
