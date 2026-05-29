@@ -142,6 +142,42 @@ app.get('/api/schedule', (req, res) => {
   res.json(schedule);
 });
 
+app.post('/api/newsletter', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email required' });
+
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
+
+  if (gmailUser && gmailPass) {
+    try {
+      const nodemailer = await import('nodemailer');
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: gmailUser, pass: gmailPass },
+      });
+
+      await transporter.sendMail({
+        from: `"TEDx Youth" <${gmailUser}>`,
+        to: 'jabari2breezy@gmail.com',
+        subject: `New Community Signup: ${email}`,
+        html: `
+          <div style="font-family: sans-serif; line-height: 1.5; color: #002B5B;">
+            <h2 style="border-bottom: 2px solid #00A859; padding-bottom: 8px;">New Community Subscriber</h2>
+            <p><strong>Email:</strong> ${email}</p>
+            <p style="color: #666; font-size: 12px;">Signed up via footer newsletter</p>
+          </div>
+        `
+      });
+      console.log(`Newsletter notification sent for: ${email}`);
+    } catch (err: any) {
+      console.error('Newsletter email error:', err.message || err);
+    }
+  }
+
+  res.json({ success: true });
+});
+
 app.post('/api/register', async (req, res) => {
   const { email, name, message } = req.body;
   const gmailUser = process.env.GMAIL_USER;

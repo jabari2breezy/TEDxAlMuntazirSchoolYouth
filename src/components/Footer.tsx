@@ -4,20 +4,32 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { SOCIALS, TICKETS_URL } from '../constants';
 import Logo from './Logo';
-import ETGLogo from './ETGLogo';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email || loading) return;
+    setLoading(true);
+    try {
+      await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
       setSubscribed(true);
       setEmail('');
+    } catch {
+      setSubscribed(true);
+      setEmail('');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,16 +41,14 @@ export default function Footer() {
       {/* Main footer content */}
       <div className="max-w-screen-2xl mx-auto px-6 md:px-16 pt-16 md:pt-24 pb-8">
 
-        {/* Top section — Logo + Tagline + Newsletter */}
+        {/* Top section — Logos + Newsletter */}
         <div className="flex flex-col lg:flex-row justify-between items-start gap-16 mb-16 md:mb-24">
-          {/* Left: Logo + tagline */}
+          {/* Left: TEDx logo + School logo */}
           <div className="space-y-6">
             <Link to="/" onClick={scrollToTop} className="inline-block">
               <Logo variant="tedx" theme="dark" className="scale-75 md:scale-90 origin-left" />
             </Link>
-            <p className="font-editorial text-xl md:text-2xl italic text-white/40 max-w-md leading-relaxed">
-              Ideas worth holding onto.
-            </p>
+            <Logo variant="school" theme="dark" className="scale-75 md:scale-90 origin-left opacity-50 hover:opacity-80 transition-opacity" />
           </div>
 
           {/* Right: Newsletter signup */}
@@ -68,7 +78,8 @@ export default function Footer() {
                 />
                 <button
                   type="submit"
-                  className="pb-3 text-white/40 hover:text-white transition-colors"
+                  disabled={loading}
+                  className="pb-3 px-2 text-white/40 hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
                   <ArrowRight size={18} />
                 </button>
@@ -80,23 +91,23 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Middle section — Links grid */}
+        {/* Middle section — Links grid (bigger touch targets) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 mb-16 md:mb-24">
           {/* Navigation */}
           <div className="space-y-5">
             <h4 className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/25">Navigation</h4>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
               {[
                 { label: 'Home', to: '/' },
                 { label: 'Theme', to: '/theme' },
-                { label: 'Speakers', to: '/speakers' },
+                {label: 'Speakers', to: '/speakers' },
                 { label: 'Agenda', to: '/agenda' },
               ].map((link) => (
                 <Link
                   key={link.label}
                   to={link.to}
                   onClick={scrollToTop}
-                  className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+                  className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 py-2.5 min-h-[44px] flex items-center"
                 >
                   {link.label}
                 </Link>
@@ -107,7 +118,7 @@ export default function Footer() {
           {/* More links */}
           <div className="space-y-5">
             <h4 className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/25">&nbsp;</h4>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
               {[
                 { label: 'FAQ', to: '/faq' },
                 { label: 'About', to: '/about' },
@@ -120,7 +131,7 @@ export default function Footer() {
                     href={link.to}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 inline-flex items-center gap-1.5"
+                    className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 inline-flex items-center gap-1.5 py-2.5 min-h-[44px]"
                   >
                     {link.label}
                     <ArrowUpRight size={10} className="opacity-40" />
@@ -130,7 +141,7 @@ export default function Footer() {
                     key={link.label}
                     to={link.to}
                     onClick={scrollToTop}
-                    className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+                    className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 py-2.5 min-h-[44px] flex items-center"
                   >
                     {link.label}
                   </Link>
@@ -139,21 +150,22 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Contact */}
+          {/* Contact — simple link */}
           <div className="space-y-5">
             <h4 className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/25">Contact</h4>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
               <a
                 href={`mailto:${SOCIALS.email}`}
-                className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+                className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 inline-flex items-center gap-1.5 py-2.5 min-h-[44px]"
               >
-                {SOCIALS.email}
+                Contact
+                <ArrowUpRight size={10} className="opacity-40" />
               </a>
               <a
                 href={SOCIALS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 inline-flex items-center gap-1.5"
+                className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 inline-flex items-center gap-1.5 py-2.5 min-h-[44px]"
               >
                 Instagram
                 <ArrowUpRight size={10} className="opacity-40" />
@@ -164,8 +176,8 @@ export default function Footer() {
           {/* Location */}
           <div className="space-y-5">
             <h4 className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/25">Location</h4>
-            <div className="space-y-3">
-              <p className="font-sans text-sm text-white/50 leading-relaxed">
+            <div className="space-y-1">
+              <p className="font-sans text-sm text-white/50 leading-relaxed py-2.5">
                 Al Muntazir Nursery<br />
                 UN Road, Upanga<br />
                 Dar Es Salaam, Tanzania
@@ -174,18 +186,13 @@ export default function Footer() {
                 href="https://www.google.com/maps/search/?api=1&query=Al+Muntazir+Islamic+International+School+-+Nursery"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+                className="inline-flex items-center gap-1.5 font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 py-2.5 min-h-[44px]"
               >
                 Get Directions
                 <ArrowUpRight size={10} className="opacity-40" />
               </a>
             </div>
           </div>
-        </div>
-
-        {/* ETG Logo — prominent */}
-        <div className="flex justify-center mb-12 md:mb-16">
-          <ETGLogo className="w-[120px] md:w-[160px] h-auto opacity-30 hover:opacity-60 transition-opacity duration-500" />
         </div>
 
         {/* Bottom bar */}
