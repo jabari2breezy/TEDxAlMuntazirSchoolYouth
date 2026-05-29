@@ -1,422 +1,625 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
-import { SPEAKERS, SEGMENTS, TICKETS_URL } from '../constants';
-import { ArrowUpRight, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { SEGMENTS, SPEAKERS } from '../constants';
+import { X, ChevronLeft, ChevronRight, ArrowUpRight, ChevronDown } from 'lucide-react';
 
-/* ─── Animation Variants ─── */
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.25, 1, 0.5, 1] } },
-};
+interface Speaker {
+  id: string;
+  name: string;
+  topic: string;
+  segmentId: string;
+  bio: string;
+  talk_description: string;
+}
 
-const fadeUpDelayed = (delay: number) => ({
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay, ease: [0.25, 1, 0.5, 1] } },
-});
+function RevealText({
+  children,
+  delay = 0,
+  className = '',
+  as: Tag = 'div',
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  as?: keyof JSX.IntrinsicElements;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+    >
+      <Tag>{children}</Tag>
+    </motion.div>
+  );
+}
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
-  },
-};
+function StaggerChildren({
+  children,
+  className = '',
+  staggerDelay = 0.08,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  staggerDelay?: number;
+}) {
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-40px' }}
+      variants={{
+        visible: { transition: { staggerChildren: staggerDelay } },
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
-const staggerItem = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 1, 0.5, 1] } },
-};
+function StaggerItem({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function Speakers() {
-  const pageRef = useRef<HTMLDivElement>(null);
-  const horizontalRef = useRef<HTMLDivElement>(null);
+  const [speakersData, setSpeakersData] = useState<Speaker[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<'bio' | 'talk'>('bio');
 
-  const { scrollYProgress } = useScroll({
-    target: pageRef,
-    offset: ['start start', 'end end'],
-  });
+  const isTheater = activeIndex !== null;
 
-  // Horizontal scroll mapping for the speakers section
-  // The section provides scroll room from ~15% to ~45% of total page scroll
-  const speakerCount = SPEAKERS.length;
-  const cardWidth = typeof window !== 'undefined' && window.innerWidth < 768 ? 90 : 40; // vw units
-  const totalTranslate = speakerCount * cardWidth;
-  const xPercent = useTransform(
-    scrollYProgress,
-    [0.15, 0.45],
-    [0, -(totalTranslate - 100)]
-  );
+  useEffect(() => {
+    setSpeakersData(SPEAKERS as Speaker[]);
+  }, []);
 
-  // Opacity for sections
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.08], [1, 0.95]);
+  // Body lock
+  useEffect(() => {
+    if (isTheater) {
+      const scrollY = window.scrollY;
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.dataset.scrollY = String(scrollY);
+    } else {
+      const scrollY = Number(document.body.dataset.scrollY || 0);
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+    };
+  }, [isTheater]);
+
+  const groupedSpeakers = SEGMENTS.map((segment) => ({
+    segment,
+    speakers: speakersData.filter((s) => s.segmentId === segment.id),
+  }));
+
+  const theaterSpeaker = isTheater && activeIndex !== null ? speakersData[activeIndex] : null;
+  const theaterSegment = theaterSpeaker
+    ? SEGMENTS.find((s) => s.id === theaterSpeaker.segmentId)
+    : null;
+  const theaterSegmentLabel = theaterSegment?.title || '';
+  const theaterSegmentIdx = theaterSpeaker
+    ? SEGMENTS.findIndex((s) => s.id === theaterSpeaker.segmentId) + 1
+    : 0;
+
+  const theaterGoNext = useCallback(() => {
+    if (activeIndex !== null) {
+      setActiveIndex((activeIndex + 1) % speakersData.length);
+      setActiveTab('bio');
+    }
+  }, [activeIndex, speakersData.length]);
+
+  const theaterGoPrev = useCallback(() => {
+    if (activeIndex !== null) {
+      setActiveIndex((activeIndex - 1 + speakersData.length) % speakersData.length);
+      setActiveTab('bio');
+    }
+  }, [activeIndex, speakersData.length]);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (isTheater) {
+        if (e.key === 'Escape') setActiveIndex(null);
+        if (e.key === 'ArrowRight') theaterGoNext();
+        if (e.key === 'ArrowLeft') theaterGoPrev();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [isTheater, theaterGoNext, theaterGoPrev]);
+
+  if (speakersData.length === 0) {
+    return (
+      <div className="h-screen w-full bg-brand-primary flex items-center justify-center">
+        <div className="font-typewriter text-white/20 animate-pulse tracking-[0.5em] uppercase text-sm">
+          Loading the assembly...
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div ref={pageRef} className="bg-brand-primary text-white font-sans overflow-x-hidden">
-      
+    <div className="w-full bg-[#f7f4ee]">
       {/* ═══ HERO SECTION ═══ */}
-      <motion.section
-        style={{ opacity: heroOpacity, scale: heroScale }}
-        className="relative h-[100dvh] w-full flex flex-col items-center justify-center px-6 overflow-hidden"
-      >
-        {/* Large ambient background text */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <span className="text-[40vw] md:text-[28vw] font-title font-black uppercase leading-none tracking-tighter text-white/[0.03]">
-            Voices
-          </span>
-        </div>
+      <section className="relative min-h-[90vh] md:min-h-screen bg-brand-primary flex flex-col justify-center px-6 md:px-16 lg:px-24 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
 
-        <div className="relative z-10 text-center space-y-6 md:space-y-8">
+        <div className="relative z-10 max-w-6xl mx-auto w-full">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-4 md:mb-6"
           >
-            <span className="inline-block font-typewriter text-[10px] md:text-xs uppercase tracking-[0.35em] text-brand-secondary/80 mb-6 md:mb-8 border border-brand-secondary/20 px-4 py-1.5 rounded-full">
-              Segment 0{SEGMENTS.length} &middot; TEDxAlMuntazirSchoolYouth
+            <span className="font-typewriter text-[10px] md:text-xs tracking-[0.4em] text-brand-secondary/70 uppercase">
+              TEDxAlMuntazirSchoolYouth 2026
             </span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.15, ease: [0.25, 1, 0.5, 1] }}
-            className="text-[18vw] md:text-[10vw] lg:text-[8vw] font-title font-black uppercase leading-[0.85] tracking-tighter"
-          >
-            Global
-            <br />
-            <span className="text-brand-secondary italic font-editorial lowercase not-italic tracking-normal">Voices</span>
-          </motion.h1>
+          <div className="overflow-hidden mb-4">
+            <motion.h1
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className="font-title font-black text-[14vw] md:text-[9vw] lg:text-[7vw] uppercase leading-[0.8] tracking-tighter text-white"
+            >
+              Global
+              <br />
+              <span className="inline-block mt-1 md:mt-2">
+                <span className="text-brand-secondary">Voices</span>
+              </span>
+            </motion.h1>
+          </div>
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="font-editorial italic text-base md:text-2xl text-white/50 max-w-md mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="font-editorial italic text-base md:text-xl lg:text-2xl text-white/60 max-w-lg leading-relaxed"
           >
-            Time is the currency we borrow. These voices exchange it for insight.
+            Nine minds. Three timelines. One stage. Meet the speakers shaping
+            our relationship with time.
           </motion.p>
         </div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
-          <span className="font-typewriter text-[8px] md:text-[10px] uppercase tracking-[0.3em] text-white/25">
-            Scroll
+          <span className="font-typewriter text-[7px] uppercase tracking-[0.4em] text-white/30">
+            Scroll to explore
           </span>
-          <div className="w-px h-12 md:h-16 bg-gradient-to-b from-white/20 to-transparent" />
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <ChevronDown size={14} className="text-white/30" />
+          </motion.div>
         </motion.div>
-      </motion.section>
-
-      {/* ═══ STATEMENT DIVIDER ═══ */}
-      <section className="relative py-32 md:py-48 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <motion.p
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-10%' }}
-            transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] }}
-            className="font-editorial italic text-3xl md:text-5xl lg:text-6xl text-white/80 leading-snug"
-          >
-            Each speaker carries a distinct relationship with time —{' '}
-            <span className="text-brand-secondary not-italic font-title uppercase">a borrowed perspective</span>{' '}
-            that shapes how we understand our past, navigate our present, and build our future.
-          </motion.p>
-        </div>
       </section>
 
-      {/* ═══ ABOUT SECTION (TWO COLUMNS) ═══ */}
-      <section className="border-t border-white/5 py-24 md:py-32 px-6 md:px-16">
-        <div className="max-w-screen-2xl mx-auto grid md:grid-cols-2 gap-16 md:gap-24">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-10%' }}
-            transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-          >
-            <span className="font-typewriter text-[9px] md:text-[11px] uppercase tracking-[0.35em] text-white/30 mb-6 block">
-              The Assembly
-            </span>
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-title font-black uppercase tracking-tighter leading-[0.85]">
-              Nine minds.
-              <br />
-              <span className="text-brand-secondary italic font-editorial lowercase not-italic">one stage.</span>
-            </h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-10%' }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 1, 0.5, 1] }}
-            className="space-y-8"
-          >
-            <p className="font-sans text-sm md:text-base text-white/60 leading-relaxed">
-              From the archives of memory to the frontier of innovation, our speakers traverse the full
-              spectrum of human experience. Each talk is a meditation on time — how we measure it, how we
-              waste it, how we transcend it.
-            </p>
-            <p className="font-sans text-sm md:text-base text-white/50 leading-relaxed">
-              Spanning three segments — The Past, The Present, The Future — this assembly brings together
-              young leaders, thinkers, and creators who are shaping the narrative of our generation.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ═══ SPEAKERS HORIZONTAL SCROLL SECTION ═══ */}
-      <section className="relative h-[400vh] md:h-[250vh]">
-        <div className="sticky top-0 h-[100dvh] overflow-hidden flex items-center">
-          {/* Section label (fixed left) */}
-          <div className="absolute top-8 md:top-12 left-6 md:left-16 z-20 flex items-center gap-4">
-            <span className="w-6 h-px bg-brand-secondary/50" />
-            <span className="font-typewriter text-[8px] md:text-[10px] uppercase tracking-[0.35em] text-white/40">
-              The Voices &mdash; 0{speakerCount} Speakers
-            </span>
-          </div>
-
-          {/* Mobile: vertical scroll instead */}
-          <div className="md:hidden w-full h-full overflow-y-auto no-scrollbar px-6 py-20">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-5%' }}
-              className="space-y-6"
+      {/* ═══ SEGMENT SECTIONS ═══ */}
+      {groupedSpeakers.map(
+        ({ segment, speakers }, segIdx) =>
+          speakers.length > 0 && (
+            <section
+              key={segment.id}
+              className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-28 lg:py-36 ${
+                segIdx % 2 === 0 ? 'bg-[#f7f4ee]' : 'bg-white'
+              }`}
             >
-              {SPEAKERS.map((speaker, idx) => {
-                const segment = SEGMENTS.find((s) => s.id === speaker.segmentId);
-                return (
-                  <motion.div
-                    key={speaker.id}
-                    variants={staggerItem}
-                    className="group relative border border-white/10 rounded-2xl p-6 hover:bg-white/5 transition-all duration-500 cursor-pointer"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-2 flex-1 min-w-0">
-                        <div className="flex items-center gap-3">
-                          <span className="font-typewriter text-[9px] uppercase tracking-[0.2em] text-brand-secondary/60">
-                            0{idx + 1}
-                          </span>
-                          <span className="w-px h-3 bg-white/10" />
-                          <span className={`
-                            font-typewriter text-[7px] uppercase tracking-[0.2em]
-                            ${segment?.id === 'past' ? 'text-blue-300/50' : ''}
-                            ${segment?.id === 'present' ? 'text-brand-secondary/50' : ''}
-                            ${segment?.id === 'future' ? 'text-amber-300/50' : ''}
-                          `}>
-                            {segment?.title || ''}
-                          </span>
-                        </div>
-                        <h3 className="text-xl font-title font-black uppercase tracking-tighter leading-none text-white group-hover:text-brand-secondary transition-colors">
-                          {speaker.name}
-                        </h3>
-                        <p className="font-editorial italic text-sm text-white/40 line-clamp-1">
-                          &ldquo;{speaker.topic}&rdquo;
-                        </p>
-                      </div>
-                      <div className="shrink-0 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/30 group-hover:text-brand-secondary group-hover:border-brand-secondary/50 transition-all duration-500">
-                        <ChevronRight size={14} />
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-white/5">
-                      <p className="font-sans text-xs text-white/50 leading-relaxed line-clamp-2">
-                        {speaker.bio}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </div>
-
-          {/* Desktop: horizontal scroll track */}
-          <motion.div
-            ref={horizontalRef}
-            style={{ x: xPercent }}
-            className="hidden md:flex items-center gap-12 px-16 will-change-transform"
-          >
-            {SPEAKERS.map((speaker, idx) => {
-              const segment = SEGMENTS.find((s) => s.id === speaker.segmentId);
-              return (
-                <motion.div
-                  key={speaker.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: idx * 0.05, ease: [0.25, 1, 0.5, 1] }}
-                  className="group relative w-[36vw] h-[60vh] shrink-0 border border-white/10 rounded-3xl p-10 flex flex-col justify-between hover:bg-white/[0.03] transition-all duration-700 cursor-pointer overflow-hidden"
-                >
-                  {/* Large number watermark */}
-                  <span className="absolute -top-8 -right-4 text-[20vw] font-title font-black text-white/[0.03] pointer-events-none select-none leading-none">
-                    {String(idx + 1).padStart(2, '0')}
-                  </span>
-
-                  {/* Top section */}
-                  <div className="relative z-10 space-y-6">
-                    <div className="flex items-center gap-3">
-                      <span className="font-typewriter text-[9px] uppercase tracking-[0.2em] text-brand-secondary/60">
-                        0{idx + 1}
+              <div className="max-w-7xl mx-auto">
+                {/* Section Header */}
+                <div className="mb-12 md:mb-16 lg:mb-20">
+                  <RevealText delay={0}>
+                    <div className="flex items-center gap-4 mb-4 md:mb-6">
+                      <span className="font-typewriter text-[10px] md:text-xs tracking-[0.3em] text-brand-secondary uppercase">
+                        {segment.number} / {segment.subtitle}
                       </span>
-                      <span className="w-px h-4 bg-white/10" />
-                      <span className={`
-                        font-typewriter text-[8px] uppercase tracking-[0.2em]
-                        ${segment?.id === 'past' ? 'text-blue-300/50' : ''}
-                        ${segment?.id === 'present' ? 'text-brand-secondary/50' : ''}
-                        ${segment?.id === 'future' ? 'text-amber-300/50' : ''}
-                      `}>
-                        {segment?.title || ''}
-                      </span>
+                      <div className="h-px flex-1 max-w-[80px] bg-brand-secondary/30" />
                     </div>
+                  </RevealText>
 
-                    <div className="space-y-3">
-                      <h3 className="text-[3.5vw] font-title font-black uppercase leading-[0.85] tracking-tighter text-white group-hover:text-brand-secondary transition-colors duration-500">
-                        {speaker.name}
-                      </h3>
-                      <p className="font-editorial italic text-lg text-white/40">
-                        &ldquo;{speaker.topic}&rdquo;
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Bottom section */}
-                  <div className="relative z-10 space-y-4">
-                    <div className="w-12 h-px bg-brand-secondary/40" />
-                    <p className="font-sans text-sm text-white/50 leading-relaxed line-clamp-3">
-                      {speaker.bio}
-                    </p>
-                  </div>
-
-                  {/* Hover indicator */}
-                  <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="w-10 h-10 rounded-full border border-brand-secondary/30 flex items-center justify-center text-brand-secondary">
-                      <ArrowUpRight size={14} />
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ═══ SEGMENTS SECTION ═══ */}
-      <section className="border-t border-white/5 py-32 md:py-40 px-6 md:px-16">
-        <div className="max-w-screen-2xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-10%' }}
-            transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="mb-20 md:mb-28"
-          >
-            <span className="font-typewriter text-[9px] md:text-[11px] uppercase tracking-[0.35em] text-white/30 mb-4 block">
-              The Segments
-            </span>
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-title font-black uppercase tracking-tighter leading-[0.85] max-w-4xl">
-              Three dimensions of{' '}
-              <span className="text-brand-secondary italic font-editorial lowercase not-italic">borrowed time</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            {SEGMENTS.map((segment, idx) => (
-              <motion.div
-                key={segment.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-10%' }}
-                transition={{ duration: 0.8, delay: idx * 0.12, ease: [0.25, 1, 0.5, 1] }}
-                className="group relative border border-white/10 rounded-2xl p-8 md:p-10 hover:bg-white/[0.03] transition-all duration-500"
-              >
-                <span className="text-6xl md:text-7xl font-title font-black text-white/[0.04] absolute top-6 right-6 leading-none select-none">
-                  {segment.number}
-                </span>
-
-                <div className="relative z-10 space-y-6">
-                  <div className="flex items-center gap-3">
-                    <span className="w-2 h-2 rounded-full bg-brand-secondary" />
-                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.25em] text-brand-secondary/70">
-                      {segment.number}
-                    </span>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-title font-black uppercase tracking-tighter leading-none text-white group-hover:text-brand-secondary transition-colors duration-500">
+                  <RevealText delay={0.1}>
+                    <h2 className="font-title font-black text-5xl md:text-7xl lg:text-8xl uppercase tracking-tighter text-brand-primary leading-[0.85]">
                       {segment.title}
-                    </h3>
-                    <p className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.25em] text-white/30">
-                      {segment.subtitle}
+                    </h2>
+                  </RevealText>
+
+                  <RevealText delay={0.2}>
+                    <p className="font-sans text-sm md:text-base text-brand-primary/50 max-w-lg mt-4 md:mt-6 leading-relaxed">
+                      {segment.description}
                     </p>
-                  </div>
-
-                  <div className="w-10 h-px bg-white/10" />
-
-                  <p className="font-sans text-sm md:text-[15px] text-white/50 leading-relaxed">
-                    {segment.description}
-                  </p>
+                  </RevealText>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ═══ CTA SECTION ═══ */}
-      <section className="border-t border-white/5 py-32 md:py-40 px-6 md:px-16">
-        <div className="max-w-screen-2xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: '-10%' }}
-            transition={{ duration: 0.9, ease: [0.25, 1, 0.5, 1] }}
-            className="relative bg-brand-secondary/10 border border-brand-secondary/20 rounded-[2.5rem] p-12 md:p-24 lg:p-32 text-center overflow-hidden"
-          >
-            {/* Background decoration */}
-            <div className="absolute inset-0 pointer-events-none select-none">
-              <span className="absolute -top-16 -right-16 text-[35vw] md:text-[20vw] font-title font-black text-white/[0.03] leading-none">
-                &rsquo;26
+                {/* Speaker Portfolio Grid (Lukebaffait.fr style) */}
+                <StaggerChildren staggerDelay={0.1}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+                    {speakers.map((sp) => (
+                      <StaggerItem key={sp.id}>
+                        <motion.button
+                          onClick={() => {
+                            setActiveIndex(
+                              speakersData.findIndex((s) => s.id === sp.id)
+                            );
+                            setActiveTab('bio');
+                          }}
+                          whileHover={{ y: -4 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="group relative w-full text-left bg-white rounded-2xl p-6 md:p-8 border border-brand-primary/5 hover:border-brand-secondary/20 transition-all duration-500 shadow-sm hover:shadow-lg hover:shadow-brand-primary/5"
+                        >
+                          {/* Segment badge */}
+                          <div className="flex items-center gap-2 mb-4 md:mb-6">
+                            <span className="w-2 h-2 rounded-full bg-brand-secondary" />
+                            <span className="font-typewriter text-[7px] uppercase tracking-[0.25em] text-brand-secondary/60">
+                              {segment.subtitle}
+                            </span>
+                          </div>
+
+                          {/* Name — large, like lukebaffait.fr project titles */}
+                          <h3 className="font-editorial italic lowercase text-2xl md:text-3xl lg:text-4xl text-brand-primary leading-[0.9] mb-3 transition-colors duration-300 group-hover:text-brand-secondary">
+                            {sp.name.toLowerCase()}
+                          </h3>
+
+                          {/* Topic */}
+                          <p className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-brand-primary/40 mb-3 md:mb-4 line-clamp-1">
+                            {sp.topic}
+                          </p>
+
+                          {/* Bio preview */}
+                          <p className="font-sans text-xs md:text-[13px] text-brand-primary/60 leading-relaxed line-clamp-2 md:line-clamp-3">
+                            {sp.bio}
+                          </p>
+
+                          {/* View indicator */}
+                          <div className="mt-4 md:mt-6 flex items-center gap-2 text-brand-secondary/60 group-hover:text-brand-secondary transition-colors duration-300">
+                            <span className="font-typewriter text-[7px] uppercase tracking-[0.25em]">
+                              View profile
+                            </span>
+                            <motion.span
+                              className="inline-block"
+                              initial={{ x: 0 }}
+                              whileHover={{ x: 3 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <ArrowUpRight
+                                size={11}
+                                className="group-hover:rotate-45 transition-transform duration-300"
+                              />
+                            </motion.span>
+                          </div>
+
+                          {/* Bottom accent line */}
+                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-secondary/0 group-hover:bg-brand-secondary/40 rounded-b-2xl transition-all duration-500" />
+                        </motion.button>
+                      </StaggerItem>
+                    ))}
+                  </div>
+                </StaggerChildren>
+              </div>
+            </section>
+          )
+      )}
+
+      {/* ═══ FOOTER CTA ═══ */}
+      <section className="relative bg-brand-primary px-6 md:px-16 lg:px-24 py-20 md:py-28 lg:py-36 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
+
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <RevealText delay={0}>
+            <span className="font-typewriter text-[10px] md:text-xs tracking-[0.4em] text-brand-secondary/70 uppercase block mb-6">
+              Be Part of the Moment
+            </span>
+          </RevealText>
+
+          <RevealText delay={0.1}>
+            <h2 className="font-title font-black text-5xl md:text-7xl lg:text-8xl uppercase tracking-tighter text-white leading-[0.85] mb-8">
+              Don&apos;t Waste
+              <br />
+              <span className="text-brand-secondary italic font-editorial lowercase">
+                Your Time
               </span>
-            </div>
+            </h2>
+          </RevealText>
 
-            <div className="relative z-10 space-y-8 md:space-y-10">
-              <span className="inline-block font-typewriter text-[9px] md:text-[11px] uppercase tracking-[0.35em] text-brand-secondary/70 border border-brand-secondary/20 px-5 py-2 rounded-full">
+          <RevealText delay={0.2}>
+            <a
+              href="https://tukiio.com/event/tedxalmuntazirschoolsyouth"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-4 px-10 md:px-14 py-4 md:py-5 bg-brand-secondary text-white rounded-full hover:bg-brand-secondary/90 transition-all duration-500 hover:scale-105 active:scale-98"
+            >
+              <span className="font-typewriter text-xs md:text-sm uppercase tracking-[0.25em] font-black">
                 Secure Your Seat
               </span>
-
-              <h2 className="text-5xl md:text-7xl lg:text-8xl font-title font-black uppercase tracking-tighter leading-[0.85] max-w-3xl mx-auto">
-                Don't just watch
-                <br />
-                <span className="italic font-editorial lowercase text-brand-secondary not-italic">be part of it.</span>
-              </h2>
-
-              <p className="font-editorial italic text-lg md:text-2xl text-white/50 max-w-xl mx-auto leading-relaxed">
-                The clock is ticking. Join us in Dar es Salaam for an unforgettable journey through the dimensions of time.
-              </p>
-
-              <motion.a
-                href={TICKETS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-4 bg-brand-secondary text-white px-10 md:px-14 py-5 md:py-6 rounded-full font-title font-bold text-lg md:text-xl uppercase tracking-widest hover:bg-white hover:text-brand-primary transition-all duration-500 shadow-2xl group"
-              >
-                Get Tickets
-                <ArrowUpRight
-                  size={20}
-                  className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300"
-                />
-              </motion.a>
-            </div>
-          </motion.div>
+              <ArrowUpRight
+                size={16}
+                className="group-hover:rotate-45 transition-transform duration-500"
+              />
+            </a>
+          </RevealText>
         </div>
       </section>
 
+      {/* ═══ THEATER OVERLAY ═══ */}
+      <AnimatePresence>
+        {isTheater && theaterSpeaker && (
+          <motion.div
+            key={`theater-${activeIndex}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 w-full h-[100dvh] bg-[#f7f4ee] flex flex-col overflow-hidden z-[200] text-[#000839]"
+          >
+            {/* Thin top border */}
+            <div className="w-full h-px bg-[#000839]/10 shrink-0" />
+
+            {/* TOP: Speaker Selection Pill Menu */}
+            <div className="w-full flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-[#000839]/10 bg-[#f7f4ee] shrink-0 relative z-30">
+              <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2 mr-3 py-0.5">
+                {speakersData.map((s, idx) => (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      setActiveIndex(idx);
+                      setActiveTab('bio');
+                    }}
+                    className={`px-3 py-1.5 rounded-full text-[8px] md:text-[9px] font-sans font-semibold uppercase tracking-[0.15em] transition-all duration-300 whitespace-nowrap border ${
+                      idx === activeIndex
+                        ? 'bg-[#000839] text-[#f7f4ee] border-[#000839]'
+                        : 'border-[#000839]/10 text-[#000839]/50 hover:text-[#000839] hover:border-[#000839]/30'
+                    }`}
+                  >
+                    {idx + 1}. {s.name.split(' ')[0].toLowerCase()}
+                  </button>
+                ))}
+              </div>
+
+              <motion.button
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setActiveIndex(null)}
+                className="w-8 h-8 rounded-full border border-[#000839]/10 flex items-center justify-center text-[#000839]/60 hover:text-[#000839] hover:border-[#000839]/30 transition-all duration-300 shrink-0"
+              >
+                <X size={12} />
+              </motion.button>
+            </div>
+
+            {/* MAIN BODY */}
+            <div className="flex-1 min-h-0 flex flex-col md:flex-row">
+              {/* LEFT: Speaker Identity */}
+              <div className="w-full md:w-[45%] border-b md:border-b-0 md:border-r border-[#000839]/10 flex flex-col justify-center p-6 md:p-12 lg:p-16 shrink-0">
+                <div className="space-y-4 md:space-y-6">
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15, duration: 0.5 }}
+                    className="flex items-center gap-2.5"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-brand-secondary" />
+                    <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.25em] text-[#000839]/50">
+                      segment 0{theaterSegmentIdx} /{' '}
+                      {theaterSegmentLabel.toLowerCase()}
+                    </span>
+                  </motion.div>
+
+                  <div className="overflow-hidden">
+                    <motion.h2
+                      key={`theater-name-${activeIndex}`}
+                      initial={{ y: '100%' }}
+                      animate={{ y: 0 }}
+                      transition={{
+                        duration: 0.7,
+                        delay: 0.1,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      className="font-editorial italic lowercase text-3xl md:text-4xl lg:text-5xl text-[#000839] tracking-tight leading-[0.9]"
+                    >
+                      {theaterSpeaker.name.toLowerCase()}
+                    </motion.h2>
+                  </div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.25, duration: 0.5 }}
+                    className="relative pl-4 border-l border-[#000839]/20"
+                  >
+                    <p className="font-editorial italic text-sm md:text-base lg:text-lg text-[#000839]/75 leading-snug">
+                      &ldquo;{theaterSpeaker.topic}&rdquo;
+                    </p>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* RIGHT: Narrative Canvas */}
+              <div className="flex-1 flex flex-col justify-between min-h-0 p-6 md:p-12 lg:p-16 bg-[#f5f2eb]">
+                {/* Mobile Tab Toggle */}
+                <div className="md:hidden flex items-center p-1 bg-[#000839]/5 rounded-full border border-[#000839]/5 mb-5 shrink-0">
+                  <button
+                    onClick={() => setActiveTab('bio')}
+                    className={`flex-1 py-2 text-center text-[9px] font-sans font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-300 relative ${
+                      activeTab === 'bio'
+                        ? 'text-[#f7f4ee]'
+                        : 'text-[#000839]/60'
+                    }`}
+                  >
+                    {activeTab === 'bio' && (
+                      <motion.div
+                        layoutId="mobile-speaker-tab-glow"
+                        className="absolute inset-0 bg-[#000839] rounded-full z-[-1]"
+                        transition={{
+                          type: 'spring',
+                          stiffness: 450,
+                          damping: 35,
+                        }}
+                      />
+                    )}
+                    the{' '}
+                    <span className="font-editorial italic lowercase">
+                      biography
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('talk')}
+                    className={`flex-1 py-2 text-center text-[9px] font-sans font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-300 relative ${
+                      activeTab === 'talk'
+                        ? 'text-[#f7f4ee]'
+                        : 'text-[#000839]/60'
+                    }`}
+                  >
+                    {activeTab === 'talk' && (
+                      <motion.div
+                        layoutId="mobile-speaker-tab-glow"
+                        className="absolute inset-0 bg-[#000839] rounded-full z-[-1]"
+                        transition={{
+                          type: 'spring',
+                          stiffness: 450,
+                          damping: 35,
+                        }}
+                      />
+                    )}
+                    about the{' '}
+                    <span className="font-editorial italic lowercase">
+                      discourse
+                    </span>
+                  </button>
+                </div>
+
+                {/* Desktop: Two-column narrative */}
+                <div className="hidden md:grid md:grid-cols-2 gap-8 lg:gap-12 h-full items-start overflow-hidden">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 border-b border-[#000839]/10 pb-2">
+                      <span className="font-typewriter text-[8px] uppercase tracking-[0.25em] text-[#000839]/40">
+                        the{' '}
+                        <span className="font-editorial italic lowercase">
+                          biography
+                        </span>
+                      </span>
+                    </div>
+                    <p className="font-sans text-xs lg:text-[13px] text-[#000839]/70 leading-relaxed max-h-[35vh] overflow-y-auto no-scrollbar">
+                      {theaterSpeaker.bio}
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 border-b border-[#000839]/10 pb-2">
+                      <span className="font-typewriter text-[8px] uppercase tracking-[0.25em] text-[#000839]/40">
+                        about the{' '}
+                        <span className="font-editorial italic lowercase">
+                          discourse
+                        </span>
+                      </span>
+                    </div>
+                    <p className="font-editorial italic text-sm lg:text-[15px] text-[#000839]/85 leading-relaxed max-h-[35vh] overflow-y-auto no-scrollbar">
+                      {theaterSpeaker.talk_description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Mobile: Single tab view */}
+                <div className="md:hidden flex-1 min-h-0 relative">
+                  <AnimatePresence mode="wait">
+                    {activeTab === 'bio' ? (
+                      <motion.div
+                        key="bio-panel"
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 8 }}
+                        transition={{ duration: 0.25 }}
+                        className="space-y-2"
+                      >
+                        <div className="flex items-center gap-2 border-b border-[#000839]/5 pb-1">
+                          <span className="font-typewriter text-[7px] uppercase tracking-[0.2em] text-[#000839]/30">
+                            curated background
+                          </span>
+                        </div>
+                        <p className="font-sans text-[12px] text-[#000839]/75 leading-relaxed overflow-y-auto no-scrollbar max-h-[22vh]">
+                          {theaterSpeaker.bio}
+                        </p>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="talk-panel"
+                        initial={{ opacity: 0, x: 8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -8 }}
+                        transition={{ duration: 0.25 }}
+                        className="space-y-2"
+                      >
+                        <div className="flex items-center gap-2 border-b border-[#000839]/5 pb-1">
+                          <span className="font-typewriter text-[7px] uppercase tracking-[0.2em] text-[#000839]/30">
+                            presentation synopsis
+                          </span>
+                        </div>
+                        <p className="font-editorial italic text-[13px] text-[#000839]/85 leading-relaxed overflow-y-auto no-scrollbar max-h-[22vh]">
+                          {theaterSpeaker.talk_description}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Footer Navigation */}
+                <div className="pt-4 border-t border-[#000839]/10 flex items-center justify-between shrink-0 mt-4">
+                  <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.2em] text-[#000839]/30">
+                    tedx 2026 / global assembly
+                  </span>
+                  <div className="flex items-center gap-4 md:gap-6">
+                    <button
+                      onClick={theaterGoPrev}
+                      className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-[#000839]/10 flex items-center justify-center text-[#000839]/40 hover:text-[#000839] hover:border-[#000839]/30 transition-all active:scale-90 shrink-0"
+                    >
+                      <ChevronLeft size={11} />
+                    </button>
+                    <span className="font-typewriter text-[7px] md:text-[8px] uppercase tracking-[0.2em] text-[#000839]/40">
+                      {String(activeIndex! + 1).padStart(2, '0')} /{' '}
+                      {String(speakersData.length).padStart(2, '0')}
+                    </span>
+                    <button
+                      onClick={theaterGoNext}
+                      className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-[#000839]/10 flex items-center justify-center text-[#000839]/40 hover:text-[#000839] hover:border-[#000839]/30 transition-all active:scale-90 shrink-0"
+                    >
+                      <ChevronRight size={11} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
