@@ -253,3 +253,9 @@ button, a, input, textarea, select, [role="button"] {
 .editorial-border-dark {
   border: 1px solid rgba(0, 8, 57, 0.06);
 }
+
+/* ─── Twinkle animation for glistening stars ─── */
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 0.8; transform: scale(1.2); }
+}

@@ -35,59 +35,59 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       // 1. Corner metadata fades in
       tl.fromTo('.preloader-meta',
         { opacity: 0 },
-        { opacity: 1, duration: 0.6, ease: 'power2.out' }
+        { opacity: 1, duration: 0.5, ease: 'power2.out' }
       )
 
       // 2. Counter animates 0 → 100
       const count = { val: 0 };
       tl.to(count, {
         val: 100,
-        duration: 2.2,
+        duration: 2.0,
         ease: 'power3.inOut',
         onUpdate: function() {
           const el = document.querySelector('.loading-counter');
           if (el) el.textContent = String(Math.round(count.val)).padStart(3, '0');
         }
-      }, '-=0.3')
+      }, '-=0.2')
 
       // 3. Top/bottom lines expand
       .fromTo('.preloader-line',
         { scaleX: 0 },
-        { scaleX: 1, duration: 0.8, ease: 'power3.inOut', stagger: 0.1 },
-        '-=1.5'
+        { scaleX: 1, duration: 0.7, ease: 'power3.inOut', stagger: 0.08 },
+        '-=1.3'
       )
 
-      // 4. Center text reveal — masked upward
-      .fromTo('.preloader-title-word',
+      // 4. Title words masked reveal — "TEDX ALMUNTAZIR SCHOOLS YOUTH 2026"
+      .fromTo('.preloader-title-line',
         { y: '110%', opacity: 0 },
-        { y: '0%', opacity: 1, duration: 0.9, ease: [0.16, 1, 0.3, 1], stagger: 0.12 },
-        '-=1.2'
+        { y: '0%', opacity: 1, duration: 0.8, ease: [0.16, 1, 0.3, 1], stagger: 0.1 },
+        '-=1.0'
       )
 
       // 5. Subtitle fades in
       .fromTo('.preloader-subtitle',
         { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
-        '-=0.5'
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+        '-=0.4'
       )
 
-      // 6. Hold for a beat
-      .to({}, { duration: 0.6 })
+      // 6. Hold
+      .to({}, { duration: 0.5 })
 
       // 7. Everything fades out
       .to('.preloader-content', {
         opacity: 0,
-        y: -30,
-        duration: 0.7,
+        y: -20,
+        duration: 0.6,
         ease: 'power3.inOut'
       })
 
-      // 8. Container slides up
+      // 8. Container slides up — jasminegunarto.com style
       .to(containerRef.current, {
         yPercent: -100,
-        duration: 1.0,
+        duration: 0.9,
         ease: [0.76, 0, 0.24, 1]
-      }, '-=0.3');
+      }, '-=0.2');
 
     }, containerRef);
 
@@ -109,7 +109,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       className="fixed inset-0 z-[9999] bg-[#050507] overflow-hidden flex items-center justify-center"
       style={{ height: '100dvh', willChange: 'transform' }}
     >
-      {/* Corner metadata — jasminegunarto.com style */}
+      {/* Corner metadata */}
       <div className="preloader-meta absolute top-6 left-6 md:top-8 md:left-10 z-20 opacity-0">
         <span className="font-typewriter text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-white/25">
           TEDxAlMuntazirSchoolsYouth
@@ -139,7 +139,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       {/* Center content */}
       <div className="preloader-content relative z-10 flex flex-col items-center text-center px-6">
         {/* Counter */}
-        <div className="flex items-baseline gap-1 mb-8">
+        <div className="flex items-baseline gap-1 mb-10">
           <span className="loading-counter font-title text-[12vw] md:text-[8vw] font-black text-white tracking-tighter leading-none">
             000
           </span>
@@ -148,21 +148,33 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           </span>
         </div>
 
-        {/* Title — masked reveal */}
-        <div className="overflow-hidden mb-3">
-          <div className="preloader-title-word font-title text-[11vw] md:text-[7vw] font-black uppercase text-white leading-[0.85] tracking-tighter">
-            Borrowed
+        {/* Title — TEDX ALMUNTAZIR SCHOOLS YOUTH 2026 */}
+        <div className="space-y-1 md:space-y-2">
+          <div className="overflow-hidden">
+            <div className="preloader-title-line font-title text-[8vw] md:text-[5vw] font-black uppercase text-white leading-[0.85] tracking-tighter">
+              TEDx
+            </div>
           </div>
-        </div>
-        <div className="overflow-hidden mb-6">
-          <div className="preloader-title-word font-title text-[11vw] md:text-[7vw] font-black uppercase text-brand-secondary leading-[0.85] tracking-tighter">
-            Time
+          <div className="overflow-hidden">
+            <div className="preloader-title-line font-title text-[6vw] md:text-[3.5vw] font-black uppercase text-white/80 leading-[0.85] tracking-tighter">
+              AlMuntazir
+            </div>
+          </div>
+          <div className="overflow-hidden">
+            <div className="preloader-title-line font-title text-[5vw] md:text-[2.8vw] font-black uppercase text-white/60 leading-[0.85] tracking-tighter">
+              Schools Youth
+            </div>
+          </div>
+          <div className="overflow-hidden mt-2">
+            <div className="preloader-title-line font-title text-[6vw] md:text-[3.5vw] font-black uppercase text-brand-secondary leading-[0.85] tracking-tighter">
+              2026
+            </div>
           </div>
         </div>
 
         {/* Subtitle */}
-        <div className="preloader-subtitle opacity-0">
-          <span className="font-editorial italic text-sm md:text-base text-white/40">
+        <div className="preloader-subtitle opacity-0 mt-8">
+          <span className="font-editorial italic text-sm md:text-base text-white/30">
             Ideas worth holding onto
           </span>
         </div>

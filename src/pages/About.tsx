@@ -1,8 +1,9 @@
 import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { HelpCircle, Mail, ArrowUpRight, Plus } from 'lucide-react';
+import MaskReveal from '../components/MaskReveal';
 
-const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
+const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function About() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -29,6 +30,7 @@ export default function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ duration: 0.85, ease: LUXURY_EASE }}
       className="pt-40"
     >
       <div className="px-6 md:px-16 max-w-screen-2xl mx-auto">
@@ -74,7 +76,7 @@ export default function About() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-10%' }}
-                transition={{ duration: 0.7, delay: i * 0.1, ease: [0.25, 1, 0.5, 1] }}
+                transition={{ duration: 0.85, delay: i * 0.1, ease: LUXURY_EASE }}
                 className="space-y-6"
               >
                 <div className="flex items-center gap-4">
@@ -83,12 +85,16 @@ export default function About() {
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: i * 0.15, ease: [0.25, 1, 0.5, 1] }}
+                    transition={{ duration: 0.85, delay: i * 0.15, ease: LUXURY_EASE }}
                     className="h-[1px] flex-grow bg-brand-outline origin-left"
                   />
                 </div>
-                <h3 className="text-4xl font-title font-black tracking-tighter uppercase text-brand-primary break-all sm:break-words">{item.title}</h3>
-                <p className="font-editorial text-xl text-brand-primary/60 leading-tight italic">{item.text}</p>
+                <MaskReveal delay={i * 0.1}>
+                  <h3 className="text-4xl font-title font-black tracking-tighter uppercase text-brand-primary break-all sm:break-words">{item.title}</h3>
+                </MaskReveal>
+                <MaskReveal delay={0.1 + i * 0.1}>
+                  <p className="font-editorial text-xl text-brand-primary/60 leading-tight italic">{item.text}</p>
+                </MaskReveal>
               </motion.div>
             ))}
           </div>
@@ -98,7 +104,7 @@ export default function About() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-10%' }}
-            transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+            transition={{ duration: 0.85, ease: LUXURY_EASE }}
             className="space-y-16"
           >
             <div className="p-12 border border-brand-outline bg-brand-surface space-y-8 rounded-[3rem] shadow-sm">

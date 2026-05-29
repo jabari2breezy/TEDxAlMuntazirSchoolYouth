@@ -1,8 +1,43 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
 import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight } from 'lucide-react';
 import { TICKETS_URL } from '../constants';
 import InteractiveBackground from '../components/InteractiveBackground';
+
+const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
+
+/* Glistening Stars — randomised positions, twinkling CSS animation */
+function GlisteningStars({ count = 80 }: { count?: number }) {
+  const stars = useMemo(() =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 2 + 0.5,
+      delay: Math.random() * 5,
+      duration: Math.random() * 3 + 2,
+    })),
+    [count]
+  );
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {stars.map(s => (
+        <div
+          key={s.id}
+          className="absolute rounded-full bg-white"
+          style={{
+            left: `${s.x}%`,
+            top: `${s.y}%`,
+            width: s.size,
+            height: s.size,
+            opacity: 0,
+            animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 const INCLUDED_ITEMS = [
   'Full access to all live speaker sessions',
@@ -39,15 +74,15 @@ export default function Tickets() {
   const section1PointerEvents = useTransform(scrollYProgress, [0, 0.07], ['auto', 'none']);
   const section2Opacity = useTransform(scrollYProgress, [0.35, 0.45, 0.95], [0, 1, 1]);
 
-  // Background Colors — frosted matte olive green
+  // Background Colors — frosted matte black
   const bgColor = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6, 1],
-    ['#f3f3f4', '#1e2e1e', '#1a2a1a', '#1a2a1a']
+    ['#f3f3f4', '#0a0a0a', '#050505', '#050505']
   );
 
   return (
-    <div className="bg-[#1a2a1a]">
+    <div className="bg-[#050505]">
       {/* Grain texture overlay - increased opacity for more noticeable texture */}
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       {/* Scroll-hijacked 3D ticket experience */}
@@ -70,6 +105,11 @@ export default function Tickets() {
             }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           />
+
+          {/* Glistening Stars on black background */}
+          <motion.div style={{ opacity: useTransform(scrollYProgress, [0.25, 0.4], [0, 1]) }} className="absolute inset-0 z-5">
+            <GlisteningStars count={90} />
+          </motion.div>
 
           {/* The Main Ticket Product (Center Stage) */}
           <motion.div
@@ -118,12 +158,19 @@ export default function Tickets() {
                 <div className="absolute right-0 w-6 h-12 bg-white rounded-l-full translate-x-1 shadow-inner" />
               </div>
 
-              {/* Bottom section */}
+              {/* Bottom section — BUY NOW button replaces price */}
               <div className="bg-white px-6 md:px-12 py-8 flex flex-col items-center">
-                <div className="flex items-end gap-2 text-[#000839]">
-                  <span className="font-typewriter text-[10px] uppercase tracking-widest opacity-40 pb-2">Tsh</span>
-                  <span className="font-title font-black text-5xl tracking-tighter">30,000</span>
-                </div>
+                <motion.a
+                  href="https://tukiio.com/event/tedxalmuntazirschoolsyouth"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group inline-flex items-center gap-3 px-8 py-4 bg-[#006d38] text-white rounded-full font-typewriter text-xs md:text-sm uppercase tracking-[0.25em] font-bold shadow-[0_0_30px_rgba(0,109,56,0.3)] hover:shadow-[0_0_50px_rgba(0,109,56,0.5)] transition-all duration-500"
+                >
+                  Buy Now
+                  <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </motion.a>
               </div>
             </div>
           </motion.div>
@@ -181,8 +228,11 @@ export default function Tickets() {
         </motion.div>
       </div>
 
-      {/* Static CTA Section (Directly above the footer and 100% visible) */}
-      <section className="relative min-h-[80vh] bg-[#1a2a1a] flex flex-col items-center justify-center px-6 py-24 overflow-hidden border-t border-white/5 z-20">
+      {/* Static CTA Section */}
+      <section className="relative min-h-[80vh] bg-[#050505] flex flex-col items-center justify-center px-6 py-24 overflow-hidden border-t border-white/5 z-20">
+        {/* Glistening Stars */}
+        <GlisteningStars count={60} />
+
         {/* Animated glow effect */}
         <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-brand-secondary/10 blur-[120px] pointer-events-none"

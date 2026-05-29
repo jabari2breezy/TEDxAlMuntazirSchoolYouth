@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import MaskReveal from '../components/MaskReveal';
 
-const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
+const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
 const TEAM_GROUPS = [
   {
@@ -66,6 +66,7 @@ export default function Team() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ duration: 0.85, ease: LUXURY_EASE }}
       className="pt-40 pb-32"
     >
       <div className="px-6 md:px-16 max-w-screen-2xl mx-auto">
@@ -97,7 +98,7 @@ export default function Team() {
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-8%' }}
-              transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
+              transition={{ duration: 0.85, ease: LUXURY_EASE }}
               className="space-y-6"
             >
               <h4 className="font-title text-3xl uppercase text-brand-primary border-b border-brand-outline pb-4 flex justify-between items-baseline">
@@ -111,7 +112,7 @@ export default function Team() {
                     initial={{ opacity: 0, x: -15 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: mIdx * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ delay: mIdx * 0.06, duration: 0.85, ease: LUXURY_EASE }}
                     className="flex justify-between items-baseline hover:pl-2 transition-all duration-300"
                   >
                     <div className="flex gap-2 items-center text-brand-primary">

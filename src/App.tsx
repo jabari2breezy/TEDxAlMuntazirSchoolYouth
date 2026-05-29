@@ -41,7 +41,7 @@ function AnimatedRoutes() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
       >
         <Routes location={location}>
           <Route path="/" element={<Home />} />

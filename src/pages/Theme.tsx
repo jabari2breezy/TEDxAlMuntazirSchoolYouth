@@ -3,6 +3,9 @@ import { motion, useAnimation } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import ScrollHint from '../components/ScrollHint';
 import { TICKETS_URL } from '../constants';
+import MaskReveal from '../components/MaskReveal';
+
+const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function Theme() {
   const topHalfControls = useAnimation();
@@ -101,18 +104,24 @@ export default function Theme() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.85, ease: LUXURY_EASE }}
           className="text-center max-w-4xl mx-auto space-y-8"
         >
           <div className="inline-block px-6 py-2 bg-brand-surface rounded-full border border-brand-outline">
             <span className="font-typewriter text-[10px] uppercase tracking-widest font-bold">What It Means</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-[0.9]">
-            We Are Living On <br/> Borrowed Time
-          </h2>
-          <p className="font-editorial text-xl md:text-3xl text-brand-primary/60 italic leading-relaxed">
-            Simply put: the world we live in today was built by people who came before us. We inherited their systems, their environment, and their mistakes. Now, the clock is ticking for us to decide what we do next.
-          </p>
+          <div className="overflow-hidden">
+            <MaskReveal>
+              <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-[0.9]">
+                We Are Living On <br/> Borrowed Time
+              </h2>
+            </MaskReveal>
+          </div>
+          <MaskReveal delay={0.1}>
+            <p className="font-editorial text-xl md:text-3xl text-brand-primary/60 italic leading-relaxed">
+              Simply put: the world we live in today was built by people who came before us. We inherited their systems, their environment, and their mistakes. Now, the clock is ticking for us to decide what we do next.
+            </p>
+          </MaskReveal>
         </motion.div>
 
         {/* Heavy Offset Cards Grid */}
@@ -123,7 +132,7 @@ export default function Theme() {
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.85, ease: LUXURY_EASE }}
             className="bg-brand-surface rounded-[2.5rem] p-10 md:p-16 border border-brand-outline relative overflow-hidden group hover:bg-white hover:text-black transition-colors duration-500"
           >
             <div className="flex justify-between items-start mb-20 md:mb-32">
@@ -145,7 +154,7 @@ export default function Theme() {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            transition={{ duration: 0.85, ease: LUXURY_EASE, delay: 0.15 }}
             className="bg-[#006d38] text-white rounded-[2.5rem] p-10 md:p-16 border border-brand-outline relative overflow-hidden md:mt-32 group hover:bg-[#000839] hover:text-white transition-colors duration-500"
           >
             <div className="flex justify-between items-start mb-20 md:mb-32">
@@ -167,7 +176,7 @@ export default function Theme() {
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+            transition={{ duration: 0.85, ease: LUXURY_EASE, delay: 0.1 }}
             className="md:col-span-2 bg-gradient-to-br from-brand-surface to-[#0a0c10] rounded-[2.5rem] p-10 md:p-20 border border-brand-outline relative overflow-hidden group"
           >
             <div className="flex justify-between items-start mb-16 md:mb-24">
@@ -193,7 +202,7 @@ export default function Theme() {
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.85, ease: LUXURY_EASE }}
           className="bg-brand-primary text-brand-background rounded-[3rem] p-12 md:p-32 text-center relative overflow-hidden"
         >
           {/* Subtle noise/texture overlay */}
