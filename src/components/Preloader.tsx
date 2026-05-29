@@ -38,27 +38,39 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         { opacity: 1, duration: 0.5, ease: 'power2.out' }
       )
 
-      // 2. Counter animates 0 → 100
+      // 2. Counter flickers in — rapid opacity flicker like jasminegunarto.com
+      .fromTo('.loading-counter',
+        { opacity: 0, scale: 1.1 },
+        { opacity: 1, scale: 1, duration: 0.1, ease: 'steps(1)' }
+      )
+      .to('.loading-counter', { opacity: 0.3, duration: 0.05 })
+      .to('.loading-counter', { opacity: 1, duration: 0.05 })
+      .to('.loading-counter', { opacity: 0.5, duration: 0.05 })
+      .to('.loading-counter', { opacity: 1, duration: 0.05 })
+      .to('.loading-counter', { opacity: 0.2, duration: 0.05 })
+      .to('.loading-counter', { opacity: 1, duration: 0.05 })
+
+      // 3. Counter animates 0 → 100 — smooth, elegant buildup
       const count = { val: 0 };
       tl.to(count, {
         val: 100,
-        duration: 2.0,
-        ease: 'power3.inOut',
+        duration: 2.4,
+        ease: 'power2.inOut',
         onUpdate: function() {
           const el = document.querySelector('.loading-counter');
           if (el) el.textContent = String(Math.round(count.val)).padStart(3, '0');
         }
-      }, '-=0.2')
+      }, '-=0.1')
 
-      // 3. Top/bottom lines expand
+      // 4. Top/bottom lines expand
       .fromTo('.preloader-line',
         { scaleX: 0 },
         { scaleX: 1, duration: 0.7, ease: 'power3.inOut', stagger: 0.08 },
-        '-=1.3'
+        '-=1.8'
       )
 
-      // 4. Hold for a beat
-      .to({}, { duration: 0.8 })
+      // 5. Hold for a beat
+      .to({}, { duration: 0.6 })
 
       // 7. Everything fades out
       .to('.preloader-content', {

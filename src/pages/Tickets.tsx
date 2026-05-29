@@ -6,58 +6,49 @@ import InteractiveBackground from '../components/InteractiveBackground';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
-/* Glistening Stars — randomised positions, twinkling with glow */
+/* Glistening Stars — randomised positions, subtle twinkle, parallax on scroll */
 function GlisteningStars({ count = 80, scrollProgress }: { count?: number; scrollProgress?: any }) {
   const stars = useMemo(() =>
     Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 2.5 + 0.8,
+      size: Math.random() * 1.5 + 0.5,
       delay: Math.random() * 5,
       duration: Math.random() * 3 + 2,
-      glowSize: Math.random() * 8 + 4,
-      parallaxOffset: Math.random() * 40 - 20,
+      parallaxSpeed: (Math.random() * 0.6 + 0.2), // 0.2–0.8x scroll speed
     })),
     [count]
   );
 
-  // Parallax Y based on scroll
-  const parallaxY = scrollProgress
-    ? useTransform(scrollProgress, [0, 1], [30, -30])
-    : undefined;
-
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {stars.map(s => (
-        <motion.div
-          key={s.id}
-          className="absolute rounded-full"
-          style={{
-            left: `${s.x}%`,
-            top: `${s.y}%`,
-            width: s.size,
-            height: s.size,
-            backgroundColor: 'white',
-            boxShadow: `0 0 ${s.glowSize}px ${s.glowSize / 2}px rgba(255,255,255,0.6), 0 0 ${s.glowSize * 2}px ${s.glowSize}px rgba(255,255,255,0.2)`,
-            opacity: 0,
-            y: parallaxY ? undefined : s.parallaxOffset,
-            animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
-          }}
-        >
-          {parallaxY && (
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{
-                y: parallaxY,
-                backgroundColor: 'white',
-                boxShadow: `0 0 ${s.glowSize}px ${s.glowSize / 2}px rgba(255,255,255,0.6), 0 0 ${s.glowSize * 2}px ${s.glowSize}px rgba(255,255,255,0.2)`,
-              }}
-            />
-          )}
-        </motion.div>
+        <StarDot key={s.id} s={s} scrollProgress={scrollProgress} />
       ))}
     </div>
+  );
+}
+
+function StarDot({ s, scrollProgress }: { s: { id: number; x: number; y: number; size: number; delay: number; duration: number; parallaxSpeed: number }; scrollProgress?: any }) {
+  const parallaxY = scrollProgress
+    ? useTransform(scrollProgress, [0, 1], [s.parallaxSpeed * 50, -s.parallaxSpeed * 50])
+    : undefined;
+
+  return (
+    <motion.div
+      className="absolute rounded-full bg-white"
+      style={{
+        left: `${s.x}%`,
+        top: `${s.y}%`,
+        width: s.size,
+        height: s.size,
+        opacity: 0,
+        boxShadow: `0 0 ${s.size * 2}px ${s.size}px rgba(255,255,255,0.15)`,
+        y: parallaxY,
+        animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+      }}
+    />
   );
 }
 
