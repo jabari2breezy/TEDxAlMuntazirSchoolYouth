@@ -52,29 +52,40 @@ function buildAgenda(slots: AgendaSlot[], startMinutes = 9 * 60 + 30): AgendaIte
 }
 
 const agendaItems = buildAgenda([
-  { duration: 30, title: 'Registration', sub: '', theme: 'past', isSpeech: false },
-  { duration: 20, title: 'Intro', sub: 'Welcome + Opening Video', theme: 'past', isSpeech: false },
+  // Registration + Intro
+  { duration: 30, title: 'Registration', sub: 'Doors open at 9:30 AM', theme: 'past', isSpeech: false },
+  { duration: 7, title: 'Welcome Address', sub: 'Opening remarks', theme: 'past', isSpeech: false },
+  { duration: 10, title: 'Opening Video', sub: '', theme: 'past', isSpeech: false },
 
-  { duration: 18, title: 'Ridhwan Mohammed', topic: 'Topic to be announced', theme: 'past', isSpeech: true },
-  { duration: 5, title: 'Interactive Activity', sub: '', theme: 'past', isSpeech: false },
+  // Session 1: 10:20 – 11:30
+  { duration: 18, title: 'Ridhwan Mohammed', topic: 'Borrowed Time, Borrowed Selves', theme: 'past', isSpeech: true },
+  { duration: 5, title: 'Nasheed', sub: 'Musical performance', theme: 'past', isSpeech: false },
   { duration: 18, title: 'Anaya Rashid', topic: 'The Culture of Time', theme: 'past', isSpeech: true },
   { duration: 10, title: 'Game', sub: '', theme: 'past', isSpeech: false },
-  { duration: 18, title: 'Zahra Datoo', topic: 'The Architecture of Nostalgia', theme: 'past', isSpeech: true },
-  { duration: 20, title: 'Tea Break', sub: '', theme: 'past', isSpeech: false },
+  { duration: 18, title: 'Zahra Datoo', topic: 'Nostalgia', theme: 'past', isSpeech: true },
 
-  { duration: 18, title: 'Zahra Moledina', topic: "Capitalism's Clock", theme: 'present', isSpeech: true },
+  // Tea Break: 11:30 – 11:50
+  { duration: 20, title: 'Tea Break', sub: 'Refreshments & networking', theme: 'past', isSpeech: false },
+
+  // Session 2: 11:50 – 1:00
+  { duration: 18, title: 'Zahra Moledina', topic: 'The Best Thing Since Sliced Bread', theme: 'present', isSpeech: true },
   { duration: 10, title: 'Kahoot / Blooket', sub: '', theme: 'present', isSpeech: false },
   { duration: 18, title: 'Speaker TBA', topic: 'Topic to be announced', theme: 'present', isSpeech: true },
   { duration: 5, title: 'Game', sub: '', theme: 'present', isSpeech: false },
-  { duration: 18, title: 'Hassan Abbas Mohammed', topic: 'The Procrastination Paradox', theme: 'present', isSpeech: true },
-  { duration: 60, title: 'Salah & Food Break', sub: '', theme: 'present', isSpeech: false },
+  { duration: 18, title: 'Hassan Abbas Muhammad', topic: 'The Procrastination Paradox', theme: 'present', isSpeech: true },
 
+  // Salah & Food Break: 1:00 – 2:00
+  { duration: 60, title: 'Salah & Food Break', sub: 'Prayer and lunch', theme: 'present', isSpeech: false },
+
+  // Session 3: 2:00 – 4:00
   { duration: 18, title: 'Yunus Osman', topic: 'The Art of Scheduling', theme: 'future', isSpeech: true },
   { duration: 10, title: 'Game', sub: '', theme: 'future', isSpeech: false },
-  { duration: 18, title: 'Sada Mbaruk Said', topic: 'Three Clocks: Climate, Animals, AI', theme: 'future', isSpeech: true },
-  { duration: 10, title: 'Game', sub: '', theme: 'future', isSpeech: false },
-  { duration: 18, title: 'Liyaan Karbelkar', topic: 'The Legacy We Leave', theme: 'future', isSpeech: true },
-  { duration: 25, title: 'Closing Ceremony', sub: '', theme: 'future', isSpeech: false },
+  { duration: 18, title: 'Sada Mbaruk', topic: 'End of the World', theme: 'future', isSpeech: true },
+  { duration: 10, title: 'Imposter Game', sub: '', theme: 'future', isSpeech: false },
+  { duration: 18, title: 'Liyaan Karbelkar', topic: 'How to Take Your Wealth With You', theme: 'future', isSpeech: true },
+
+  // Closing
+  { duration: 45, title: 'Closing Ceremony', sub: '', theme: 'future', isSpeech: false },
 ]);
 
 export default function Agenda() {

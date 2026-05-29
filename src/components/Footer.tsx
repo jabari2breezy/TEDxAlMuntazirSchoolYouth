@@ -67,21 +67,21 @@ export default function Footer() {
                 Thanks for joining. We'll be in touch.
               </p>
             ) : (
-              <form onSubmit={handleSubscribe} className="flex items-center gap-3 max-w-md">
+              <form onSubmit={handleSubscribe} className="flex items-stretch gap-0 max-w-md border-b border-white/20 focus-within:border-white/50 transition-colors">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email"
                   required
-                  className="flex-1 bg-transparent border-b border-white/20 pb-3 font-sans text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/50 transition-colors"
+                  className="flex-1 bg-transparent border-none pb-3 font-sans text-sm text-white placeholder:text-white/30 focus:outline-none"
                 />
                 <button
                   type="submit"
                   disabled={loading}
-                  className="pb-3 px-2 text-white/40 hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className="pb-3 px-4 font-typewriter text-[10px] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center border-l border-white/10"
                 >
-                  <ArrowRight size={18} />
+                  {loading ? '...' : 'Send'}
                 </button>
               </form>
             )}

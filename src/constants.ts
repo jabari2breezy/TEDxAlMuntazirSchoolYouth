@@ -50,7 +50,7 @@ export const SEGMENTS: Segment[] = [
 ];
 
 export const SOCIALS = {
-  instagram: 'https://instagram.com/almuntazirschools',
+  instagram: 'https://www.instagram.com/almuntazirschool?igsh=MTg2MmhrZzZoamY4eQ==',
   email: 'tedxalmuntazirschoolsyouth@gmail.com'
 };
 
