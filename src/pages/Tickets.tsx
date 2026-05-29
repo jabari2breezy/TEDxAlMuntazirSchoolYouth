@@ -123,8 +123,8 @@ export default function Tickets() {
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          {/* Glistening Stars on black background */}
-          <motion.div style={{ opacity: useTransform(scrollYProgress, [0.25, 0.4], [0, 1]) }} className="absolute inset-0 z-5">
+          {/* Glistening Stars on black background — fade in earlier */}
+          <motion.div style={{ opacity: useTransform(scrollYProgress, [0.15, 0.3], [0, 1]) }} className="absolute inset-0 z-5">
             <GlisteningStars count={90} scrollProgress={scrollYProgress} />
           </motion.div>
 

@@ -1,143 +1,203 @@
-import { ArrowUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { SOCIALS, TICKETS_URL } from '../constants';
 import Logo from './Logo';
-import { MaskedReveal, StaggerContainer, StaggerItem, StructuralLine } from './KineticTypography';
+import ETGLogo from './ETGLogo';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
-const linkHover = { scale: 1.02, x: 4, color: '#006d38', transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } };
-
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  return (
-    <motion.footer
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: '-10%' }}
-      transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-      className="px-6 md:px-16 py-32 border-t border-brand-outline relative overflow-hidden bg-brand-surface/40 backdrop-blur-md"
-    >
-      <div className="absolute inset-0 liquid-bg opacity-5 -z-10" />
-      
-      <StaggerContainer
-        className="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-start gap-20 relative z-10"
-        staggerDelay={0.08}
-      >
-        <StaggerItem className="flex-1 space-y-12">
-          <div className="flex flex-col gap-6">
-            <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.3, ease: LUXURY_EASE }}>
-              <Link to="/" className="inline-block" onClick={scrollToTop}>
-                <Logo variant="tedx" theme="light" className="scale-90 md:scale-110 origin-left" />
-              </Link>
-            </motion.div>
-            <StructuralLine className="w-16" />
-            <Logo variant="school" theme="light" className="scale-100 origin-left opacity-60 hover:opacity-100 transition-opacity" />
-          </div>
-          <MaskedReveal>
-            <p className="font-editorial text-4xl md:text-5xl leading-tight max-w-lg italic text-brand-primary">
-              "Ideas are the <span className="text-brand-secondary font-title not-italic uppercase">legacy</span> that survives the curated time."
-            </p>
-          </MaskedReveal>
-        </StaggerItem>
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setSubscribed(true);
+      setEmail('');
+    }
+  };
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-20">
-          <StaggerItem className="space-y-8">
-            <h4 className="font-typewriter text-[10px] uppercase tracking-[0.4em] text-brand-primary/40">Explore</h4>
-            <div className="flex flex-col gap-4 font-title text-xl uppercase tracking-tighter text-brand-primary">
+  return (
+    <footer className="relative bg-[#050507] text-white overflow-hidden">
+      {/* Top border */}
+      <div className="h-px bg-white/8" />
+
+      {/* Main footer content */}
+      <div className="max-w-screen-2xl mx-auto px-6 md:px-16 pt-16 md:pt-24 pb-8">
+
+        {/* Top section — Logo + Tagline + Newsletter */}
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-16 mb-16 md:mb-24">
+          {/* Left: Logo + tagline */}
+          <div className="space-y-6">
+            <Link to="/" onClick={scrollToTop} className="inline-block">
+              <Logo variant="tedx" theme="dark" className="scale-75 md:scale-90 origin-left" />
+            </Link>
+            <p className="font-editorial text-xl md:text-2xl italic text-white/40 max-w-md leading-relaxed">
+              Ideas worth holding onto.
+            </p>
+          </div>
+
+          {/* Right: Newsletter signup */}
+          <div className="w-full lg:w-auto">
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: LUXURY_EASE }}
+              className="font-title text-2xl md:text-3xl font-black uppercase tracking-tighter mb-6"
+            >
+              Join our community
+            </motion.p>
+            {subscribed ? (
+              <p className="font-editorial text-sm italic text-brand-secondary">
+                Thanks for joining. We'll be in touch.
+              </p>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex items-center gap-3 max-w-md">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email"
+                  required
+                  className="flex-1 bg-transparent border-b border-white/20 pb-3 font-sans text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/50 transition-colors"
+                />
+                <button
+                  type="submit"
+                  className="pb-3 text-white/40 hover:text-white transition-colors"
+                >
+                  <ArrowRight size={18} />
+                </button>
+              </form>
+            )}
+            <p className="mt-3 font-sans text-[9px] text-white/20">
+              By submitting your email you agree to our Privacy Policy.
+            </p>
+          </div>
+        </div>
+
+        {/* Middle section — Links grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 mb-16 md:mb-24">
+          {/* Navigation */}
+          <div className="space-y-5">
+            <h4 className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/25">Navigation</h4>
+            <div className="flex flex-col gap-3">
               {[
                 { label: 'Home', to: '/' },
                 { label: 'Theme', to: '/theme' },
                 { label: 'Speakers', to: '/speakers' },
                 { label: 'Agenda', to: '/agenda' },
-                { label: 'FAQs', to: '/faq' },
+              ].map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  onClick={scrollToTop}
+                  className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* More links */}
+          <div className="space-y-5">
+            <h4 className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/25">&nbsp;</h4>
+            <div className="flex flex-col gap-3">
+              {[
+                { label: 'FAQ', to: '/faq' },
                 { label: 'About', to: '/about' },
                 { label: 'The Team', to: '/team' },
                 { label: 'Tickets', to: TICKETS_URL, external: true },
               ].map((link) => (
                 link.external ? (
-                  <motion.a
+                  <a
                     key={link.label}
                     href={link.to}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={linkHover}
-                    className="w-fit hover:text-brand-secondary transition-colors"
+                    className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 inline-flex items-center gap-1.5"
                   >
                     {link.label}
-                  </motion.a>
+                    <ArrowUpRight size={10} className="opacity-40" />
+                  </a>
                 ) : (
-                  <motion.div key={link.label} whileHover={linkHover} className="w-fit" style={{ transformOrigin: 'left' }}>
-                    <Link to={link.to} className="hover:text-brand-secondary transition-colors">
-                      {link.label}
-                    </Link>
-                  </motion.div>
+                  <Link
+                    key={link.label}
+                    to={link.to}
+                    onClick={scrollToTop}
+                    className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+                  >
+                    {link.label}
+                  </Link>
                 )
               ))}
             </div>
-          </StaggerItem>
+          </div>
 
-          <StaggerItem className="space-y-8">
-            <h4 className="font-typewriter text-[10px] uppercase tracking-[0.4em] text-brand-primary/40">Connect</h4>
-            <div className="flex flex-col gap-4 font-title text-xl uppercase tracking-tighter text-brand-primary">
-              <motion.a
+          {/* Contact */}
+          <div className="space-y-5">
+            <h4 className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/25">Contact</h4>
+            <div className="flex flex-col gap-3">
+              <a
+                href={`mailto:${SOCIALS.email}`}
+                className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
+              >
+                {SOCIALS.email}
+              </a>
+              <a
                 href={SOCIALS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={linkHover}
-                className="flex items-center gap-3 hover:text-brand-secondary transition-colors group"
+                className="font-sans text-sm text-white/50 hover:text-white transition-colors duration-300 inline-flex items-center gap-1.5"
               >
-                Instagram <ArrowUpRight size={16} className="opacity-40 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </motion.a>
-              <motion.a
-                href={`mailto:${SOCIALS.email}`}
-                whileHover={linkHover}
-                className="flex items-center gap-3 hover:text-brand-secondary transition-colors group"
-              >
-                Contact <ArrowUpRight size={16} className="opacity-40 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </motion.a>
+                Instagram
+                <ArrowUpRight size={10} className="opacity-40" />
+              </a>
             </div>
-          </StaggerItem>
+          </div>
 
-          <StaggerItem className="space-y-8">
-            <h4 className="font-typewriter text-[10px] uppercase tracking-[0.4em] text-brand-primary/40">Location</h4>
-            <div className="space-y-6">
-              <div className="font-title text-xl uppercase tracking-tighter text-brand-primary leading-tight">
-                AlMuntazir Nursery,<br />
-                UN Road, Upanga
-              </div>
-              <motion.a
+          {/* Location */}
+          <div className="space-y-5">
+            <h4 className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/25">Location</h4>
+            <div className="space-y-3">
+              <p className="font-sans text-sm text-white/50 leading-relaxed">
+                Al Muntazir Nursery<br />
+                UN Road, Upanga<br />
+                Dar Es Salaam, Tanzania
+              </p>
+              <a
                 href="https://www.google.com/maps/search/?api=1&query=Al+Muntazir+Islamic+International+School+-+Nursery"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-3 px-6 py-3 border border-brand-outline rounded-full font-typewriter text-[10px] uppercase tracking-widest hover:bg-brand-primary hover:text-white transition-all group"
+                className="inline-flex items-center gap-1.5 font-sans text-sm text-white/50 hover:text-white transition-colors duration-300"
               >
-                Get Directions <ArrowUpRight size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </motion.a>
+                Get Directions
+                <ArrowUpRight size={10} className="opacity-40" />
+              </a>
             </div>
-          </StaggerItem>
+          </div>
         </div>
-      </StaggerContainer>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.6 }}
-        className="max-w-screen-2xl mx-auto pt-32 flex flex-col md:flex-row justify-between items-end gap-12 opacity-40"
-      >
-        <p className="font-sans text-[9px] uppercase tracking-widest leading-relaxed max-w-sm">
-          This independent TEDx event is operated under license from TED. <br /><br />
-          © 2026 TEDxAlMuntazirSchoolsYouth.
-        </p>
-        <div className="font-typewriter text-[9px] uppercase tracking-[0.4em]">
-          Dar Es Salaam, Tanzania
+        {/* ETG Logo — prominent */}
+        <div className="flex justify-center mb-12 md:mb-16">
+          <ETGLogo className="w-[120px] md:w-[160px] h-auto opacity-30 hover:opacity-60 transition-opacity duration-500" />
         </div>
-      </motion.div>
-    </motion.footer>
+
+        {/* Bottom bar */}
+        <div className="border-t border-white/8 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-sans text-[9px] text-white/20 text-center md:text-left">
+            This independent TEDx event is operated under license from TED. © 2026 TEDxAlMuntazirSchoolsYouth.
+          </p>
+          <p className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-white/15">
+            Dar Es Salaam, Tanzania
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 }
