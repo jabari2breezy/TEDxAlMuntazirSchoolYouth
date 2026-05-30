@@ -1,253 +1,262 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence, useSpring } from 'motion/react';
-import { X, ArrowUpRight } from 'lucide-react';
-import { TICKETS_URL } from '../constants';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { motion, useSpring, useTransform, AnimatePresence, useScroll } from 'motion/react';
 
 const AGENDA_ITEMS = [
   {
     id: '01',
     time: '08:00 AM',
-    title: 'Registration & Immersive Welcome',
-    desc: 'Begin the journey. Enter the dark monolithic space and receive your credentials.',
-    duration: '60 MINS',
+    title: 'THE ARRIVAL',
+    desc: 'Enter the monolithic space and receive credentials.',
+    duration: '60M',
     type: 'EXPERIENCE'
   },
   {
     id: '02',
     time: '09:00 AM',
-    title: 'Session 01: The Inheritors',
-    desc: 'Exploring the systems we did not build, but must now manage. Features talks from Anaya Rashid and Zahra Datoo on cultural and architectural legacies.',
-    duration: '90 MINS',
+    title: 'THE INHERITORS',
+    desc: 'Exploring the systems we must now manage.',
+    duration: '90M',
     type: 'KEYNOTE'
   },
   {
     id: '03',
     time: '10:30 AM',
-    title: 'The Liquidity Break',
-    desc: 'Networking and ambient experiences in the courtyard.',
-    duration: '30 MINS',
+    title: 'LIQUIDITY BREAK',
+    desc: 'Networking and ambient experiences.',
+    duration: '30M',
     type: 'BREAK'
   },
   {
     id: '04',
     time: '11:00 AM',
-    title: 'Session 02: The Present Tense',
-    desc: 'Maximizing the value of "now". Hassan Abbas and Zahra Moledina dissect procrastination and the economic realities of time.',
-    duration: '90 MINS',
+    title: 'THE PRESENT TENSE',
+    desc: 'Dissecting procrastination and time economics.',
+    duration: '90M',
     type: 'KEYNOTE'
   },
   {
     id: '05',
     time: '12:30 PM',
-    title: 'The Mid-Day Pause',
-    desc: 'Curated lunch experience and partner activations.',
-    duration: '60 MINS',
+    title: 'MID-DAY PAUSE',
+    desc: 'Curated lunch and partner activations.',
+    duration: '60M',
     type: 'LUNCH'
   },
   {
     id: '06',
     time: '01:30 PM',
-    title: 'Session 03: Future Legacies',
-    desc: 'Designing the architecture of tomorrow. Liyaan Karbelkar and Sada Mbaruk Said close the loop on what we leave behind.',
-    duration: '90 MINS',
+    title: 'FUTURE LEGACIES',
+    desc: 'Designing the architecture of tomorrow.',
+    duration: '90M',
     type: 'KEYNOTE'
   },
 ];
 
+// Infinite list by tripling the items
+const EXTENDED_ITEMS = [...AGENDA_ITEMS, ...AGENDA_ITEMS, ...AGENDA_ITEMS].map((item, index) => ({
+  ...item,
+  uniqueId: `${item.id}-${index}`
+}));
+
 export default function Agenda() {
-  const [activeItem, setActiveItem] = useState<string | null>(null);
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  
-  // Fluid blob tracking
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const springConfig = { stiffness: 50, damping: 20 };
-  const fluidX = useSpring(0, springConfig);
-  const fluidY = useSpring(0, springConfig);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-      fluidX.set(e.clientX - window.innerWidth / 2);
-      fluidY.set(e.clientY - window.innerHeight / 2);
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [fluidX, fluidY]);
-
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
+  
+  // Create a massive scroll container
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  // Parallax the intro text
-  const introY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
-  const introOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  // Apply heavy friction to the scroll via spring
+  const smoothProgress = useSpring(scrollYProgress, { 
+    stiffness: 50, 
+    damping: 30,
+    mass: 2
+  });
 
-  // Make list slide up
-  const listY = useTransform(scrollYProgress, [0.1, 0.3], [100, 0]);
-  const listOpacity = useTransform(scrollYProgress, [0.1, 0.3], [0, 1]);
+  // Map 0-1 progress to an angle. 
+  // We have 18 items. Let's space them 20 degrees apart. Total 360 degrees.
+  const angleOffset = useTransform(smoothProgress, [0, 1], [0, 360]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeDuration, setActiveDuration] = useState(0);
+
+  // We need to continuously track the active index based on current angle
+  useEffect(() => {
+    let lastTime = Date.now();
+    
+    const unsub = angleOffset.on("change", (v) => {
+      // Each item is 20 degrees.
+      // the front item is when itemAngle - v ≈ 0
+      const currentIndex = Math.round(v / 20) % EXTENDED_ITEMS.length;
+      
+      if (currentIndex !== activeIndex) {
+        setActiveIndex(currentIndex);
+        setActiveDuration(0); // reset duration
+      } else {
+        // Accumulate hold duration
+        const now = Date.now();
+        setActiveDuration(prev => prev + (now - lastTime));
+      }
+      lastTime = Date.now();
+    });
+
+    return () => unsub();
+  }, [angleOffset, activeIndex]);
+
+  // If scroll stops for 1 second, activeDuration keeps growing? 
+  // No, the "change" event only fires when moving.
+  // We need a timer that ticks when activeIndex settles.
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveDuration(prev => prev + 100);
+    }, 100);
+    return () => clearInterval(timer);
+  }, []);
+
+  const showMetadata = activeDuration > 1000; // 1 second threshold
 
   return (
-    <div ref={containerRef} className="bg-[#050507] text-white min-h-[250vh] relative">
+    <div className="bg-[#050507] text-white overflow-hidden relative">
       
-      {/* GLOBAL AMBIENT FLUID & FROSTED GLASS */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* The Blob */}
+      {/* 1. Background Layer (Velvet Red Mist + Grain + Blur) */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[#050507] z-0" />
+        
+        {/* The Pooling Mist - Jumps to center when settled */}
         <motion.div 
-          className="absolute top-1/2 left-1/2 w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full bg-brand-secondary opacity-30 mix-blend-screen"
-          style={{ x: fluidX, y: fluidY, filter: 'blur(100px)' }}
+          className="absolute left-1/2 -translate-x-1/2 w-[120vw] md:w-[60vw] h-[40vh] bg-[#E02229] rounded-[100%] opacity-40 mix-blend-screen"
+          style={{ 
+            filter: 'blur(100px)',
+            // When moving fast, scale down and fade out slightly. When settled, pool big.
+            scale: showMetadata ? 1.2 : 0.8,
+            opacity: showMetadata ? 0.6 : 0.2,
+            top: '50%',
+            y: '-50%'
+          }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         />
-        {/* Deep frosted glass */}
-        <div className="absolute inset-0 backdrop-blur-[80px] bg-[#050507]/40" />
+
+        {/* Heavy Frosted Glass & Grain */}
+        <div className="absolute inset-0 backdrop-blur-3xl z-10" />
+        <div className="absolute inset-0 z-20 opacity-[0.15] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       </div>
 
-      {/* FIXED COORDINATE INTRO */}
-      <motion.div 
-        style={{ y: introY, opacity: introOpacity }}
-        className="fixed inset-0 z-10 flex flex-col items-center justify-center pointer-events-none px-6"
-      >
-        <div className="absolute top-32 left-6 md:left-12 font-typewriter text-[9px] uppercase tracking-widest text-white/40">
-          -06.7924° S <br/> 39.2083° E
-        </div>
-        <div className="absolute top-32 right-6 md:right-12 font-typewriter text-[9px] uppercase tracking-widest text-white/40 text-right">
-          Temporal <br/> Alignment
-        </div>
+      {/* 2. The Cylinder Wheel Scroll Container */}
+      {/* Massive height to allow extensive scrolling. */}
+      <div ref={containerRef} className="h-[500vh] relative z-30">
         
-        <h1 className="text-[12vw] md:text-[10vw] font-editorial italic tracking-tight text-white mix-blend-overlay">
-          THE CHRONOLOGY
-        </h1>
-      </motion.div>
+        {/* Sticky viewport for the 3D wheel */}
+        <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden perspective-[1000px] md:perspective-[2000px]">
+          
+          <div className="relative w-full max-w-7xl h-full flex items-center justify-center transform-style-3d">
+            
+            {EXTENDED_ITEMS.map((item, i) => {
+              // Base angle for this item
+              const itemAngle = i * 20;
 
-      {/* THE AGENDA LIST */}
-      <div className="absolute top-[100vh] w-full z-20 px-4 md:px-16 pb-40">
-        <motion.div style={{ y: listY, opacity: listOpacity }} className="max-w-7xl mx-auto w-full">
-          <div className="flex flex-col">
-            {AGENDA_ITEMS.map((item) => (
-              <motion.div 
-                layoutId={`row-${item.id}`}
-                key={item.id}
-                onMouseEnter={() => setHoveredItem(item.id)}
-                onMouseLeave={() => setHoveredItem(null)}
-                onClick={() => setActiveItem(item.id)}
-                className={`
-                  relative cursor-pointer py-12 md:py-16 border-b border-white/10 group transition-all duration-500
-                  ${hoveredItem && hoveredItem !== item.id ? 'opacity-20 blur-[4px]' : 'opacity-100'}
-                `}
-              >
-                {/* Localized Hover Fluid */}
-                <div className={`
-                  absolute inset-0 bg-brand-secondary/5 rounded-3xl blur-[40px] transition-opacity duration-500 pointer-events-none
-                  ${hoveredItem === item.id ? 'opacity-100' : 'opacity-0'}
-                `} />
+              return (
+                <CylinderRow 
+                  key={item.uniqueId} 
+                  item={item} 
+                  itemAngle={itemAngle}
+                  angleOffset={angleOffset}
+                  isActive={i === activeIndex}
+                  showMetadata={showMetadata && i === activeIndex}
+                />
+              );
+            })}
 
-                <div className="relative z-10 flex flex-col md:flex-row md:items-baseline gap-4 md:gap-16">
-                  <div className="w-full md:w-1/4 font-typewriter text-sm tracking-widest text-brand-secondary">
-                    {item.time}
-                  </div>
-                  <div className="w-full md:w-3/4 flex justify-between items-baseline">
-                    <h2 className="text-3xl md:text-5xl font-title font-black uppercase tracking-tighter group-hover:translate-x-4 transition-transform duration-500">
-                      {item.title}
-                    </h2>
-                    
-                    {/* Mobile 3D Lens Simulation */}
-                    <div className="md:hidden w-8 h-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-2 h-2 rounded-full bg-brand-secondary" />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+          </div>
+
+          {/* Fixed center X-Ray Lens (Emerges when settled) */}
+          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] md:w-[40vw] h-[25vh] rounded-full border border-white/20 pointer-events-none transition-all duration-1000 ease-[0.16,1,0.3,1] flex items-center justify-center z-0 mix-blend-overlay
+            ${showMetadata ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
+          `}>
+            {/* Structural clock vector outline */}
+            <svg width="120" height="120" viewBox="0 0 100 100" fill="none" className="opacity-30">
+              <circle cx="50" cy="50" r="48" stroke="white" strokeWidth="0.5" />
+              <line x1="50" y1="50" x2="50" y2="20" stroke="white" strokeWidth="1" />
+              <line x1="50" y1="50" x2="70" y2="50" stroke="white" strokeWidth="0.5" />
+            </svg>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Subcomponent for each row to handle its own complex 3D math and interpolation
+function CylinderRow({ item, itemAngle, angleOffset, isActive, showMetadata }: any) {
+  
+  // Calculate relative angle distance from the current camera view (angleOffset)
+  // We want to wrap around 360 to keep the cylinder continuous
+  const relativeAngle = useTransform(angleOffset, (currentOffset: number) => {
+    let diff = (itemAngle - currentOffset) % 360;
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+    return diff;
+  });
+
+  // Transform angle to 3D CSS
+  const rotateX = useTransform(relativeAngle, (v: number) => `${v}deg`);
+  
+  // Visibility: Only render if within +/- 40 degrees (3 rows visible)
+  const opacity = useTransform(relativeAngle, [-40, -20, 0, 20, 40], [0, 0.2, 1, 0.2, 0]);
+  const scale = useTransform(relativeAngle, [-40, -20, 0, 20, 40], [0.4, 0.5, 1, 0.5, 0.4]);
+  const color = useTransform(relativeAngle, [-20, 0, 20], ['#666666', '#ffffff', '#666666']);
+  const letterSpacing = useTransform(relativeAngle, [-20, 0, 20], ['0.2em', '0em', '0.2em']);
+
+  // Move it out on the Z axis to form a cylinder
+  const translateZ = 400; // Radius of the cylinder
+
+  // When inactive, we can apply blur
+  const filter = useTransform(relativeAngle, [-20, 0, 20], ['blur(4px)', 'blur(0px)', 'blur(4px)']);
+
+  return (
+    <motion.div
+      className="absolute w-full flex flex-col items-center justify-center text-center transform-style-3d pointer-events-none"
+      style={{
+        rotateX,
+        translateZ,
+        opacity,
+        scale,
+        color,
+        letterSpacing,
+        filter
+      }}
+    >
+      <div className="font-typewriter text-[10px] md:text-sm uppercase tracking-widest text-[#E02229] mb-4">
+        {item.time}
+      </div>
+      
+      <h2 className="text-4xl md:text-[8vw] font-title font-black uppercase leading-none tracking-tighter whitespace-nowrap">
+        {item.title}
+      </h2>
+
+      {/* The Zero-Jump Accordion Rollout */}
+      {/* Absolute positioning ensures zero layout shifting to the massive text */}
+      <div className="relative w-full h-0 flex justify-center">
+        <motion.div 
+          className="absolute top-8 overflow-hidden flex flex-col items-center gap-2"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ 
+            height: showMetadata ? 'auto' : 0, 
+            opacity: showMetadata ? 1 : 0 
+          }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <p className="font-editorial text-xl md:text-3xl italic text-white/80 mt-4 max-w-2xl">
+            {item.desc}
+          </p>
+          <div className="flex gap-6 mt-4 font-typewriter text-[9px] md:text-[11px] uppercase tracking-widest text-white/50 border-t border-white/10 pt-4">
+            <span>[ SPEAKER: TBA ]</span>
+            <span>[ DURATION: {item.duration} ]</span>
+            <span>[ STAGE: 01 ]</span>
           </div>
         </motion.div>
       </div>
-
-      {/* DEEP NARRATIVE ACCORDION (MODAL) */}
-      <AnimatePresence>
-        {activeItem && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 md:p-12"
-          >
-            {/* Darker backdrop to hide the main list completely */}
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }} 
-              className="absolute inset-0 bg-[#050507]/95 backdrop-blur-2xl" 
-              onClick={() => setActiveItem(null)}
-            />
-
-            {AGENDA_ITEMS.map((item) => item.id === activeItem && (
-              <motion.div 
-                key={`modal-${item.id}`}
-                layoutId={`row-${item.id}`}
-                className="relative w-full max-w-7xl h-full max-h-[80vh] bg-[#0a0a0d] border border-white/10 rounded-[3rem] p-8 md:p-16 flex flex-col md:flex-row gap-12 overflow-hidden shadow-[0_0_100px_rgba(0,109,56,0.1)]"
-              >
-                {/* Structural Nodes (Left) */}
-                <div className="w-full md:w-1/3 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10 pb-8 md:pb-0 md:pr-12">
-                  <div className="space-y-6">
-                    <span className="font-typewriter text-[10px] uppercase tracking-widest text-brand-secondary">
-                      [ NODE: {item.id} ]
-                    </span>
-                    <h3 className="text-5xl md:text-7xl font-title font-black uppercase tracking-tighter leading-none">
-                      {item.time}
-                    </h3>
-                  </div>
-                  
-                  <div className="space-y-4 pt-8 md:pt-0">
-                    <div className="font-typewriter text-[9px] uppercase tracking-[0.3em] text-white/40">
-                      [ DURATION: {item.duration} ]
-                    </div>
-                    <div className="font-typewriter text-[9px] uppercase tracking-[0.3em] text-white/40">
-                      [ PROTOCOL: {item.type} ]
-                    </div>
-                  </div>
-                </div>
-
-                {/* Expansive Typography (Right) */}
-                <div className="w-full md:w-2/3 flex flex-col justify-between pt-4 md:pt-0">
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="space-y-8"
-                  >
-                    <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-[0.9]">
-                      {item.title}
-                    </h2>
-                    <p className="font-editorial text-2xl md:text-4xl italic text-white/60 leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </motion.div>
-
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className="flex justify-end pt-12"
-                  >
-                    <a 
-                      href={TICKETS_URL}
-                      target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-4 text-brand-secondary font-typewriter text-[11px] uppercase tracking-widest hover:text-white transition-colors group"
-                    >
-                      Secure Access
-                      <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    </a>
-                  </motion.div>
-                </div>
-
-                <button 
-                  onClick={() => setActiveItem(null)}
-                  className="absolute top-8 right-8 w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                  <X size={20} className="text-white/50" />
-                </button>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

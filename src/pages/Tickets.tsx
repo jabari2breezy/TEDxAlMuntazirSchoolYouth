@@ -147,26 +147,26 @@ export default function Tickets() {
           {/* Center Details Content (Phase 2) */}
           <motion.div 
             style={{ opacity: centerContentOpacity, y: centerContentY }}
-            className={`absolute z-10 w-full max-w-xl px-6 pointer-events-auto ${isMobile ? 'top-[45%]' : 'left-[10vw]'}`}
+            className={`absolute z-10 w-full max-w-xl px-6 pointer-events-auto ${isMobile ? 'bottom-[5%] top-auto flex flex-col justify-end' : 'left-[10vw]'}`}
           >
-            <div className="space-y-8">
-              <div className="space-y-2">
-                <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-brand-secondary">The Inclusion</span>
-                <h3 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-none">Event Details</h3>
-                <p className="font-editorial text-xl italic text-white/60">June 14, 2026. Al Muntazir Nursery Campus.</p>
+            <div className="space-y-4 md:space-y-8">
+              <div className="space-y-1 md:space-y-2">
+                <span className="font-typewriter text-[9px] md:text-[10px] uppercase tracking-[0.5em] text-brand-secondary">The Inclusion</span>
+                <h3 className="text-3xl md:text-6xl font-title font-black uppercase tracking-tighter leading-none">Event Details</h3>
+                <p className="font-editorial text-lg md:text-xl italic text-white/60">June 14, 2026. Al Muntazir Nursery Campus.</p>
               </div>
-              <div className="space-y-4 bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-md">
+              <div className="space-y-2 md:space-y-4 bg-white/5 border border-white/10 p-4 md:p-6 rounded-2xl backdrop-blur-md">
                 {INCLUDED_ITEMS.map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 group">
-                    <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                      <item.icon size={14} className="text-brand-secondary" />
+                  <div key={i} className="flex items-center gap-3 md:gap-4 group">
+                    <div className="w-6 h-6 md:w-8 md:h-8 rounded-md md:rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+                      <item.icon size={12} className="text-brand-secondary" />
                     </div>
-                    <span className="font-sans text-sm md:text-base text-white/80">{item.text}</span>
+                    <span className="font-sans text-xs md:text-base text-white/80">{item.text}</span>
                   </div>
                 ))}
               </div>
               
-              <div className="space-y-2">
+              <div className="space-y-1 md:space-y-2 hidden md:block">
                 <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-brand-secondary">Instructions</span>
                 <p className="text-sm text-white/60 leading-relaxed font-typewriter">
                   Proceeding to checkout will redirect you to the Tukiio portal. Please have your M-Pesa or card details ready.
