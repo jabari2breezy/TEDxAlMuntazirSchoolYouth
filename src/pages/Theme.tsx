@@ -40,7 +40,7 @@ function KineticSpine({ scrollYProgress, isMobile }: { scrollYProgress: any, isM
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
-      <meshBasicMaterial color="#E02229" wireframe transparent opacity={0.5} blending={THREE.AdditiveBlending} />
+      <meshBasicMaterial color="#006d38" wireframe transparent opacity={0.5} blending={THREE.AdditiveBlending} />
     </mesh>
   );
 }
@@ -89,7 +89,7 @@ function ParticleStorm({ active }: { active: boolean }) {
 
   return (
     <Points ref={pointsRef} positions={positions} visible={false}>
-      <PointMaterial transparent color="#E02229" size={0.08} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      <PointMaterial transparent color="#006d38" size={0.08} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
     </Points>
   );
 }
@@ -149,7 +149,7 @@ export default function Theme() {
             style={{ opacity: scrollIndicatorOpacity }}
           >
             <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/50">Scroll to Explore</span>
-            <div className="w-[1px] h-8 bg-gradient-to-b from-[#E02229] to-transparent" />
+            <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
           </motion.div>
 
           {/* Phase 1: Massive Title */}
@@ -158,12 +158,12 @@ export default function Theme() {
             className="absolute inset-0 z-0 pointer-events-none flex flex-col justify-center items-center px-6 md:px-16"
           >
             <div className="text-center">
-              <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-[#E02229] block mb-6">
+              <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-brand-secondary block mb-6">
                 [ THEME OVERVIEW ]
               </span>
               <h1 className="text-[14vw] md:text-[12vw] font-title font-black uppercase tracking-tighter leading-[0.85] text-white">
                 BORROWED<br />
-                <span className="text-[#E02229]">TIME.</span>
+                <span className="text-brand-secondary">TIME.</span>
               </h1>
             </div>
           </motion.div>
@@ -185,7 +185,7 @@ export default function Theme() {
             <div className={`w-full px-6 md:px-16 ${isMobile ? 'flex flex-col justify-end pb-24 h-full' : 'max-w-2xl'}`}>
               <div className="space-y-6 md:space-y-10">
                 <div>
-                  <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-[#E02229] block mb-4">
+                  <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-brand-secondary block mb-4">
                     [ INDEX: 01 // HORIZON ]
                   </span>
                   <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-[0.9] text-white">
@@ -215,7 +215,7 @@ export default function Theme() {
               to="/speakers"
               className="pointer-events-auto flex flex-col items-center gap-6 group"
             >
-              <div className="w-20 h-20 rounded-full bg-[#E02229] flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-white group-hover:text-[#E02229] transition-all shadow-[0_0_80px_rgba(224,34,41,0.5)]">
+              <div className="w-20 h-20 rounded-full bg-brand-secondary flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-white group-hover:text-brand-secondary transition-all shadow-[0_0_80px_rgba(0,109,56,0.5)]">
                 <ArrowRight size={32} />
               </div>
               <span className="font-typewriter text-[10px] tracking-[0.5em] uppercase text-white/50 group-hover:text-white transition-colors">
@@ -231,7 +231,7 @@ export default function Theme() {
       <div className="relative bg-[#050507] z-10 py-32 px-6 md:px-16 max-w-screen-xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32">
           <div>
-            <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-[#E02229] block mb-8">
+            <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-brand-secondary block mb-8">
               [ INDEX: 02 // THE PREMISE ]
             </span>
             <h3 className="text-4xl md:text-5xl font-title font-black uppercase tracking-tighter leading-[0.9] text-white mb-8">
@@ -243,7 +243,7 @@ export default function Theme() {
             </div>
           </div>
           <div>
-            <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-[#E02229] block mb-8">
+            <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-brand-secondary block mb-8">
               [ INDEX: 03 // THE STAKES ]
             </span>
             <h3 className="text-4xl md:text-5xl font-title font-black uppercase tracking-tighter leading-[0.9] text-white mb-8">

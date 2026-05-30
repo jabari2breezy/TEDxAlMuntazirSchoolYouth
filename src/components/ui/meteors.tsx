@@ -26,8 +26,8 @@ export const Meteors: React.FC<MeteorProps> = ({ number = 20, className = "" }) 
             left: m.left + "px",
             animationDelay: m.delay + "s",
             animationDuration: m.duration + "s",
-            background: "rgba(224,34,41,0.6)",
-            boxShadow: "0 0 0 1px rgba(224,34,41,0.1)",
+            background: "rgba(0,109,56,0.6)",
+            boxShadow: "0 0 0 1px rgba(0,109,56,0.1)",
           }}
         >
           <span
@@ -38,7 +38,7 @@ export const Meteors: React.FC<MeteorProps> = ({ number = 20, className = "" }) 
               transform: "translateY(-50%)",
               width: "50px",
               height: "1px",
-              background: "linear-gradient(to right, rgba(224,34,41,0.8), transparent)",
+              background: "linear-gradient(to right, rgba(0,109,56,0.8), transparent)",
             }}
           />
         </span>

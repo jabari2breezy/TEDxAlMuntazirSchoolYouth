@@ -67,10 +67,10 @@ export default function Team() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.85, ease: LUXURY_EASE }}
-      className="pt-40 pb-32 relative bg-[#050507] min-h-screen text-white overflow-hidden"
+      className="pt-40 pb-32 relative bg-brand-background min-h-screen text-brand-primary overflow-hidden"
     >
       {/* 3D Shader Background */}
-      <BackgroundShaders className="opacity-40" />
+      <BackgroundShaders className="opacity-20" />
 
       {/* Noise overlay */}
       <div
@@ -89,13 +89,13 @@ export default function Team() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 1 }}
-              className="font-typewriter text-[10px] text-[#E02229] tracking-[1em] uppercase mb-8"
+              className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase mb-8"
             >
               The Assembly / Crew
             </motion.div>
-            <h1 className="text-[16vw] md:text-[14vw] font-title font-black tracking-tighter leading-[0.8] uppercase text-white flex flex-col items-center">
+            <h1 className="text-[16vw] md:text-[14vw] font-title font-black tracking-tighter leading-[0.8] uppercase text-brand-primary flex flex-col items-center">
               <span>The</span>
-              <span className="italic font-editorial lowercase text-[#E02229]">Architects.</span>
+              <span className="italic font-editorial lowercase text-brand-secondary">Architects.</span>
             </h1>
           </motion.div>
         </header>
@@ -110,9 +110,9 @@ export default function Team() {
               transition={{ duration: 0.85, ease: LUXURY_EASE }}
               className="space-y-6"
             >
-              <h4 className="font-title text-3xl uppercase text-white border-b border-white/10 pb-4 flex justify-between items-baseline">
+              <h4 className="font-title text-3xl uppercase text-brand-primary border-b border-brand-outline/30 pb-4 flex justify-between items-baseline">
                 {group.category}
-                <span className="font-typewriter text-[9px] text-[#E02229] opacity-60 tracking-widest">{group.members.length} Units</span>
+                <span className="font-typewriter text-[9px] text-brand-secondary opacity-60 tracking-widest">{group.members.length} Units</span>
               </h4>
               <div className="space-y-3">
                 {group.members.map((m, mIdx) => (
@@ -124,15 +124,15 @@ export default function Team() {
                     transition={{ delay: mIdx * 0.06, duration: 0.85, ease: LUXURY_EASE }}
                     className="flex justify-between items-baseline hover:pl-2 transition-all duration-300"
                   >
-                    <div className="flex gap-2 items-center text-white">
+                    <div className="flex gap-2 items-center text-brand-primary">
                       <span className={`font-sans text-lg ${m.lead ? 'font-bold' : 'opacity-50'}`}>{m.name}</span>
                       {m.lead && (
-                        <span className="text-[10px] bg-[#E02229] text-white px-2 py-0.5 rounded-full uppercase font-bold tracking-tighter shrink-0">
+                        <span className="text-[10px] bg-brand-secondary text-white px-2 py-0.5 rounded-full uppercase font-bold tracking-tighter shrink-0">
                           {m.title || 'Lead'}
                         </span>
                       )}
                     </div>
-                    <span className="font-typewriter text-[10px] text-white/20 shrink-0">{m.year ? `Year ${m.year}` : ''}</span>
+                    <span className="font-typewriter text-[10px] text-brand-primary/20 shrink-0">{m.year ? `Year ${m.year}` : ''}</span>
                   </motion.div>
                 ))}
               </div>

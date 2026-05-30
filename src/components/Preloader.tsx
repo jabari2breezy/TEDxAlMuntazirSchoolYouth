@@ -108,7 +108,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         {/* Progress Line */}
         <div className="w-full max-w-xs md:max-w-md mt-8 mb-4 relative">
           <div className="h-[1px] bg-white/10 w-full" />
-          <div className="pl-progress-bar absolute inset-0 h-[1px] bg-[#E02229]" />
+          <div className="pl-progress-bar absolute inset-0 h-[1px] bg-brand-secondary" />
         </div>
 
         {/* Counter */}

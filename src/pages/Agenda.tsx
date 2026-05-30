@@ -172,14 +172,14 @@ export default function Agenda() {
             {/* The Expanded Card Component */}
             <motion.div 
               layoutId={`card-${selectedItem.id}`}
-              className="relative w-full md:w-1/2 h-[40dvh] md:h-full bg-neutral-900 flex flex-col justify-between p-8 md:p-16 border-r border-b md:border-b-0 border-[#E02229]"
+              className="relative w-full md:w-1/2 h-[40dvh] md:h-full bg-neutral-900 flex flex-col justify-between p-8 md:p-16 border-r border-b md:border-b-0 border-brand-secondary"
             >
               <motion.div layoutId={`card-time-${selectedItem.id}`} className="font-title font-black text-6xl md:text-8xl tracking-tighter uppercase text-white leading-none">
                 {selectedItem.time}
               </motion.div>
               
               <div>
-                <motion.div layoutId={`card-type-${selectedItem.id}`} className="font-typewriter text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E02229] mb-2">
+                <motion.div layoutId={`card-type-${selectedItem.id}`} className="font-typewriter text-[10px] md:text-xs uppercase tracking-[0.5em] text-brand-secondary mb-2">
                   {selectedItem.type} // {selectedItem.duration}
                 </motion.div>
                 <motion.div layoutId={`card-title-${selectedItem.id}`} className="font-title font-bold text-3xl md:text-5xl uppercase text-white mb-4">
@@ -241,10 +241,10 @@ function AgendaCard({ item, onClick, isSelected }: { item: any, onClick: () => v
       onClick={onClick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.98 }}
-      className={`group relative shrink-0 h-[60vh] md:h-[70vh] aspect-[3/4] bg-neutral-900 border ${isSelected ? 'border-transparent' : 'border-white/10 hover:border-[#E02229]'} transition-colors duration-500 flex flex-col justify-between p-6 md:p-10 cursor-pointer overflow-hidden`}
+      className={`group relative shrink-0 h-[60vh] md:h-[70vh] aspect-[3/4] bg-neutral-900 border ${isSelected ? 'border-transparent' : 'border-white/10 hover:border-brand-secondary'} transition-colors duration-500 flex flex-col justify-between p-6 md:p-10 cursor-pointer overflow-hidden`}
     >
       {/* Background Hover Glow */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#E02229]/0 to-[#E02229]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/0 to-brand-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
       {/* Top: Massive Compressed Time */}
       <motion.div layoutId={`card-time-${item.id}`} className="font-title font-black text-6xl md:text-7xl tracking-tighter uppercase text-white/90 group-hover:text-white transition-colors leading-none relative z-10">
@@ -253,7 +253,7 @@ function AgendaCard({ item, onClick, isSelected }: { item: any, onClick: () => v
       
       {/* Bottom: Details with Hover Roll Reveal */}
       <div className="relative z-10 flex flex-col">
-        <motion.div layoutId={`card-type-${item.id}`} className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-[#E02229] mb-2">
+        <motion.div layoutId={`card-type-${item.id}`} className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-brand-secondary mb-2">
           {item.type}
         </motion.div>
         

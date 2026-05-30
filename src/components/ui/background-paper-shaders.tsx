@@ -45,8 +45,8 @@ const fragmentShader = `
 
 function ShaderPlane({
   position,
-  color1 = "#E02229",
-  color2 = "#050507",
+  color1 = "#006d38",
+  color2 = "#000839",
 }: {
   position: [number, number, number];
   color1?: string;
@@ -90,7 +90,7 @@ function ShaderPlane({
 function EnergyRing({
   radius = 1.2,
   position = [0, 0, 0] as [number, number, number],
-  color = "#E02229",
+  color = "#006d38",
 }: {
   radius?: number;
   position?: [number, number, number];
@@ -117,11 +117,11 @@ function EnergyRing({
 function Scene() {
   return (
     <>
-      <ShaderPlane position={[-1.2, 0.8, 0]} color1="#E02229" color2="#050507" />
-      <ShaderPlane position={[1.5, -0.5, -0.5]} color1="#1a0002" color2="#E02229" />
-      <EnergyRing radius={1.2} position={[0, 0, 0]} color="#E02229" />
-      <EnergyRing radius={0.7} position={[1.5, 0.8, 0]} color="#ff5555" />
-      <EnergyRing radius={0.9} position={[-1, -0.6, 0]} color="#E02229" />
+      <ShaderPlane position={[-1.2, 0.8, 0]} color1="#006d38" color2="#000839" />
+      <ShaderPlane position={[1.5, -0.5, -0.5]} color1="#000839" color2="#006d38" />
+      <EnergyRing radius={1.2} position={[0, 0, 0]} color="#006d38" />
+      <EnergyRing radius={0.7} position={[1.5, 0.8, 0]} color="#004d28" />
+      <EnergyRing radius={0.9} position={[-1, -0.6, 0]} color="#006d38" />
     </>
   );
 }

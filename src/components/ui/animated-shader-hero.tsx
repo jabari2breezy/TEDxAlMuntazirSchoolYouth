@@ -43,8 +43,8 @@ void main(void) {
   vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
   vec3 col=vec3(0);
   
-  // TEDx dark red color palette instead of generic
-  vec3 tedRed = vec3(0.878, 0.133, 0.161); // #E02229
+  // TEDx brand color palette instead of generic
+  vec3 tedRed = vec3(0.0, 0.031, 0.224); // #000839
   vec3 darkBg = vec3(0.02, 0.02, 0.03);
   
   float bg=clouds(vec2(st.x+T*.3,-st.y));

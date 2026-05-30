@@ -30,7 +30,7 @@ export default function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-40 relative min-h-screen bg-[#050507] text-white overflow-hidden"
+      className="pt-40 relative min-h-screen bg-brand-background text-brand-primary overflow-hidden"
     >
       {/* WebGL Shader Background */}
       <AnimatedShaderBackground className="opacity-60" />
@@ -52,13 +52,13 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 1 }}
-              className="font-typewriter text-[10px] text-[#E02229] tracking-[1em] uppercase mb-8"
+              className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase mb-8"
             >
               Registry / Info
             </motion.div>
-            <h1 className="text-[16vw] md:text-[14vw] font-title font-black tracking-tighter leading-[0.8] uppercase text-white flex flex-col items-center">
+            <h1 className="text-[16vw] md:text-[14vw] font-title font-black tracking-tighter leading-[0.8] uppercase text-brand-primary flex flex-col items-center">
               <span>What it's</span>
-              <span className="italic font-editorial lowercase text-[#E02229]">all about.</span>
+              <span className="italic font-editorial lowercase text-brand-secondary">all about.</span>
             </h1>
           </motion.div>
         </header>
@@ -89,17 +89,17 @@ export default function About() {
                 className="space-y-5"
               >
                 <div className="flex items-center gap-4">
-                  <span className="font-typewriter text-[10px] text-[#E02229]">0{i + 1}</span>
+                  <span className="font-typewriter text-[10px] text-brand-secondary">0{i + 1}</span>
                   <motion.div
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8, delay: i * 0.15, ease: [0.25, 1, 0.5, 1] }}
-                    className="h-[1px] flex-grow bg-white/10 origin-left"
+                    className="h-[1px] flex-grow bg-brand-outline/20 origin-left"
                   />
                 </div>
-                <h3 className="text-3xl md:text-4xl font-title font-black tracking-tighter uppercase text-white break-words">{item.title}</h3>
-                <p className="font-editorial text-xl text-white/50 leading-tight italic">{item.text}</p>
+                <h3 className="text-3xl md:text-4xl font-title font-black tracking-tighter uppercase text-brand-primary break-words">{item.title}</h3>
+                <p className="font-editorial text-xl text-brand-primary/50 leading-tight italic">{item.text}</p>
               </motion.div>
             ))}
           </div>
@@ -113,52 +113,52 @@ export default function About() {
             transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
             className="space-y-12"
           >
-            <div className="p-8 md:p-12 border border-white/10 bg-white/[0.04] backdrop-blur-sm space-y-8 rounded-[2.5rem]">
-              <Mail className="text-[#E02229]" size={32} />
-              <h2 className="text-4xl md:text-5xl font-title font-black tracking-tighter uppercase leading-none text-white">
+            <div className="p-8 md:p-12 border border-brand-outline/20 bg-brand-surface backdrop-blur-sm space-y-8 rounded-[2.5rem]">
+              <Mail className="text-brand-secondary" size={32} />
+              <h2 className="text-4xl md:text-5xl font-title font-black tracking-tighter uppercase leading-none text-brand-primary">
                 Get <br /> Involved.
               </h2>
 
               {status === 'success' ? (
-                <div className="font-editorial text-2xl text-[#E02229] italic">
+                <div className="font-editorial text-2xl text-brand-secondary italic">
                   Thanks for reaching out! We'll get back to you soon.
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8">
-                  <div className="space-y-2 border-b border-white/10 pb-4 focus-within:border-[#E02229] transition-colors">
-                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-white/30">Full Name</label>
+                  <div className="space-y-2 border-b border-brand-outline/20 pb-4 focus-within:border-brand-secondary transition-colors">
+                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/30">Full Name</label>
                     <input
                       type="text"
                       placeholder="e.g. Salim Ahmed"
-                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-white placeholder:text-white/20 outline-none"
+                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-brand-primary placeholder:text-brand-primary/30 outline-none"
                       required
                       value={formState.name}
                       onChange={e => setFormState({ ...formState, name: e.target.value })}
                     />
                   </div>
-                  <div className="space-y-2 border-b border-white/10 pb-4 focus-within:border-[#E02229] transition-colors">
-                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-white/30">Email Address</label>
+                  <div className="space-y-2 border-b border-brand-outline/20 pb-4 focus-within:border-brand-secondary transition-colors">
+                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/30">Email Address</label>
                     <input
                       type="email"
                       placeholder="hello@example.com"
-                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-white placeholder:text-white/20 outline-none"
+                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-brand-primary placeholder:text-brand-primary/30 outline-none"
                       required
                       value={formState.email}
                       onChange={e => setFormState({ ...formState, email: e.target.value })}
                     />
                   </div>
-                  <div className="space-y-2 border-b border-white/10 pb-4 focus-within:border-[#E02229] transition-colors">
-                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-white/30">How do you want to help?</label>
+                  <div className="space-y-2 border-b border-brand-outline/20 pb-4 focus-within:border-brand-secondary transition-colors">
+                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/30">How do you want to help?</label>
                     <textarea
                       placeholder="Tell us about your ideas..."
-                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-white placeholder:text-white/20 min-h-[100px] resize-none outline-none"
+                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-brand-primary placeholder:text-brand-primary/30 min-h-[100px] resize-none outline-none"
                       value={formState.message}
                       onChange={e => setFormState({ ...formState, message: e.target.value })}
                     />
                   </div>
                   <button
                     disabled={status === 'sending'}
-                    className="w-full py-4 bg-[#E02229] text-white font-title font-black uppercase tracking-widest text-sm rounded-full hover:bg-white hover:text-[#E02229] transition-all duration-500"
+                    className="w-full py-4 bg-brand-secondary text-white font-title font-black uppercase tracking-widest text-sm rounded-full hover:bg-brand-primary hover:text-white transition-all duration-500"
                   >
                     {status === 'sending' ? 'Sending...' : 'Join the Conversation'}
                   </button>
@@ -166,8 +166,8 @@ export default function About() {
               )}
             </div>
 
-            <div className="font-typewriter text-[10px] text-white/30 uppercase tracking-[0.2em] leading-relaxed max-w-sm">
-              <span className="text-[#E02229]">Note:</span> Everyone has a story to tell, and we are here to provide the platform.
+            <div className="font-typewriter text-[10px] text-brand-primary/30 uppercase tracking-[0.2em] leading-relaxed max-w-sm">
+              <span className="text-brand-secondary">Note:</span> Everyone has a story to tell, and we are here to provide the platform.
             </div>
           </motion.div>
         </div>
