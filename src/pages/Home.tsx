@@ -35,13 +35,15 @@ const itemVariants = {
 };
 
 const titleVariants = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, scale: 1.5, filter: 'blur(20px)' },
   visible: { 
     opacity: 1, 
-    y: 0,
+    scale: 1,
+    filter: 'blur(0px)',
     transition: { 
-      duration: 0.7, 
-      ease: [0.16, 1, 0.3, 1] as const
+      duration: 1.5, 
+      ease: [0.16, 1, 0.3, 1] as const,
+      delay: 0.5
     }
   }
 };

@@ -96,14 +96,13 @@ export const SPEAKERS: Speaker[] = [
     segmentId: 'present'
   },
   {
-    id: 'faizaan-emerson',
+    id: 'speaker-tba',
     name: 'TBA',
     topic: 'TBA',
-    bio: "Speaker details will be announced soon.",
-    talk_description: "To be announced soon.",
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600&h=800',
-    segmentId: 'present',
-    isAlum: true
+    bio: "Speaker details to be announced soon.",
+    talk_description: "More details about this session will be available soon.",
+    image: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=600&h=800',
+    segmentId: 'present'
   },
   {
     id: 'hassan-abbas',
