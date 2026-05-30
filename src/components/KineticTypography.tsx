@@ -15,10 +15,10 @@ export function MaskedReveal({
   children: ReactNode;
   delay?: number;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: any;
 }) {
   return (
-    <span className={`inline-block overflow-hidden ${className}`}>
+    <Tag className={`inline-block overflow-hidden ${className}`}>
       <motion.span
         className="inline-block"
         initial={{ y: '110%' }}
@@ -32,7 +32,7 @@ export function MaskedReveal({
       >
         {children}
       </motion.span>
-    </span>
+    </Tag>
   );
 }
 

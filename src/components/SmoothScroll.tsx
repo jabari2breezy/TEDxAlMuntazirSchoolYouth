@@ -19,17 +19,14 @@ export default function SmoothScroll() {
       wheelMultiplier: isMobileLike ? 0.8 : 0.92,
       touchMultiplier: isMobileLike ? 1.0 : 1.6,
       infinite: false,
-      // @ts-expect-error supported in newer Lenis
+      // Using as any to bypass version-specific property checks
       smoothTouch: true,
-      // @ts-expect-error supported in newer Lenis
       syncTouch: true,
-      // @ts-expect-error supported in newer Lenis
       normalizeWheel: true,
-      // @ts-expect-error supported in newer Lenis
       lerp: isMobileLike ? 0.075 : 0.1,
     } as any);
 
-    window.__lenis = lenis;
+    (window as any).__lenis = lenis;
     document.documentElement.classList.add('lenis', 'lenis-smooth');
 
     let rafId = 0;
@@ -39,14 +36,14 @@ export default function SmoothScroll() {
     };
     rafId = requestAnimationFrame(raf);
 
-    const handleResize = () => lenis.resize?.();
+    const handleResize = () => (lenis as any).resize?.();
     window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(rafId);
       lenis.destroy();
-      delete window.__lenis;
+      delete (window as any).__lenis;
       document.documentElement.classList.remove('lenis', 'lenis-smooth');
     };
   }, []);

@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { motion, useSpring, useTransform } from 'motion/react';
+import { motion, useSpring } from 'motion/react';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -32,7 +32,7 @@ export function MagneticButton({
 
   const reset = useCallback(() => { x.set(0); y.set(0); }, [x, y]);
 
-  const Tag = href ? 'a' : 'button';
+  const Tag = (href ? 'a' : 'button') as any;
 
   return (
     <motion.div
@@ -61,7 +61,7 @@ export function TextScramble({
 }: {
   text: string;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: any;
 }) {
   const [display, setDisplay] = useState(text);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);

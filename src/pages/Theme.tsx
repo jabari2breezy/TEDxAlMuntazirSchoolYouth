@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, useInView } from 'motion/react';
-import { ArrowRight, Clock, Zap, Infinity, Share2 } from 'lucide-react';
+import { ArrowRight, Clock, Zap, Infinity as InfinityIcon, Share2 } from 'lucide-react';
 import { TICKETS_URL } from '../constants';
 import MaskReveal from '../components/MaskReveal';
 
@@ -24,7 +24,7 @@ export default function Theme() {
           <motion.div 
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] rounded-full bg-brand-secondary/5 blur-[120px]"
             animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 10, repeat: Infinity }}
+            transition={{ duration: 10, repeat: Infinity as any }}
           />
         </div>
 
@@ -56,7 +56,7 @@ export default function Theme() {
             <motion.div 
               className="w-px h-20 bg-gradient-to-b from-brand-secondary to-transparent"
               animate={{ scaleY: [0, 1, 0], originY: [0, 0, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 2, repeat: Infinity as any, ease: "easeInOut" }}
             />
           </motion.div>
         </div>
@@ -98,15 +98,15 @@ export default function Theme() {
             <motion.div 
               className="absolute inset-0 rounded-full border border-white/5"
               animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 20, repeat: Infinity as any, ease: "linear" }}
             />
             <motion.div 
               className="absolute inset-10 rounded-full border border-brand-secondary/20"
               animate={{ rotate: -360 }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 15, repeat: Infinity as any, ease: "linear" }}
             />
             <div className="relative z-10 flex flex-col items-center gap-4">
-              <Infinity size={80} className="text-brand-secondary" />
+              <InfinityIcon size={80} className="text-brand-secondary" />
               <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white/40">Universal Flow</span>
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function Theme() {
           style={{ y: useTransform(smoothProgress, [0.8, 1], [0, -100]) }}
         >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-b from-brand-secondary/20 to-transparent blur-[150px]" />
-        </div >
+        </motion.div>
 
         <div className="relative z-10 space-y-12">
           <h2 className="text-6xl md:text-[10vw] font-title font-black uppercase tracking-tighter leading-[0.8]">
