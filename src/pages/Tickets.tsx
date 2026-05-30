@@ -91,15 +91,16 @@ export default function Tickets() {
 
   // Translate ticket
   // Phase 1: Center (0)
-  // Phase 2: Shift Right (Desktop: 25vw, Mobile: 0) / Shift Up (Mobile: -25vh)
+  // Phase 2 Desktop: Shift Right. Phase 2 Mobile: Ticket goes DOWN, details come UP
   // Phase 3: Center (0)
   const xMovementDesktop = useTransform(scrollYProgress,
     [0, 0.2, 0.3, 0.8, 0.9, 1],
-    [0, 0, 250, 250, 0, 0] // pixels or vw
+    [0, 0, 250, 250, 0, 0]
   );
+  // On mobile: ticket slides DOWN out of the way
   const yMovementMobile = useTransform(scrollYProgress,
     [0, 0.2, 0.3, 0.8, 0.9, 1],
-    [0, 0, -250, -250, 0, 0]
+    [0, 0, 260, 260, 0, 0]
   );
 
   const ticketX = isMobile ? 0 : xMovementDesktop;
@@ -153,10 +154,10 @@ export default function Tickets() {
             <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
           </motion.div>
 
-          {/* Center Details Content (Phase 2) */}
+          {/* Center Details Content (Phase 2) - slides UP from bottom on mobile */}
           <motion.div 
-            style={{ opacity: centerContentOpacity, y: centerContentY }}
-            className={`absolute z-10 w-full max-w-xl px-6 pointer-events-auto ${isMobile ? 'bottom-[5%] top-auto flex flex-col justify-end' : 'left-[10vw]'}`}
+            style={{ opacity: centerContentOpacity, y: isMobile ? useTransform(scrollYProgress, [0.25, 0.35, 0.75, 0.85], [80, 0, 0, -40]) : centerContentY }}
+            className={`absolute z-10 w-full max-w-xl px-6 pointer-events-auto ${isMobile ? 'top-[5%] left-0 right-0 flex flex-col justify-start' : 'left-[10vw]'}`}
           >
             <div className="space-y-4 md:space-y-8">
               <div className="space-y-1 md:space-y-2">

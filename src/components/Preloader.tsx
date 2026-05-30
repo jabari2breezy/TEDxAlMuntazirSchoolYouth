@@ -8,116 +8,67 @@ interface PreloaderProps {
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [isMounted, setIsMounted] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    if (!containerRef.current) return;
 
+  useEffect(() => {
     window.scrollTo(0, 0);
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
-    document.body.style.top = '0';
 
-    // Hide actual UI text initially
-    gsap.set('.home-hero-almuntazir, .home-hero-suffix, #nav-logo-tedx', { opacity: 0 });
-    // Keep .home-hero-tedx hidden entirely, since Navbar takes over
-    gsap.set('.home-hero-tedx', { display: 'none' });
+    // Griflan-style: Big agency preloader
+    // 1. Large counter ticks up
+    // 2. At 100%, text does a massive horizontal wipe
+    // 3. Everything slides off-screen revealing the page underneath
 
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
+      const counter = { val: 0 };
+
+      // Start the counter bar thin, will expand
+      gsap.set('.pl-progress-bar', { scaleX: 0, transformOrigin: 'left' });
+      gsap.set('.pl-overlay', { opacity: 1 });
+
       const tl = gsap.timeline({
         onComplete: () => {
           document.documentElement.style.overflow = '';
           document.body.style.overflow = '';
           document.body.style.position = '';
           document.body.style.width = '';
-          document.body.style.top = '';
-          
-          // Reveal the actual UI text
-          gsap.set('.home-hero-almuntazir, .home-hero-suffix, #nav-logo-tedx', { opacity: 1 });
-          
           setIsMounted(false);
           onComplete();
         }
       });
 
-      // 1. Initial State: Centered Stacked Lockup
-      // [ LINE 1 ] -> TEDX
-      // [ LINE 2 ] -> ALMUNTAZIR
-      gsap.set('.preloader-tedx', { 
-        position: 'absolute',
-        top: '40%',
-        left: '50%',
-        xPercent: -50,
-        yPercent: -50,
-      });
-      gsap.set('.preloader-almuntazir', { 
-        position: 'absolute',
-        top: '60%',
-        left: '50%',
-        xPercent: -50,
-        yPercent: -50,
-      });
-
-      // 2. Count to 100
-      const count = { val: 0 };
-      tl.to(count, {
+      // Phase 1: Count up 0→100, widen the progress bar
+      tl.to(counter, {
         val: 100,
-        duration: 3,
-        ease: 'linear',
-        onUpdate: function() {
-          const el = document.querySelector('.preloader-counter');
-          if (el) el.textContent = Math.round(count.val).toString().padStart(2, '0');
+        duration: 2.2,
+        ease: 'power2.inOut',
+        onUpdate() {
+          const el = document.querySelector('.pl-count');
+          if (el) el.textContent = Math.round(counter.val).toString().padStart(3, '0');
+          const bar = document.querySelector('.pl-progress-bar') as HTMLElement;
+          if (bar) gsap.set(bar, { scaleX: counter.val / 100 });
         }
-      })
-      
-      // 3. Phase 2: Elastic Snap (Triggered at 100%)
-      .add(() => {
-        // Fade the counter
-        gsap.to('.preloader-counter-container', { opacity: 0, duration: 0.3 });
+      });
 
-        const targetNavLogo = document.getElementById('nav-logo-tedx');
-        const targetHeroAlmuntazir = document.querySelector('.home-hero-almuntazir') as HTMLElement;
-        
-        if (targetNavLogo && targetHeroAlmuntazir) {
-          const navRect = targetNavLogo.getBoundingClientRect();
-          const heroRect = targetHeroAlmuntazir.getBoundingClientRect();
-          
-          // TEDX flies to top-left corner
-          gsap.to('.preloader-tedx', {
-            top: navRect.top + navRect.height / 2,
-            left: navRect.left + navRect.width / 2,
-            scale: 0.25, // Scale down heavily for Navbar
-            letterSpacing: '0em',
-            duration: 1.2,
-            ease: 'cubic-bezier(0.16, 1, 0.3, 1)'
-          });
-          
-          // ALMUNTAZIR flies to center and track-stretches
-          gsap.to('.preloader-almuntazir', {
-            top: heroRect.top + heroRect.height / 2,
-            left: heroRect.left + heroRect.width / 2,
-            scale: 0.8, // Adjust to hero size
-            letterSpacing: '0.02em', // Stretches as it lands
-            duration: 1.2,
-            ease: 'cubic-bezier(0.16, 1, 0.3, 1)'
-          });
-        }
-      })
-      
-      // Wait for flight
-      .to({}, { duration: 1.2 })
-      
-      // 4. Phase 3: Ghost Reveal
-      .to('.preloader-bg', {
+      // Phase 2: Brief pause, then slide the left panel UP and right panel DOWN
+      tl.to('.pl-panel-left', {
+        yPercent: -105,
+        duration: 0.9,
+        ease: 'power4.inOut',
+      }, '+=0.1');
+
+      tl.to('.pl-panel-right', {
+        yPercent: 105,
+        duration: 0.9,
+        ease: 'power4.inOut',
+      }, '<');
+
+      tl.to('.pl-wordmark', {
         opacity: 0,
-        duration: 0.6,
-        ease: 'power2.inOut'
-      })
-      .to('.preloader-tedx, .preloader-almuntazir', {
-        opacity: 0,
-        duration: 0.1
-      }, "-=0.2");
+        duration: 0.3,
+      }, '<+0.2');
 
     }, containerRef);
 
@@ -127,9 +78,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.width = '';
-      document.body.style.top = '';
-      gsap.set('.home-hero-almuntazir, .home-hero-suffix, #nav-logo-tedx', { opacity: 1 });
-      gsap.set('.home-hero-tedx', { display: 'none' });
     };
   }, [onComplete]);
 
@@ -141,17 +89,39 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       className="fixed inset-0 z-[9999] overflow-hidden pointer-events-none"
       style={{ height: '100dvh' }}
     >
-      <div className="preloader-bg absolute inset-0 bg-black" />
-      
-      {/* Absolute Dark Mode Typography */}
-      <div className="absolute inset-0 z-10 text-white font-title font-black uppercase tracking-tighter leading-none text-7xl md:text-[14vw] flex items-center justify-center whitespace-nowrap mix-blend-difference">
-        <span className="preloader-tedx inline-block origin-center text-[#E02229]">TEDX</span>
-        <span className="preloader-almuntazir inline-block origin-center">ALMUNTAZIR</span>
-      </div>
+      {/* Two-panel split: top slides up, bottom slides down */}
+      <div className="pl-panel-left absolute inset-x-0 top-0 h-1/2 bg-[#050507] z-20" />
+      <div className="pl-panel-right absolute inset-x-0 bottom-0 h-1/2 bg-[#050507] z-20" />
 
-      {/* Elite Monospaced Counter */}
-      <div className="preloader-counter-container absolute bottom-[40%] left-1/2 -translate-x-1/2 z-10 text-white/40 font-typewriter text-[10px] uppercase tracking-[0.5em] mix-blend-difference text-center">
-        [ SYSTEM INDEX // <span className="preloader-counter text-white">00</span>% ]
+      {/* Central Wordmark - sits between panels */}
+      <div className="pl-wordmark absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 pointer-events-none">
+        {/* Main headline */}
+        <div className="flex items-baseline gap-4 md:gap-8">
+          <span className="font-title font-black text-[14vw] md:text-[10vw] uppercase tracking-tighter leading-none text-[#E02229]">
+            TEDX
+          </span>
+          <span className="font-title font-black text-[14vw] md:text-[10vw] uppercase tracking-tighter leading-none text-white">
+            ALM
+          </span>
+        </div>
+
+        {/* Progress Line */}
+        <div className="w-full max-w-xs md:max-w-md mt-8 mb-4 relative">
+          <div className="h-[1px] bg-white/10 w-full" />
+          <div className="pl-progress-bar absolute inset-0 h-[1px] bg-[#E02229]" />
+        </div>
+
+        {/* Counter */}
+        <div className="flex items-baseline gap-3">
+          <span className="pl-count font-typewriter text-6xl md:text-8xl font-black tracking-tighter text-white tabular-nums">
+            000
+          </span>
+          <span className="font-typewriter text-xl text-white/30">%</span>
+        </div>
+
+        <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-white/30 mt-4">
+          [ BORROWED TIME // 2026 ]
+        </span>
       </div>
     </div>
   );
