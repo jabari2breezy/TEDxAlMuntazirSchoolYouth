@@ -1,239 +1,185 @@
-import { useRef, type ComponentType } from 'react';
-import { motion, useScroll, useSpring, useTransform } from 'motion/react';
-import { ArrowUpRight, Clock, MoveRight, Orbit, Sparkles, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useSpring, useInView } from 'motion/react';
+import { ArrowRight, Clock, Zap, Infinity as InfinityIcon, Share2 } from 'lucide-react';
 import { TICKETS_URL } from '../constants';
+import MaskReveal from '../components/MaskReveal';
 
-const EASE = [0.16, 1, 0.3, 1] as const;
-
-function KineticStat({
-  label,
-  value,
-  detail,
-}: {
-  label: string;
-  value: string;
-  detail: string;
-}) {
-  return (
-    <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 md:p-8 backdrop-blur-2xl">
-      <p className="font-typewriter text-[9px] uppercase tracking-[0.45em] text-white/35">{label}</p>
-      <p className="mt-4 text-4xl md:text-6xl font-title font-black uppercase tracking-tighter">{value}</p>
-      <p className="mt-4 font-sans text-sm md:text-base leading-relaxed text-white/55">{detail}</p>
-    </div>
-  );
-}
-
-function MotionCard({
-  title,
-  copy,
-  icon: Icon,
-}: {
-  title: string;
-  copy: string;
-  icon: ComponentType<{ size?: number }>;
-}) {
-  return (
-    <motion.div
-      whileHover={{ y: -6, scale: 1.01 }}
-      transition={{ duration: 0.35, ease: EASE }}
-      className="rounded-[2rem] border border-white/10 bg-black/20 p-6 md:p-8 backdrop-blur-2xl shadow-[0_24px_90px_rgba(0,0,0,0.35)]"
-    >
-      <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-secondary/15 text-brand-secondary">
-          <Icon size={20} />
-        </div>
-        <h3 className="text-2xl md:text-3xl font-title font-black uppercase tracking-tighter">{title}</h3>
-      </div>
-      <p className="mt-5 font-editorial text-lg italic text-white/65 leading-relaxed">{copy}</p>
-    </motion.div>
-  );
-}
+const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function Theme() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start start', 'end end'],
+    offset: ["start start", "end end"]
   });
 
-  const progress = useSpring(scrollYProgress, { stiffness: 70, damping: 18, mass: 0.9 });
-
-  const heroScale = useTransform(progress, [0, 0.22], [1, 0.96]);
-  const heroY = useTransform(progress, [0, 0.24], [0, -60]);
-  const orbitRotate = useTransform(progress, [0, 1], [0, 360]);
-  const splitOpacity = useTransform(progress, [0.18, 0.3, 0.52], [0, 1, 1]);
-  const splitX = useTransform(progress, [0.18, 0.3], [-28, 0]);
-  const bottomOpacity = useTransform(progress, [0.52, 0.72, 1], [0, 1, 1]);
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
   return (
-    <div ref={containerRef} className="relative bg-[#050507] text-white overflow-x-hidden">
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(0,109,56,0.13),transparent_32%),radial-gradient(circle_at_10%_80%,rgba(255,255,255,0.05),transparent_28%),linear-gradient(180deg,#050507_0%,#070b12_55%,#040405_100%)]" />
-        <motion.div
-          className="absolute left-1/2 top-1/2 h-[90vw] w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/8"
-          style={{ rotate: orbitRotate }}
-        />
-        <motion.div
-          className="absolute left-1/2 top-1/2 h-[64vw] w-[64vw] -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-secondary/20"
-          style={{ rotate: useTransform(progress, [0, 1], [0, -360]) }}
-        />
-        <div className="absolute inset-0 opacity-[0.06] mix-blend-overlay" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)', backgroundSize: '34px 34px' }} />
-      </div>
-
-      <section className="min-h-screen sticky top-0 px-6 md:px-16">
-        <motion.div
-          style={{ scale: heroScale, y: heroY }}
-          className="mx-auto flex h-screen max-w-screen-2xl items-center"
-        >
-          <div className="grid w-full gap-16 lg:grid-cols-[1.15fr_0.85fr] items-center">
-            <div className="space-y-8">
-              <p className="font-typewriter text-[10px] md:text-[11px] uppercase tracking-[0.8em] text-white/30">
-                THEME / BORROWED TIME
-              </p>
-              <h1 className="text-[16vw] md:text-[10vw] font-title font-black uppercase leading-[0.76] tracking-tighter">
-                BORROWED
-                <span className="block text-brand-secondary italic font-editorial lowercase">Time.</span>
-              </h1>
-              <p className="max-w-2xl font-editorial text-xl md:text-3xl italic text-white/60 leading-relaxed">
-                The page is designed as a slow, premium reveal: a central visual anchor, soft circular movement, and sections that glide into place rather than snapping in.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {['fluid motion', 'editorial layout', 'scroll-linked atmosphere'].map((item) => (
-                  <span key={item} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 font-typewriter text-[9px] uppercase tracking-[0.35em] text-white/55">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="relative flex justify-center lg:justify-end">
-              <motion.div
-                className="relative flex aspect-square w-[84vw] max-w-[560px] items-center justify-center"
-                animate={{ y: [0, -14, 0] }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <motion.div
-                  className="absolute inset-[14%] rounded-full border border-brand-secondary/25 bg-brand-secondary/8 backdrop-blur-2xl"
-                  animate={{ scale: [1, 1.03, 1] }}
-                  transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-                />
-                <motion.div
-                  className="absolute inset-[28%] rounded-full border border-white/10 bg-white/4 backdrop-blur-2xl"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
-                />
-                <div className="relative z-10 flex flex-col items-center gap-3">
-                  <Orbit size={72} className="text-brand-secondary" />
-                  <p className="font-typewriter text-[10px] uppercase tracking-[0.45em] text-white/40">
-                    A single idea, turned into motion
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      <section className="py-24 md:py-40 px-6 md:px-16">
-        <motion.div
-          style={{ opacity: splitOpacity, x: splitX }}
-          className="mx-auto max-w-screen-2xl"
-        >
-          <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] items-center">
-            <div className="space-y-8">
-              <div className="space-y-5">
-                <p className="font-typewriter text-[10px] uppercase tracking-[0.6em] text-brand-secondary">
-                  THE FLOW
-                </p>
-                <h2 className="text-5xl md:text-8xl font-title font-black uppercase tracking-tighter leading-[0.82]">
-                  The movement
-                  <span className="block text-white/50 italic font-editorial lowercase">does the explaining.</span>
-                </h2>
-                <p className="font-editorial text-xl md:text-2xl italic text-white/65 leading-relaxed">
-                  Like the best award-site experiences, the copy, visuals, and spacing all work as one large motion system instead of separate blocks competing for attention.
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <MotionCard
-                  icon={Clock}
-                  title="Slow reveal"
-                  copy="The most important element emerges first, and the rest of the page responds to it."
-                />
-                <MotionCard
-                  icon={Sparkles}
-                  title="Cinematic polish"
-                  copy="Every section uses motion to reinforce hierarchy rather than decorate it."
-                />
-              </div>
-            </div>
-
-            <div className="grid gap-4">
-              <KineticStat
-                label="Experience"
-                value="Immersive"
-                detail="The theme page now reads like a full-screen visual statement: dark, smooth, and deliberately paced."
-              />
-              <KineticStat
-                label="Motion system"
-                value="Orbital"
-                detail="Circular movement, floating depth, and deliberate scroll-linked easing keep the page alive."
-              />
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      <section className="px-6 md:px-16 py-24 md:py-36">
-        <div className="mx-auto max-w-screen-2xl grid gap-8 lg:grid-cols-3">
-          <MotionCard
-            icon={Zap}
-            title="The pulse"
-            copy="A premium rhythm of impact words, soft glows, and highly controlled transitions."
+    <div ref={containerRef} className="bg-[#050507] text-white overflow-x-hidden">
+      {/* Hero Section (Everswap inspired) */}
+      <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+        {/* Animated Background Gradients */}
+        <div className="absolute inset-0 z-0">
+          <motion.div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] rounded-full bg-brand-secondary/5 blur-[120px]"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+            transition={{ duration: 10, repeat: Infinity as any }}
           />
-          <MotionCard
-            icon={MoveRight}
-            title="The drift"
-            copy="Objects slide in from the edges instead of appearing all at once, so the eye always has a next destination."
-          />
-          <MotionCard
-            icon={ArrowUpRight}
-            title="The call"
-            copy="The CTA is positioned like a conclusion, not a generic button, so the final move feels earned."
-          />
+        </div>
+
+        <div className="relative z-10 text-center space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: LUXURY_EASE }}
+          >
+            <span className="font-typewriter text-[11px] uppercase tracking-[0.8em] text-brand-secondary font-bold">The Philosophy</span>
+          </motion.div>
+          
+          <motion.h1 
+            className="text-[15vw] md:text-[12vw] font-title font-black uppercase leading-[0.75] tracking-tighter"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: LUXURY_EASE }}
+          >
+            BORROWED <br/> <span className="text-brand-secondary italic font-editorial lowercase">Time.</span>
+          </motion.h1>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1 }}
+            className="flex flex-col items-center gap-4"
+          >
+            <p className="font-typewriter text-[10px] uppercase tracking-[0.4em] text-white/30">Scroll to enter the flow</p>
+            <motion.div 
+              className="w-px h-20 bg-gradient-to-b from-brand-secondary to-transparent"
+              animate={{ scaleY: [0, 1, 0], originY: [0, 0, 1] }}
+              transition={{ duration: 2, repeat: Infinity as any, ease: "easeInOut" }}
+            />
+          </motion.div>
         </div>
       </section>
 
-      <section className="px-6 md:px-16 pb-24 md:pb-40">
-        <motion.div
-          style={{ opacity: bottomOpacity }}
-          className="mx-auto max-w-screen-2xl"
-        >
-          <div className="rounded-[2.5rem] border border-white/10 bg-white/5 p-8 md:p-12 backdrop-blur-2xl shadow-[0_40px_140px_rgba(0,0,0,0.4)]">
-            <div className="grid gap-10 lg:grid-cols-[1fr_auto] items-end">
-              <div className="max-w-4xl space-y-6">
-                <p className="font-typewriter text-[10px] uppercase tracking-[0.8em] text-white/30">FINAL CTA</p>
-                <h2 className="text-5xl md:text-[8vw] font-title font-black uppercase tracking-tighter leading-[0.82]">
-                  Join the
-                  <span className="block text-brand-secondary italic font-editorial lowercase">moment.</span>
-                </h2>
-                <p className="max-w-2xl font-editorial text-xl md:text-2xl italic text-white/65 leading-relaxed">
-                  The theme page now ends with the same premium momentum it starts with: a clear visual system, meaningful movement, and an obvious next action.
-                </p>
-              </div>
+      {/* Concept: One Pool Every Function (Everswap style applied to Time) */}
+      <section className="py-40 px-6 md:px-16 max-w-screen-2xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-24 items-center">
+          <div className="space-y-12">
+            <div className="space-y-6">
+              <h2 className="text-5xl md:text-8xl font-title font-black uppercase tracking-tighter leading-[0.85]">
+                TIME AT <br/> <span className="text-brand-secondary">PEAK.</span>
+              </h2>
+              <p className="font-editorial text-2xl md:text-4xl italic text-white/60 leading-relaxed">
+                Unifying the past, present, and future through a single-sided experience of existence.
+              </p>
+            </div>
 
-              <motion.a
-                href={TICKETS_URL}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-5 rounded-full bg-brand-secondary px-10 py-5 font-title text-xl font-black uppercase tracking-[0.25em] text-white shadow-[0_18px_50px_rgba(0,109,56,0.35)]"
-              >
-                Secure seat
-                <ArrowUpRight size={20} />
-              </motion.a>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 space-y-4 hover:bg-white/10 transition-colors group">
+                <div className="w-12 h-12 rounded-2xl bg-brand-secondary/20 flex items-center justify-center text-brand-secondary group-hover:scale-110 transition-transform">
+                  <Clock size={24} />
+                </div>
+                <h3 className="text-2xl font-title font-bold uppercase tracking-tight">The Inheritors</h3>
+                <p className="font-sans text-sm text-white/50 leading-relaxed">Navigating systems we didn't build, borrowing against a legacy we must now manage.</p>
+              </div>
+              <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 space-y-4 hover:bg-white/10 transition-colors group">
+                <div className="w-12 h-12 rounded-2xl bg-brand-secondary/20 flex items-center justify-center text-brand-secondary group-hover:scale-110 transition-transform">
+                  <Zap size={24} />
+                </div>
+                <h3 className="text-2xl font-title font-bold uppercase tracking-tight">The Present</h3>
+                <p className="font-sans text-sm text-white/50 leading-relaxed">Maximizing the value of 'now' before the liquidity of the moment evaporates.</p>
+              </div>
             </div>
           </div>
+
+          {/* Abstract Visual (Everswap style) */}
+          <div className="relative aspect-square flex items-center justify-center">
+            <motion.div 
+              className="absolute inset-0 rounded-full border border-white/5"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity as any, ease: "linear" }}
+            />
+            <motion.div 
+              className="absolute inset-10 rounded-full border border-brand-secondary/20"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 15, repeat: Infinity as any, ease: "linear" }}
+            />
+            <div className="relative z-10 flex flex-col items-center gap-4">
+              <InfinityIcon size={80} className="text-brand-secondary" />
+              <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white/40">Universal Flow</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The Three Clocks (Segmented Display) */}
+      <section className="py-40 bg-white text-[#000839]">
+        <div className="max-w-screen-2xl mx-auto px-6 md:px-16">
+          <div className="mb-24 space-y-4">
+            <span className="font-typewriter text-[11px] uppercase tracking-[0.6em] text-brand-secondary font-bold">System Architecture</span>
+            <h2 className="text-5xl md:text-8xl font-title font-black uppercase tracking-tighter leading-none">
+              THE <span className="italic font-editorial lowercase">Three</span> CLOCKS.
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { id: '01', title: 'PAST', desc: 'Echoes of inherited systems and the weight of history.', color: 'bg-[#000839] text-white' },
+              { id: '02', title: 'PRESENT', desc: 'The urgency of presence in a world of constant demand.', color: 'bg-brand-secondary text-white' },
+              { id: '03', title: 'FUTURE', desc: 'Designing the legacy that we leave for those who follow.', color: 'bg-[#f7f4ee] text-[#000839]' }
+            ].map((segment, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.2 }}
+                className={`${segment.color} p-12 rounded-[3rem] space-y-12 flex flex-col justify-between aspect-[4/5] shadow-2xl`}
+              >
+                <span className="font-title text-6xl font-black opacity-20">{segment.id}</span>
+                <div className="space-y-6">
+                  <h3 className="text-4xl md:text-5xl font-title font-black uppercase tracking-tighter">{segment.title}</h3>
+                  <p className="font-editorial text-xl italic opacity-80 leading-relaxed">{segment.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA (Everswap style) */}
+      <section className="py-60 relative overflow-hidden flex flex-col items-center justify-center text-center px-6">
+        <motion.div 
+          className="absolute inset-0 z-0 opacity-30"
+          style={{ y: useTransform(smoothProgress, [0.8, 1], [0, -100]) }}
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-b from-brand-secondary/20 to-transparent blur-[150px]" />
         </motion.div>
+
+        <div className="relative z-10 space-y-12">
+          <h2 className="text-6xl md:text-[10vw] font-title font-black uppercase tracking-tighter leading-[0.8]">
+            JOIN THE <br/> <span className="text-brand-secondary">SUMMIT.</span>
+          </h2>
+          <p className="font-editorial text-2xl md:text-4xl italic text-white/50 max-w-3xl mx-auto">
+            Stay close to the flow. The clock is ticking, but the opportunity is now.
+          </p>
+          <motion.a
+            href={TICKETS_URL}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-6 bg-brand-secondary text-white px-12 md:px-20 py-8 rounded-full font-title font-black text-2xl uppercase tracking-widest shadow-[0_0_50px_rgba(0,109,56,0.3)] hover:shadow-[0_0_80px_rgba(0,109,56,0.5)] transition-all"
+          >
+            Secure Seat
+            <ArrowRight size={32} />
+          </motion.a>
+        </div>
+
+        {/* Floating Footer Meta */}
+        <div className="absolute bottom-10 w-full flex justify-between px-10 opacity-20 font-typewriter text-[9px] uppercase tracking-[0.5em]">
+          <span>Dar Es Salaam</span>
+          <span>TEDxAlMuntazir 2026</span>
+          <span>Borrowed Time</span>
+        </div>
       </section>
     </div>
   );

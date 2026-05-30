@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'motion/react';
 import gsap from 'gsap';
 
 interface PreloaderProps {
@@ -9,7 +8,7 @@ interface PreloaderProps {
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [isMounted, setIsMounted] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-
+  
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -20,17 +19,8 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     document.body.style.width = '100%';
     document.body.style.top = '0';
 
-    const ctx = gsap.context(() => {
-      gsap.set([
-        '.preloader-title-line span',
-        '.preloader-meta-line span',
-        '.preloader-stat',
-      ], { y: '110%' });
-      gsap.set('.preloader-progress-fill', { scaleX: 0 });
-      gsap.set('.preloader-ring', { scale: 0.75, opacity: 0 });
-
-      const count = { value: 0 };
-      const timeline = gsap.timeline({
+    let ctx = gsap.context(() => {
+      const tl = gsap.timeline({
         onComplete: () => {
           document.documentElement.style.overflow = '';
           document.body.style.overflow = '';
@@ -39,67 +29,53 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           document.body.style.top = '';
           setIsMounted(false);
           onComplete();
-        },
+        }
       });
 
-      timeline
-        .to('.preloader-ring', {
-          scale: 1,
-          opacity: 1,
-          duration: 0.9,
-          ease: 'power3.out',
-          stagger: 0.12,
-        })
-        .to('.preloader-title-line span', {
-          y: '0%',
-          duration: 1,
-          stagger: 0.08,
-          ease: 'power4.out',
-        }, '-=0.4')
-        .to('.preloader-meta-line span', {
-          y: '0%',
-          duration: 0.8,
-          stagger: 0.05,
-          ease: 'power3.out',
-        }, '-=0.7')
-        .to('.preloader-stat', {
-          y: '0%',
-          duration: 0.8,
-          ease: 'power3.out',
-        }, '-=0.55')
-        .fromTo('.preloader-progress-fill', { scaleX: 0 }, { scaleX: 1, duration: 2.8, ease: 'power2.inOut' }, '-=0.3')
-        .to(count, {
-          value: 100,
-          duration: 2.8,
-          ease: 'power2.inOut',
-          onUpdate: () => {
-            const el = document.querySelector('.preloader-percentage');
-            if (el) el.textContent = `${Math.round(count.value)}`;
-          },
-        }, '<')
-        .to('.preloader-eyebrow', {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-        }, '-=2.2')
-        .to('.preloader-copy', {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-        }, '-=1.9')
-        .to('.preloader-content', {
-          y: -70,
-          opacity: 0,
-          duration: 0.8,
-          ease: 'power4.in',
-        }, '>-0.2')
-        .to(containerRef.current, {
-          y: '-100%',
-          duration: 1.05,
-          ease: 'power4.inOut',
-        }, '-=0.3');
+      // 1. Initial State
+      gsap.set('.preloader-text-line span', { y: '100%' });
+      gsap.set('.preloader-reveal-bg', { scaleY: 0 });
+
+      // 2. Text Reveal (Inspired by Luke Baffait's smooth typography)
+      tl.to('.preloader-text-line span', {
+        y: '0%',
+        duration: 1.2,
+        ease: 'power4.out',
+        stagger: 0.1
+      })
+      
+      // 3. Reveal Progress (Elegant 0-100)
+      .fromTo('.preloader-progress-bar', 
+        { scaleX: 0 },
+        { scaleX: 1, duration: 2.5, ease: 'power2.inOut' },
+        '-=0.8'
+      )
+      
+      // 4. Update Counter
+      const count = { val: 0 };
+      tl.to(count, {
+        val: 100,
+        duration: 2.5,
+        ease: 'power2.inOut',
+        onUpdate: function() {
+          const el = document.querySelector('.preloader-percentage');
+          if (el) el.textContent = Math.round(count.val).toString();
+        }
+      }, '<')
+
+      // 5. Exit Animation: Cinematic Slide Up (Luke Baffait style)
+      .to('.preloader-content', {
+        y: -100,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power4.in'
+      })
+      .to(containerRef.current, {
+        y: '-100%',
+        duration: 1.2,
+        ease: 'power4.inOut'
+      }, '-=0.4');
+
     }, containerRef);
 
     return () => {
@@ -117,82 +93,53 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] overflow-hidden bg-[#050507] text-white"
+      className="fixed inset-0 z-[9999] bg-[#050507] overflow-hidden flex flex-col items-center justify-center"
       style={{ height: '100dvh', willChange: 'transform' }}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(0,109,56,0.14),transparent_32%),radial-gradient(circle_at_15%_80%,rgba(255,255,255,0.06),transparent_25%),linear-gradient(180deg,#050507_0%,#08080a_100%)]" />
-
-      <div className="absolute inset-0 opacity-[0.06] mix-blend-overlay" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-
-      <div className="absolute inset-0 flex items-center justify-center">
-        <motion.div
-          className="preloader-ring absolute h-[40vw] w-[40vw] max-h-[540px] max-w-[540px] rounded-full border border-brand-secondary/20"
-        />
-        <motion.div
-          className="preloader-ring absolute h-[24vw] w-[24vw] max-h-[320px] max-w-[320px] rounded-full border border-white/10"
-        />
-      </div>
-
-      <div className="preloader-content relative z-10 mx-auto flex h-full w-full max-w-screen-2xl flex-col justify-between px-6 py-8 md:px-16 md:py-12">
-        <div className="flex items-start justify-between gap-8">
-          <div className="space-y-2">
-            <div className="overflow-hidden">
-              <p className="preloader-eyebrow translate-y-6 opacity-0 font-typewriter text-[10px] uppercase tracking-[0.75em] text-white/35">
-                TEDxAlMuntazirSchoolsYouth / 2026
-              </p>
-            </div>
-            <div className="overflow-hidden">
-              <p className="preloader-copy translate-y-6 opacity-0 font-editorial text-lg italic text-white/55">
-                Smooth reveal, sharp type, and a little ceremonial movement.
-              </p>
-            </div>
-          </div>
-          <div className="hidden md:block overflow-hidden">
-            <p className="preloader-meta-line font-typewriter text-[9px] uppercase tracking-[0.55em] text-white/25">
-              <span className="block">PREPARING THE SCROLL JOURNEY</span>
-            </p>
-          </div>
+      <div className="preloader-content w-full max-w-screen-xl px-10 flex flex-col gap-8">
+        {/* Cinematic Typography */}
+        <div className="overflow-hidden">
+          <h2 className="preloader-text-line font-title text-[8vw] md:text-[5vw] font-black uppercase leading-none tracking-tighter text-white">
+            <span className="block">Borrowed</span>
+          </h2>
+        </div>
+        <div className="overflow-hidden -mt-4 md:-mt-8">
+          <h2 className="preloader-text-line font-title text-[8vw] md:text-[5vw] font-black uppercase leading-none tracking-tighter text-brand-secondary italic">
+            <span className="block">Time.</span>
+          </h2>
         </div>
 
-        <div className="flex flex-col items-start gap-6 md:gap-8">
-          <div className="grid gap-2 overflow-hidden">
-            <h2 className="preloader-title-line font-title text-[15vw] md:text-[8vw] font-black uppercase leading-[0.78] tracking-tighter">
-              <span className="block">Borrowed</span>
-            </h2>
-            <h2 className="preloader-title-line font-title text-[15vw] md:text-[8vw] font-black uppercase leading-[0.78] tracking-tighter text-brand-secondary">
-              <span className="block">Time.</span>
-            </h2>
-          </div>
-
-          <div className="max-w-2xl space-y-4">
-            <div className="flex items-end justify-between gap-6">
-              <span className="preloader-stat overflow-hidden font-typewriter text-[9px] uppercase tracking-[0.6em] text-white/25">
-                <span className="block">LOADING THE EXPERIENCE</span>
-              </span>
-              <div className="flex items-baseline gap-2">
-                <span className="preloader-percentage font-title text-5xl md:text-7xl font-black tabular-nums">0</span>
-                <span className="font-typewriter text-xs uppercase tracking-[0.3em] text-white/30">%</span>
-              </div>
-            </div>
-            <div className="relative h-px w-full overflow-hidden bg-white/10">
-              <motion.div className="preloader-progress-fill absolute inset-0 origin-left bg-brand-secondary" />
+        {/* Progress Section */}
+        <div className="flex flex-col gap-4 mt-8">
+          <div className="flex justify-between items-end">
+            <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white/30">
+              TEDxAlMuntazir
+            </span>
+            <div className="flex items-baseline gap-1">
+              <span className="preloader-percentage font-title text-4xl md:text-6xl font-black text-white">0</span>
+              <span className="font-typewriter text-xs text-white/30">%</span>
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="overflow-hidden">
-            <p className="preloader-meta-line font-typewriter text-[9px] uppercase tracking-[0.45em] text-white/25">
-              <span className="block">DYNAMIC / EDITORIAL / 3D</span>
-            </p>
-          </div>
-          <div className="overflow-hidden">
-            <p className="preloader-meta-line font-typewriter text-[9px] uppercase tracking-[0.45em] text-white/25">
-              <span className="block">SCROLL WHEN READY</span>
-            </p>
+          <div className="relative w-full h-[1px] bg-white/10">
+            <div className="preloader-progress-bar absolute top-0 left-0 h-full bg-brand-secondary origin-left w-full scale-x-0" />
           </div>
         </div>
       </div>
+
+      {/* Background Decorative Layer */}
+      <div className="absolute bottom-10 left-10 overflow-hidden">
+        <p className="preloader-text-line font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/20">
+          <span className="block">Dar Es Salaam / 2026</span>
+        </p>
+      </div>
+
+      {/* Grain texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-overlay"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
+        }}
+      />
     </div>
   );
 }

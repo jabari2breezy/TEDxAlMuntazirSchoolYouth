@@ -88,31 +88,25 @@ function FloatingBadge({ activeSession }: { activeSession: number }) {
       style={{ x: mousePos.x, y: mousePos.y }}
       className="fixed top-24 left-1/2 -translate-x-1/2 z-50"
     >
-      <div className="relative flex items-center justify-center">
-        <motion.span
-          aria-hidden="true"
-          className="absolute inset-0 text-[12vw] md:text-[8vw] font-title font-black uppercase tracking-tighter text-[#000839]/10 select-none leading-none"
-          animate={{ scale: [1, 1.02, 1], rotate: [0, -1, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+      <motion.div 
+        className="flex items-center gap-2 px-6 py-3 bg-[#000839]/95 backdrop-blur-xl rounded-full border border-brand-secondary/30 shadow-2xl"
+        whileHover={{ scale: 1.05, boxShadow: '0 20px 60px rgba(0, 109, 56, 0.3)' }}
+        transition={{ duration: 0.3, ease: LUXURY_EASE }}
+      >
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
         >
-          Agenda
-        </motion.span>
-        <motion.div 
-          className="relative flex items-center gap-3 px-6 py-3 bg-[#000839]/95 backdrop-blur-xl rounded-full border border-brand-secondary/30 shadow-2xl"
-          whileHover={{ scale: 1.05, boxShadow: '0 20px 60px rgba(0, 109, 56, 0.3)' }}
-          transition={{ duration: 0.3, ease: LUXURY_EASE }}
-        >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-          >
-            <Clock size={12} className="text-brand-secondary" />
-          </motion.div>
-          <span className="font-typewriter text-[9px] uppercase tracking-[0.2em] text-white/70">
-            {SESSIONS[activeSession]?.label}
-          </span>
+          <Clock size={12} className="text-brand-secondary" />
         </motion.div>
-      </div>
+        <span className="font-typewriter text-[9px] uppercase tracking-[0.3em] text-white/70">
+          Session {activeSession + 1} / 3
+        </span>
+        <div className="w-px h-3 bg-white/20" />
+        <span className="font-typewriter text-[9px] uppercase tracking-[0.2em] text-brand-secondary font-bold">
+          {SESSIONS[activeSession]?.label}
+        </span>
+      </motion.div>
     </motion.div>
   );
 }
