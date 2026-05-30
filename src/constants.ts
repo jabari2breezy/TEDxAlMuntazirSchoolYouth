@@ -97,10 +97,10 @@ export const SPEAKERS: Speaker[] = [
   },
   {
     id: 'faizaan-emerson',
-    name: 'Faizaan (Emerson)',
-    topic: 'Finding Your Flow',
-    bio: "Alumnus of Al Muntazir. Creative thinker and problem solver. Faizaan brings a unique perspective on navigating life's transitions.",
-    talk_description: "Coming back to where it all started, Faizaan explores the journey of growth and the importance of finding your own rhythm in an increasingly fast-paced world.",
+    name: 'TBA',
+    topic: 'TBA',
+    bio: "Speaker details to be announced.",
+    talk_description: "This session will be announced soon.",
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600&h=800',
     segmentId: 'present',
     isAlum: true
