@@ -1,191 +1,294 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform, useSpring, useInView } from 'motion/react';
-import { ArrowRight, Clock, Zap, Infinity as InfinityIcon, Share2 } from 'lucide-react';
-import { TICKETS_URL } from '../constants';
-import MaskReveal from '../components/MaskReveal';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Environment, Points, PointMaterial } from '@react-three/drei';
+import * as THREE from 'three';
 
-const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
+// --- 3D SCENE COMPONENTS ---
+
+// Generates abstract sand/particle geometry
+function ParticleField({ count = 2000, scrollYProgress, isFractured }: { count?: number; scrollYProgress: any, isFractured: boolean }) {
+  const pointsRef = useRef<THREE.Points>(null);
+  
+  // Random positions in a cylinder/hourglass shape
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      // Abstract dispersion around center
+      const theta = Math.random() * 2 * Math.PI;
+      const radius = Math.random() * 4 + (Math.random() > 0.5 ? 0 : 2); // outer or inner ring
+      const y = (Math.random() - 0.5) * 10;
+      
+      pos[i * 3] = radius * Math.cos(theta);
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = radius * Math.sin(theta);
+    }
+    return pos;
+  }, [count]);
+
+  const velocities = useMemo(() => {
+    const vel = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      vel[i * 3] = (Math.random() - 0.5) * 0.1;
+      vel[i * 3 + 1] = Math.random() * 0.2; // float up
+      vel[i * 3 + 2] = (Math.random() - 0.5) * 0.1;
+    }
+    return vel;
+  }, [count]);
+
+  useFrame(() => {
+    if (!pointsRef.current) return;
+    const scroll = scrollYProgress.get();
+    
+    // Reverse gravity based on scroll
+    const floatSpeed = scroll * 2;
+    
+    const positionsAttr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute;
+    const posArray = positionsAttr.array as Float32Array;
+    
+    for (let i = 0; i < count; i++) {
+      if (isFractured) {
+        // Explosion! fly past camera
+        posArray[i * 3] += velocities[i * 3] * 5;
+        posArray[i * 3 + 1] += velocities[i * 3 + 1] * 5;
+        posArray[i * 3 + 2] += 0.5; // fly towards camera (Z axis)
+      } else {
+        // Subtle floating up (reverse gravity)
+        posArray[i * 3 + 1] += velocities[i * 3 + 1] * floatSpeed * 0.1;
+        // Wrap around
+        if (posArray[i * 3 + 1] > 5) posArray[i * 3 + 1] = -5;
+      }
+    }
+    positionsAttr.needsUpdate = true;
+  });
+
+  return (
+    <Points ref={pointsRef} positions={positions}>
+      <PointMaterial transparent color="#ffffff" size={0.05} sizeAttenuation={true} depthWrite={false} opacity={0.4} />
+    </Points>
+  );
+}
+
+function HourglassGeometry({ scrollYProgress, isMobile }: { scrollYProgress: any, isMobile: boolean }) {
+  const groupRef = useRef<THREE.Group>(null);
+  
+  useFrame(() => {
+    if (!groupRef.current) return;
+    const scroll = scrollYProgress.get();
+    
+    // Phase 2: Tilt and Slide
+    // Scroll 0.25 to 0.7:
+    let targetX = 0;
+    let targetY = 0;
+    let targetRotateZ = 0;
+    let targetRotateX = 0;
+    
+    if (scroll > 0.25) {
+      const progress = Math.min((scroll - 0.25) / 0.45, 1); // 0 to 1 over Phase 2
+      if (isMobile) {
+        targetY = -3 * progress;
+        targetRotateX = (Math.PI / 4) * progress; // tilt back
+      } else {
+        targetX = 4 * progress; // slide right
+        targetRotateZ = -(Math.PI / 2) * progress; // tilt on side
+      }
+    }
+    
+    // Phase 3: Fracture (Hide or explode the geometry)
+    if (scroll > 0.7) {
+      const p3 = Math.min((scroll - 0.7) / 0.3, 1);
+      groupRef.current.scale.setScalar(1 - p3); // shrink to nothing while particles explode
+    } else {
+      groupRef.current.scale.setScalar(1);
+    }
+    
+    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, 0.05);
+    groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.05);
+    groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, targetRotateZ, 0.05);
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotateX, 0.05);
+  });
+
+  return (
+    <group ref={groupRef}>
+      {/* Top Cone */}
+      <mesh position={[0, 1.5, 0]}>
+        <coneGeometry args={[2, 3, 32]} />
+        <meshStandardMaterial color="#111111" roughness={0.1} metalness={0.8} />
+      </mesh>
+      {/* Bottom Cone */}
+      <mesh position={[0, -1.5, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[2, 3, 32]} />
+        <meshStandardMaterial color="#111111" roughness={0.1} metalness={0.8} />
+      </mesh>
+      
+      {/* Structural Rings */}
+      <mesh position={[0, 3, 0]} rotation={[Math.PI/2, 0, 0]}>
+        <torusGeometry args={[2, 0.1, 16, 100]} />
+        <meshStandardMaterial color="#006d38" roughness={0.4} metalness={0.8} emissive="#006d38" emissiveIntensity={0.2} />
+      </mesh>
+      <mesh position={[0, -3, 0]} rotation={[Math.PI/2, 0, 0]}>
+        <torusGeometry args={[2, 0.1, 16, 100]} />
+        <meshStandardMaterial color="#006d38" roughness={0.4} metalness={0.8} emissive="#006d38" emissiveIntensity={0.2} />
+      </mesh>
+    </group>
+  );
+}
+
+function SceneCamera({ scrollYProgress }: { scrollYProgress: any }) {
+  useFrame(({ camera }) => {
+    const scroll = scrollYProgress.get();
+    
+    // Phase 1: Low angle, looking up
+    // Scroll 0 to 0.25
+    let targetY = -4;
+    let targetZ = 8;
+    let targetLookY = 0;
+    
+    // Phase 2: Crane shot high bird's eye
+    if (scroll > 0.2) {
+      const progress = Math.min((scroll - 0.2) / 0.5, 1);
+      targetY = -4 + (progress * 14); // move up to y=10
+      targetZ = 8 + (progress * 6);   // move back to z=14
+      targetLookY = progress * -2;    // look down
+    }
+    
+    // Phase 3: Pull back aggressively
+    if (scroll > 0.7) {
+      const progress = Math.min((scroll - 0.7) / 0.3, 1);
+      targetZ = 14 + (progress * 20); // pull way back
+    }
+    
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.05);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
+    
+    const lookAtPos = new THREE.Vector3(0, targetLookY, 0);
+    camera.lookAt(lookAtPos);
+  });
+  return null;
+}
+
+// --- MAIN PAGE COMPONENT ---
 
 export default function Theme() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const horizontalRef = useRef<HTMLDivElement>(null);
-  
+  const [isMobile, setIsMobile] = useState(false);
+  const [isFractured, setIsFractured] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  useEffect(() => {
+    const unsub = scrollYProgress.on("change", (v) => {
+      setIsFractured(v > 0.75); // trigger explosion
+    });
+    return () => unsub();
+  }, [scrollYProgress]);
 
-  // Horizontal Scroll Setup
-  const { scrollYProgress: horizontalProgress } = useScroll({
-    target: horizontalRef,
-  });
+  // DOM Opacities mapping
+  const phase1Opacity = useTransform(scrollYProgress, [0, 0.2, 0.25], [1, 1, 0]);
   
-  // Maps 0-1 to 0% to -66.66% (since we have 3 cards, we shift by 2 card widths)
-  const xTransform = useTransform(horizontalProgress, [0, 1], ["0%", "-66.66%"]);
+  const phase2Opacity = useTransform(scrollYProgress, [0.2, 0.25, 0.65, 0.7], [0, 1, 1, 0]);
+  const phase2Y = useTransform(scrollYProgress, [0.2, 0.3], [50, 0]);
+
+  const phase3Opacity = useTransform(scrollYProgress, [0.75, 0.85], [0, 1]);
 
   return (
-    <div ref={containerRef} className="bg-[#050507] text-white overflow-x-hidden">
-      {/* Hero Section (Everswap inspired) */}
-      <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-        <div className="absolute inset-0 z-0">
+    <div className="bg-[#050507] text-white">
+      {/* 300vh Scroll Track */}
+      <div ref={containerRef} className="h-[400vh] relative">
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
+          
+          {/* WebGL Canvas Background */}
+          <div className="absolute inset-0 z-0 bg-[#050507]">
+            <Canvas camera={{ position: [0, -4, 8], fov: 45 }}>
+              <SceneCamera scrollYProgress={scrollYProgress} />
+              <ambientLight intensity={0.2} />
+              <spotLight position={[5, 10, 5]} angle={0.5} penumbra={1} intensity={2} color="#ffffff" />
+              <spotLight position={[-5, 5, 5]} angle={0.5} penumbra={1} intensity={1} color="#006d38" />
+              <HourglassGeometry scrollYProgress={scrollYProgress} isMobile={isMobile} />
+              <ParticleField scrollYProgress={scrollYProgress} isFractured={isFractured} />
+              <Environment preset="city" />
+            </Canvas>
+          </div>
+
+          {/* Phase 1 Overlay (0% - 25%) */}
           <motion.div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] rounded-full bg-brand-secondary/5 blur-[120px]"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 10, repeat: Infinity as any }}
-          />
-        </div>
-
-        <div className="relative z-10 text-center space-y-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: LUXURY_EASE }}
+            style={{ opacity: phase1Opacity }}
+            className="absolute inset-0 z-10 pointer-events-none flex flex-col justify-center px-6 md:px-16"
           >
-            <span className="font-typewriter text-[11px] uppercase tracking-[0.8em] text-brand-secondary font-bold">The Philosophy</span>
+            <div className="absolute top-40 left-6 md:left-16">
+              <span className="font-typewriter text-[10px] tracking-widest text-white/40 uppercase">
+                [ THEME OVERVIEW ]
+              </span>
+            </div>
+            
+            <div className="w-full flex justify-center items-center">
+              <h1 className="text-[18vw] md:text-[15vw] font-title font-black uppercase tracking-tighter leading-[0.8] text-center mix-blend-overlay opacity-80">
+                BORROWED <br/> TIME.
+              </h1>
+            </div>
           </motion.div>
-          
-          <motion.h1 
-            className="text-[15vw] md:text-[12vw] font-title font-black uppercase leading-[0.75] tracking-tighter"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.5, ease: LUXURY_EASE }}
-          >
-            BORROWED <br/> <span className="text-brand-secondary italic font-editorial lowercase">Time.</span>
-          </motion.h1>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="flex flex-col items-center gap-4"
+          {/* Phase 2 Overlay (26% - 70%) */}
+          <motion.div 
+            style={{ opacity: phase2Opacity, y: phase2Y }}
+            className={`absolute z-10 w-full px-6 md:px-16 pointer-events-none ${isMobile ? 'top-[15%]' : 'left-0 top-1/2 -translate-y-1/2 max-w-2xl'}`}
           >
-            <p className="font-typewriter text-[10px] uppercase tracking-[0.4em] text-white/30">Scroll to enter the flow</p>
-            <motion.div 
-              className="w-px h-20 bg-gradient-to-b from-brand-secondary to-transparent"
-              animate={{ scaleY: [0, 1, 0], originY: [0, 0, 1] }}
-              transition={{ duration: 2, repeat: Infinity as any, ease: "easeInOut" }}
-            />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Concept: One Pool Every Function (Everswap style applied to Time) */}
-      <section className="py-40 px-6 md:px-16 max-w-screen-2xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-24 items-center">
-          <div className="space-y-12">
-            <div className="space-y-6">
-              <h2 className="text-5xl md:text-8xl font-title font-black uppercase tracking-tighter leading-[0.85]">
-                TIME AT <br/> <span className="text-brand-secondary">PEAK.</span>
-              </h2>
-              <p className="font-editorial text-2xl md:text-4xl italic text-white/60 leading-relaxed">
-                Unifying the past, present, and future through a single-sided experience of existence.
+            <div className="space-y-12">
+              <div className="space-y-4">
+                <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-brand-secondary block">The Thesis</span>
+                <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-none">
+                  Sustainability, <br/> Youth Legacy & <br/> Urgency.
+                </h2>
+              </div>
+              <p className="font-editorial text-xl md:text-3xl italic text-white/60 leading-relaxed max-w-xl">
+                We are borrowing time from our future selves. Navigating systems we didn't build, borrowing against a legacy we must now manage.
               </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 space-y-4 hover:bg-white/10 transition-colors group">
-                <div className="w-12 h-12 rounded-2xl bg-brand-secondary/20 flex items-center justify-center text-brand-secondary group-hover:scale-110 transition-transform">
-                  <Clock size={24} />
+              
+              <div className="grid grid-cols-2 gap-8 pt-8 border-t border-white/10">
+                <div>
+                  <span className="font-title font-bold text-3xl md:text-4xl block text-white">01</span>
+                  <span className="font-typewriter text-[9px] uppercase tracking-widest text-white/40">The Past</span>
                 </div>
-                <h3 className="text-2xl font-title font-bold uppercase tracking-tight">The Inheritors</h3>
-                <p className="font-sans text-sm text-white/50 leading-relaxed">Navigating systems we didn't build, borrowing against a legacy we must now manage.</p>
-              </div>
-              <div className="p-8 rounded-[2rem] bg-white/5 border border-white/10 space-y-4 hover:bg-white/10 transition-colors group">
-                <div className="w-12 h-12 rounded-2xl bg-brand-secondary/20 flex items-center justify-center text-brand-secondary group-hover:scale-110 transition-transform">
-                  <Zap size={24} />
-                </div>
-                <h3 className="text-2xl font-title font-bold uppercase tracking-tight">The Present</h3>
-                <p className="font-sans text-sm text-white/50 leading-relaxed">Maximizing the value of 'now' before the liquidity of the moment evaporates.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative aspect-square flex items-center justify-center">
-            <motion.div 
-              className="absolute inset-0 rounded-full border border-white/5"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity as any, ease: "linear" }}
-            />
-            <motion.div 
-              className="absolute inset-10 rounded-full border border-brand-secondary/20"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 15, repeat: Infinity as any, ease: "linear" }}
-            />
-            <div className="relative z-10 flex flex-col items-center gap-4">
-              <InfinityIcon size={80} className="text-brand-secondary" />
-              <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white/40">Universal Flow</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* The Three Clocks (Everswap Horizontal Stack) */}
-      <section ref={horizontalRef} className="relative h-[300vh] bg-white text-[#000839]">
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-          
-          <div className="absolute top-20 left-6 md:left-16 z-20">
-            <span className="font-typewriter text-[11px] uppercase tracking-[0.6em] text-brand-secondary font-bold">System Architecture</span>
-            <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-none mt-4">
-              THE <span className="italic font-editorial lowercase">Three</span> CLOCKS.
-            </h2>
-          </div>
-
-          <motion.div style={{ x: xTransform }} className="flex w-[300vw] items-center pt-20">
-            {[
-              { id: '01', title: 'PAST', desc: 'Echoes of inherited systems and the weight of history.', color: 'bg-[#000839] text-white' },
-              { id: '02', title: 'PRESENT', desc: 'The urgency of presence in a world of constant demand.', color: 'bg-brand-secondary text-white' },
-              { id: '03', title: 'FUTURE', desc: 'Designing the legacy that we leave for those who follow.', color: 'bg-[#f7f4ee] text-[#000839]' }
-            ].map((segment, i) => (
-              <div key={i} className="w-[100vw] flex justify-center px-6 md:px-16">
-                <div className={`${segment.color} p-12 md:p-20 rounded-[3rem] w-full max-w-4xl space-y-12 flex flex-col justify-between aspect-square md:aspect-[16/9] shadow-2xl`}>
-                  <span className="font-title text-8xl md:text-[10rem] font-black opacity-20">{segment.id}</span>
-                  <div className="space-y-6">
-                    <h3 className="text-5xl md:text-8xl font-title font-black uppercase tracking-tighter">{segment.title}</h3>
-                    <p className="font-editorial text-2xl md:text-4xl italic opacity-80 leading-relaxed max-w-2xl">{segment.desc}</p>
-                  </div>
+                <div>
+                  <span className="font-title font-bold text-3xl md:text-4xl block text-white">02</span>
+                  <span className="font-typewriter text-[9px] uppercase tracking-widest text-white/40">The Present</span>
                 </div>
               </div>
-            ))}
+            </div>
           </motion.div>
-          
-        </div>
-      </section>
 
-      {/* Final CTA */}
-      <section className="py-60 relative overflow-hidden flex flex-col items-center justify-center text-center px-6">
-        <motion.div 
-          className="absolute inset-0 z-0 opacity-30"
-          style={{ y: useTransform(smoothProgress, [0.8, 1], [0, -100]) }}
-        >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-b from-brand-secondary/20 to-transparent blur-[150px]" />
-        </motion.div>
-
-        <div className="relative z-10 space-y-12">
-          <h2 className="text-6xl md:text-[10vw] font-title font-black uppercase tracking-tighter leading-[0.8]">
-            JOIN THE <br/> <span className="text-brand-secondary">SUMMIT.</span>
-          </h2>
-          <p className="font-editorial text-2xl md:text-4xl italic text-white/50 max-w-3xl mx-auto">
-            Stay close to the flow. The clock is ticking, but the opportunity is now.
-          </p>
-          <motion.a
-            href={TICKETS_URL}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-6 bg-brand-secondary text-white px-12 md:px-20 py-8 rounded-full font-title font-black text-2xl uppercase tracking-widest shadow-[0_0_50px_rgba(0,109,56,0.3)] hover:shadow-[0_0_80px_rgba(0,109,56,0.5)] transition-all"
+          {/* Phase 3 Overlay (71% - 100%) */}
+          <motion.div 
+            style={{ opacity: phase3Opacity }}
+            className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
           >
-            Secure Seat
-            <ArrowRight size={32} />
-          </motion.a>
-        </div>
+            <Link 
+              to="/speakers"
+              className="pointer-events-auto flex flex-col items-center gap-6 group"
+            >
+              <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter text-white">
+                THE LINEUP IS WAITING
+              </h2>
+              <div className="w-16 h-16 rounded-full bg-brand-secondary flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-white group-hover:text-brand-secondary transition-all shadow-[0_0_40px_rgba(0,109,56,0.5)]">
+                <ArrowRight size={24} />
+              </div>
+            </Link>
+          </motion.div>
 
-        <div className="absolute bottom-10 w-full flex justify-between px-10 opacity-20 font-typewriter text-[9px] uppercase tracking-[0.5em]">
-          <span>Dar Es Salaam</span>
-          <span>TEDxAlMuntazir 2026</span>
-          <span>Borrowed Time</span>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

@@ -35,15 +35,12 @@ const itemVariants = {
 };
 
 const titleVariants = {
-  hidden: { opacity: 0, scale: 1.5, filter: 'blur(20px)' },
+  hidden: { opacity: 0 },
   visible: { 
     opacity: 1, 
-    scale: 1,
-    filter: 'blur(0px)',
     transition: { 
-      duration: 1.5, 
-      ease: [0.16, 1, 0.3, 1] as const,
-      delay: 0.5
+      duration: 0.1, 
+      delay: 0
     }
   }
 };
@@ -253,9 +250,12 @@ export default function Home() {
         <div className="flex-1 w-full max-w-screen-2xl mx-auto px-6 md:px-16 pt-40 pb-20 relative z-10 flex flex-col justify-center items-center text-center">
           <motion.div variants={titleVariants} className="max-w-7xl mb-12">
             <h1 className="hero-text hero-flicker text-[18vw] md:text-[14vw] font-title font-black leading-[0.75] tracking-tighter uppercase text-white mix-blend-difference">
-              TEDX ALMUNTAZIR <br />
-              <span className="text-brand-secondary">SCHOOLS YOUTH</span> <br />
-              <span className="opacity-30">2026</span>
+              <span className="home-hero-tedx inline-block">TEDX</span>{' '}
+              <span className="home-hero-almuntazir inline-block">ALMUNTAZIR</span> <br />
+              <div className="home-hero-suffix inline-block">
+                <span className="text-brand-secondary">SCHOOLS YOUTH</span> <br />
+                <span className="opacity-30">2026</span>
+              </div>
             </h1>
           </motion.div>
 
