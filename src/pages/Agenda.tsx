@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Clock, ArrowUpRight, Zap } from 'lucide-react';
+import { ChevronDown, Clock, ArrowUpRight } from 'lucide-react';
 import MaskReveal from '../components/MaskReveal';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
@@ -35,7 +35,7 @@ const agendaItems: AgendaItem[] = [
   // Session 2: Present
   { time: '11:50 – 12:05', duration: 15, title: 'Zahra Moledina', topic: 'The Best Thing Since Sliced Bread', theme: 'present', isSpeech: true, speakerSlug: 'zahra-moledina' },
   { time: '12:05 – 12:15', duration: 10, title: 'Kahoot / Blooket', sub: 'Interactive Quiz', theme: 'present', isSpeech: false },
-  { time: '12:15 – 12:30', duration: 15, title: 'Faizaan (Emerson)', topic: 'Finding Your Flow', theme: 'present', isSpeech: true, speakerSlug: 'faizaan-emerson', sub: 'Alum' },
+  { time: '12:15 – 12:30', duration: 15, title: 'TBA', topic: 'TBA', theme: 'present', isSpeech: true },
   { time: '12:30 – 12:35', duration: 5, title: 'Game', sub: 'Quick Activity', theme: 'present', isSpeech: false },
   { time: '12:35 – 12:50', duration: 15, title: 'Hassan Abbas Muhammad', topic: 'Procrastination', theme: 'present', isSpeech: true, speakerSlug: 'hassan-abbas' },
   { time: '12:50 – 2:00', duration: 70, title: 'Salah & Food Break', sub: 'Prayer and lunch', theme: 'present', isSpeech: false },
@@ -244,7 +244,7 @@ function AgendaItemRow({
   return content;
 }
 
-/* ── Premium Session Section with Spatial Depth ── */
+/* ── Premium Session Section with Adaptive Layout ── */
 function SessionSection({
   session,
   items,
@@ -259,7 +259,6 @@ function SessionSection({
   const [expanded, setExpanded] = useState(true);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: false, margin: '-40%' });
-  const [isHeaderHovered, setIsHeaderHovered] = useState(false);
 
   useEffect(() => {
     if (isInView) onInView();
@@ -270,89 +269,69 @@ function SessionSection({
   return (
     <motion.section
       ref={sectionRef}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, scale: 0.98 }}
+      whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: '-10%' }}
-      transition={{ duration: 1, ease: AGGRESSIVE_EASE }}
-      className={`${session.bg} ${session.text} rounded-3xl md:rounded-[2rem] overflow-hidden border ${isDark ? 'border-white/5' : 'border-[#000839]/5'} shadow-2xl`}
+      transition={{ duration: 0.8, ease: LUXURY_EASE }}
+      className={`${session.bg} ${session.text} rounded-3xl md:rounded-[3rem] overflow-hidden shadow-2xl border border-white/5`}
     >
-      {/* Session Header with kinetic interactions */}
+      {/* Session Header with Magnetic Effect */}
       <motion.div
-        className="px-6 md:px-12 py-8 md:py-12 cursor-pointer flex items-center justify-between relative overflow-hidden"
+        className="px-6 md:px-12 py-10 md:py-16 cursor-pointer flex items-center justify-between group"
         onClick={() => setExpanded(!expanded)}
-        onHoverStart={() => setIsHeaderHovered(true)}
-        onHoverEnd={() => setIsHeaderHovered(false)}
+        whileHover={{ backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,8,57,0.02)' }}
       >
-        {/* Background gradient on hover */}
-        <motion.div
-          className={`absolute inset-0 pointer-events-none ${isDark ? 'bg-gradient-to-r from-brand-secondary/0 via-brand-secondary/5 to-brand-secondary/0' : 'bg-gradient-to-r from-brand-secondary/0 via-brand-secondary/3 to-brand-secondary/0'}`}
-          initial={{ opacity: 0 }}
-          animate={isHeaderHovered ? { opacity: 1 } : {}}
-          transition={{ duration: 0.3, ease: LUXURY_EASE }}
-        />
-
-        <div className="flex items-center gap-4 md:gap-8 relative z-10">
+        <div className="flex items-center gap-4 md:gap-12">
           <motion.span 
-            className={`font-title text-5xl md:text-7xl font-black tracking-tighter ${isDark ? 'text-white/10' : 'text-[#000839]/10'}`}
-            animate={isHeaderHovered ? { scale: 1.1, x: 10 } : {}}
-            transition={{ duration: 0.3, ease: LUXURY_EASE }}
+            className={`font-title text-6xl md:text-9xl font-black tracking-tighter ${isDark ? 'text-white/5' : 'text-[#000839]/5'}`}
+            animate={expanded ? { scale: 1.1, opacity: 0.1 } : { scale: 1, opacity: 0.05 }}
           >
             0{index + 1}
           </motion.span>
           <div>
-            <motion.div 
-              className="flex items-center gap-3 mb-1"
-              animate={isHeaderHovered ? { x: 4 } : {}}
-              transition={{ duration: 0.3, ease: LUXURY_EASE }}
-            >
+            <div className="flex items-center gap-3 mb-2">
               <motion.div 
-                className="w-1.5 h-1.5 rounded-full" 
+                className="w-2 h-2 rounded-full" 
                 style={{ backgroundColor: session.accent }}
-                animate={isHeaderHovered ? { scale: 1.5, boxShadow: `0 0 15px ${session.accent}` } : {}}
-                transition={{ duration: 0.3, ease: LUXURY_EASE }}
+                animate={{ scale: [1, 1.5, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
               />
-              <span className={`font-typewriter text-[9px] uppercase tracking-[0.4em] ${isDark ? 'text-white/50' : 'text-[#000839]/50'}`}>
+              <span className={`font-typewriter text-[10px] uppercase tracking-[0.5em] ${isDark ? 'text-white/40' : 'text-[#000839]/40'}`}>
                 {session.label}
               </span>
-            </motion.div>
-            <motion.h2 
-              className="text-3xl md:text-5xl font-title font-black uppercase tracking-tighter"
-              animate={isHeaderHovered ? { letterSpacing: '0.05em' } : {}}
-              transition={{ duration: 0.3, ease: LUXURY_EASE }}
-            >
+            </div>
+            <h2 className="text-4xl md:text-7xl font-title font-black uppercase tracking-tighter leading-[0.85]">
               {session.title}
-            </motion.h2>
+            </h2>
           </div>
         </div>
 
         <motion.div
-          animate={{ rotate: expanded ? 180 : 0 }}
-          transition={{ duration: 0.4, ease: LUXURY_EASE }}
-          className={`w-10 h-10 rounded-full border ${isDark ? 'border-white/15' : 'border-[#000839]/15'} flex items-center justify-center relative z-10`}
-          whileHover={{ scale: 1.1, borderColor: session.accent }}
+          animate={{ rotate: expanded ? 180 : 0, scale: expanded ? 1.1 : 1 }}
+          transition={{ duration: 0.5, ease: LUXURY_EASE }}
+          className={`w-12 h-12 md:w-16 md:h-16 rounded-full border ${isDark ? 'border-white/10' : 'border-[#000839]/10'} flex items-center justify-center group-hover:border-brand-secondary transition-colors`}
         >
-          <ChevronDown size={16} className={isDark ? 'text-white/40' : 'text-[#000839]/40'} />
+          <ChevronDown size={20} className={isDark ? 'text-white/30' : 'text-[#000839]/30'} />
         </motion.div>
       </motion.div>
 
-      {/* Items with staggered reveal */}
-      <AnimatePresence mode="wait">
+      {/* Items List with Kinetic Stagger */}
+      <AnimatePresence>
         {expanded && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.6, ease: AGGRESSIVE_EASE }}
+            transition={{ duration: 0.6, ease: LUXURY_EASE }}
             className="overflow-hidden"
           >
-            <div className="px-6 md:px-12 pb-8 md:pb-12">
-              {/* Duration line with scale animation */}
+            <div className="px-6 md:px-12 pb-12 md:pb-20">
               <motion.div
-                initial={{ scaleX: 0, opacity: 0 }}
-                whileInView={{ scaleX: 1, opacity: 1 }}
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: AGGRESSIVE_EASE }}
-                className={`h-px ${isDark ? 'bg-gradient-to-r from-white/0 via-white/20 to-white/0' : 'bg-gradient-to-r from-[#000839]/0 via-[#000839]/20 to-[#000839]/0'} mb-6 origin-left`}
+                transition={{ duration: 1.2, ease: LUXURY_EASE }}
+                className={`h-px ${isDark ? 'bg-white/10' : 'bg-[#000839]/10'} mb-8 origin-left`}
               />
               {items.map((item, i) => (
                 <AgendaItemRow key={i} item={item} index={i} isDark={isDark} />
@@ -365,85 +344,56 @@ function SessionSection({
   );
 }
 
-/* ── Main Agenda Page with Unified Spatial Canvas ── */
+/* ── Main Agenda Page ── */
 export default function Agenda() {
   const [activeSession, setActiveSession] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: containerRef });
-  const progressScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   const pastItems = agendaItems.filter(i => i.theme === 'past');
   const presentItems = agendaItems.filter(i => i.theme === 'present');
   const futureItems = agendaItems.filter(i => i.theme === 'future');
 
   return (
-    <div ref={containerRef} className="relative min-h-screen overflow-x-hidden">
-      {/* Progress indicator */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-secondary via-brand-secondary to-transparent origin-left z-50"
-        style={{ scaleX: progressScale }}
-      />
-
-      {/* Floating badge */}
+    <div ref={containerRef} className="relative bg-[#f7f4ee]">
       <FloatingBadge activeSession={activeSession} />
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.85, ease: LUXURY_EASE }}
+        transition={{ duration: 1, ease: LUXURY_EASE }}
         className="pt-40 pb-32"
       >
         <div className="px-6 md:px-16 max-w-screen-2xl mx-auto">
-          {/* Premium Header with masked reveals */}
-          <header className="mb-16 md:mb-24 flex flex-col items-center text-center">
+          {/* Kinetic Header Inspired by Award Sites */}
+          <header className="mb-24 md:mb-40 flex flex-col items-center text-center">
             <motion.div
-              initial={{ scale: 0.9, y: 100, opacity: 0, filter: 'blur(10px)' }}
-              animate={{ scale: 1, y: 0, opacity: 1, filter: 'blur(0px)' }}
-              transition={{ duration: 1.3, ease: [0.76, 0, 0.24, 1] }}
-              className="flex flex-col gap-6 overflow-hidden items-center"
+              initial={{ scale: 0.8, y: 100, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              transition={{ duration: 1.5, ease: AGGRESSIVE_EASE }}
+              className="flex flex-col gap-6 items-center"
             >
               <MaskReveal delay={0.1}>
-                <motion.span 
-                  className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase font-bold flex items-center gap-2"
-                  animate={{ letterSpacing: '0.15em' }}
-                  transition={{ duration: 0.8, ease: LUXURY_EASE }}
-                >
-                  <Zap size={12} />
-                  The assembly
-                </motion.span>
+                <span className="font-typewriter text-[11px] text-brand-secondary tracking-[1.2em] uppercase font-bold">The Assembly</span>
               </MaskReveal>
               <MaskReveal delay={0.2}>
-                <motion.h1 
-                  className="text-7xl md:text-[10vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-brand-primary flex flex-col items-center"
-                  animate={{ letterSpacing: '-0.02em' }}
-                  transition={{ duration: 1, ease: LUXURY_EASE }}
-                >
-                  <motion.span
-                    initial={{ y: 100, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: AGGRESSIVE_EASE }}
-                  >
-                    Agenda.
-                  </motion.span>
-                  <motion.span 
-                    className="italic font-editorial lowercase text-brand-secondary"
-                    initial={{ y: 100, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.4, ease: AGGRESSIVE_EASE }}
-                  >
-                    Time Unfolding.
-                  </motion.span>
-                </motion.h1>
+                <h1 className="text-8xl md:text-[15vw] font-title font-black tracking-tighter uppercase leading-[0.75] text-brand-primary">
+                  AGENDA
+                </h1>
+              </MaskReveal>
+              <MaskReveal delay={0.4}>
+                <p className="font-editorial text-2xl md:text-4xl italic text-brand-secondary mt-4">
+                  Time Unfolding.
+                </p>
               </MaskReveal>
             </motion.div>
 
-            {/* Session quick-jump pills with kinetic hover */}
+            {/* Quick Jump Magnetic Navigation */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.7, ease: LUXURY_EASE }}
-              className="flex items-center gap-3 mt-12 flex-wrap justify-center"
+              transition={{ delay: 0.8, duration: 0.8, ease: LUXURY_EASE }}
+              className="flex items-center gap-4 mt-16"
             >
               {SESSIONS.map((s, i) => (
                 <motion.button
@@ -452,14 +402,13 @@ export default function Agenda() {
                     setActiveSession(i);
                     document.getElementById(`session-${i}`)?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className={`px-5 py-2.5 rounded-full font-typewriter text-[9px] uppercase tracking-[0.3em] border transition-all duration-300 font-bold ${
+                  whileHover={{ scale: 1.05, y: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-6 py-3 rounded-full font-typewriter text-[10px] uppercase tracking-[0.4em] border transition-all duration-500 ${
                     activeSession === i
-                      ? 'bg-[#000839] text-white border-[#000839] shadow-lg'
-                      : 'border-[#000839]/15 text-[#000839]/50 hover:border-[#000839]/30 hover:text-[#000839]/70'
+                      ? 'bg-[#000839] text-white border-[#000839] shadow-xl'
+                      : 'border-[#000839]/10 text-[#000839]/40 hover:border-[#000839]/30 hover:text-[#000839]'
                   }`}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2, ease: LUXURY_EASE }}
                 >
                   0{i + 1} / {s.label}
                 </motion.button>
@@ -467,89 +416,33 @@ export default function Agenda() {
             </motion.div>
           </header>
 
-          {/* Sessions with spatial depth */}
-          <div className="space-y-8 md:space-y-12">
-            <motion.div 
-              id="session-0"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: '-10%' }}
-              transition={{ duration: 0.6 }}
-            >
-              <SessionSection
-                session={SESSIONS[0]}
-                items={pastItems}
-                index={0}
-                onInView={() => setActiveSession(0)}
+          {/* Sessions Stack */}
+          <div className="space-y-12 md:space-y-24">
+            <div id="session-0">
+              <SessionSection 
+                session={SESSIONS[0]} 
+                items={pastItems} 
+                index={0} 
+                onInView={() => setActiveSession(0)} 
               />
-            </motion.div>
-            <motion.div 
-              id="session-1"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: '-10%' }}
-              transition={{ duration: 0.6 }}
-            >
-              <SessionSection
-                session={SESSIONS[1]}
-                items={presentItems}
-                index={1}
-                onInView={() => setActiveSession(1)}
+            </div>
+            <div id="session-1">
+              <SessionSection 
+                session={SESSIONS[1]} 
+                items={presentItems} 
+                index={1} 
+                onInView={() => setActiveSession(1)} 
               />
-            </motion.div>
-            <motion.div 
-              id="session-2"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: '-10%' }}
-              transition={{ duration: 0.6 }}
-            >
-              <SessionSection
-                session={SESSIONS[2]}
-                items={futureItems}
-                index={2}
-                onInView={() => setActiveSession(2)}
+            </div>
+            <div id="session-2">
+              <SessionSection 
+                session={SESSIONS[2]} 
+                items={futureItems} 
+                index={2} 
+                onInView={() => setActiveSession(2)} 
               />
-            </motion.div>
+            </div>
           </div>
-
-          {/* Premium Bottom CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.85, ease: AGGRESSIVE_EASE }}
-            className="mt-20 md:mt-32 text-center"
-          >
-            <motion.p 
-              className="font-editorial text-xl md:text-2xl italic text-[#000839]/50 mb-10"
-              animate={{ letterSpacing: '0.02em' }}
-              transition={{ duration: 0.8, ease: LUXURY_EASE }}
-            >
-              9 speakers. 3 sessions. 1 day that matters.
-            </motion.p>
-            <Link to="/tickets" className="inline-block">
-              <motion.button
-                className="inline-flex items-center gap-3 px-10 py-5 bg-[#000839] text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.3em] font-bold border border-[#000839] shadow-lg"
-                whileHover={{ 
-                  scale: 1.05, 
-                  boxShadow: '0 20px 60px rgba(0, 8, 57, 0.4)',
-                  backgroundColor: '#006d38',
-                  borderColor: '#006d38'
-                }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.3, ease: LUXURY_EASE }}
-              >
-                Secure Your Seat
-                <motion.div
-                  animate={{ x: 2, y: -2 }}
-                  transition={{ duration: 0.3, ease: LUXURY_EASE }}
-                >
-                  <ArrowUpRight size={14} />
-                </motion.div>
-              </motion.button>
-            </Link>
-          </motion.div>
         </div>
       </motion.div>
     </div>
