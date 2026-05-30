@@ -89,7 +89,7 @@ function FloatingBadge({ activeSession }: { activeSession: number }) {
       className="fixed top-24 left-1/2 -translate-x-1/2 z-50"
     >
       <motion.div 
-        className="flex items-center gap-2 px-6 py-3 bg-[#000839]/95 backdrop-blur-xl rounded-full border border-brand-secondary/30 shadow-2xl"
+        className="flex items-center gap-3 px-8 py-3.5 bg-[#000839]/95 backdrop-blur-xl rounded-full border border-brand-secondary/30 shadow-2xl"
         whileHover={{ scale: 1.05, boxShadow: '0 20px 60px rgba(0, 109, 56, 0.3)' }}
         transition={{ duration: 0.3, ease: LUXURY_EASE }}
       >
@@ -97,13 +97,13 @@ function FloatingBadge({ activeSession }: { activeSession: number }) {
           animate={{ rotate: 360 }}
           transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
         >
-          <Clock size={12} className="text-brand-secondary" />
+          <Clock size={14} className="text-brand-secondary" />
         </motion.div>
-        <span className="font-typewriter text-[9px] uppercase tracking-[0.3em] text-white/70">
-          Session {activeSession + 1} / 3
+        <span className="font-title text-sm md:text-base font-black uppercase tracking-[0.4em] text-white">
+          AGENDA
         </span>
-        <div className="w-px h-3 bg-white/20" />
-        <span className="font-typewriter text-[9px] uppercase tracking-[0.2em] text-brand-secondary font-bold">
+        <div className="w-px h-4 bg-white/20" />
+        <span className="font-typewriter text-[10px] uppercase tracking-[0.2em] text-brand-secondary font-bold">
           {SESSIONS[activeSession]?.label}
         </span>
       </motion.div>
