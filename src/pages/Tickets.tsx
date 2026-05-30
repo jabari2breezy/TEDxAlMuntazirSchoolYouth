@@ -144,6 +144,15 @@ export default function Tickets() {
             <GlisteningStars count={100} scrollProgress={scrollYProgress} />
           </motion.div>
 
+          {/* Scroll Indicator */}
+          <motion.div 
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 pointer-events-none"
+            style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}
+          >
+            <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/50">Scroll to Explore</span>
+            <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
+          </motion.div>
+
           {/* Center Details Content (Phase 2) */}
           <motion.div 
             style={{ opacity: centerContentOpacity, y: centerContentY }}

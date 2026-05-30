@@ -248,9 +248,8 @@ export default function Home() {
         </div>
 
         <div className="flex-1 w-full max-w-screen-2xl mx-auto px-6 md:px-16 pt-40 pb-20 relative z-10 flex flex-col justify-center items-center text-center">
-          <motion.div variants={titleVariants} className="max-w-7xl mb-12">
-            <h1 className="hero-text hero-flicker text-[18vw] md:text-[14vw] font-title font-black leading-[0.75] tracking-tighter uppercase text-white mix-blend-difference">
-              <span className="home-hero-tedx inline-block">TEDX</span>{' '}
+          <motion.div variants={titleVariants} className="max-w-7xl mb-12 flex flex-col items-center">
+            <h1 className="hero-text hero-flicker text-[18vw] md:text-[14vw] font-title font-black leading-[0.75] tracking-tighter uppercase text-white mix-blend-difference text-center">
               <span className="home-hero-almuntazir inline-block">ALMUNTAZIR</span> <br />
               <div className="home-hero-suffix inline-block">
                 <span className="text-brand-secondary">SCHOOLS YOUTH</span> <br />
@@ -269,7 +268,7 @@ export default function Home() {
             <Countdown />
           </motion.div>
 
-          <motion.div variants={itemVariants} className="hero-text flex flex-col md:flex-row gap-8 items-center">
+          <motion.div variants={itemVariants} className="hero-text flex flex-col md:flex-row gap-8 items-center mb-8 md:mb-0">
             <PrecisionButton to={TICKETS_URL} variant="light">
               Get Your Tickets
             </PrecisionButton>
@@ -277,6 +276,15 @@ export default function Home() {
               Explore the Theme
               <div className="w-12 h-[1px] bg-white/20 group-hover:bg-brand-secondary group-hover:w-16 transition-all" />
             </Link>
+          </motion.div>
+          
+          {/* Scroll Indicator (Mobile / Bottom Hero) */}
+          <motion.div 
+            className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
+            style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}
+          >
+            <span className="font-typewriter text-[8px] uppercase tracking-[0.5em] text-white/50">Scroll Down</span>
+            <div className="w-[1px] h-6 bg-gradient-to-b from-brand-secondary to-transparent" />
           </motion.div>
         </div>
 

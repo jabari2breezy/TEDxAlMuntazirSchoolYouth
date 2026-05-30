@@ -192,8 +192,17 @@ export default function Theme() {
     <div className="bg-[#050507] text-white overflow-hidden">
       {/* 400vh Scroll Track */}
       <div ref={containerRef} className="h-[400vh] relative">
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
+        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
           
+          {/* Scroll Indicator */}
+          <motion.div 
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 pointer-events-none"
+            style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}
+          >
+            <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/50">Scroll to Explore</span>
+            <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
+          </motion.div>
+
           {/* Text Layer (Behind the Ribbon for Phase 1 effect) */}
           <motion.div 
             style={{ opacity: phase1Opacity, y: phase1Y }}
@@ -208,7 +217,7 @@ export default function Theme() {
 
           {/* WebGL Canvas (Sits ON TOP of Phase 1 text to slice through it) */}
           <div className="absolute inset-0 z-10 pointer-events-none">
-            <Canvas camera={{ position: [0, 0, 12], fov: 45 }}>
+            <Canvas camera={{ position: [0, 0, 12], fov: 45 }} style={{ width: '100%', height: '100%' }}>
               <SceneCamera scrollYProgress={scrollYProgress} />
               <KineticSpine scrollYProgress={scrollYProgress} isMobile={isMobile} isFractured={isFractured} />
               <ParticleStorm isFractured={isFractured} />
@@ -218,18 +227,18 @@ export default function Theme() {
           {/* Phase 2 Overlay (26% - 75%) */}
           <motion.div 
             style={{ opacity: phase2Opacity }}
-            className={`absolute z-20 w-full px-6 md:px-16 pointer-events-none h-full flex flex-col ${isMobile ? 'justify-end pb-[10%]' : 'justify-center max-w-2xl'}`}
+            className={`absolute z-20 w-full px-6 md:px-16 pointer-events-none h-full flex flex-col ${isMobile ? 'justify-end pb-[15%]' : 'justify-center max-w-2xl'}`}
           >
-            <div className="space-y-12">
+            <div className="space-y-8 md:space-y-12">
               <div className="space-y-4">
                 <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-brand-secondary block">
                   [ INDEX: 01 // HORIZON ]
                 </span>
-                <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-none">
+                <h2 className="text-3xl md:text-6xl font-title font-black uppercase tracking-tighter leading-none">
                   Sustainability, <br/> Youth Legacy & <br/> Urgency.
                 </h2>
               </div>
-              <p className="font-editorial text-xl md:text-3xl italic text-white/60 leading-relaxed max-w-xl">
+              <p className="font-editorial text-lg md:text-3xl italic text-white/60 leading-relaxed max-w-xl">
                 We are borrowing time from our future selves. Navigating systems we didn't build, borrowing against a legacy we must now manage.
               </p>
             </div>

@@ -1,261 +1,274 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { motion, useSpring, useTransform, AnimatePresence, useScroll } from 'motion/react';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 
 const AGENDA_ITEMS = [
   {
     id: '01',
     time: '08:00 AM',
     title: 'THE ARRIVAL',
-    desc: 'Enter the monolithic space and receive credentials.',
+    speaker: 'Registration',
+    desc: 'Enter the monolithic space and receive your credentials. Access the primary viewing arrays and prepare for the temporal shift.',
     duration: '60M',
     type: 'EXPERIENCE'
   },
   {
     id: '02',
     time: '09:00 AM',
-    title: 'THE INHERITORS',
-    desc: 'Exploring the systems we must now manage.',
-    duration: '90M',
+    title: 'INTRO',
+    speaker: 'Opening Address',
+    desc: 'The beginning of the end. An orientation to the systems and structures of Borrowed Time.',
+    duration: '30M',
     type: 'KEYNOTE'
   },
   {
     id: '03',
-    time: '10:30 AM',
-    title: 'LIQUIDITY BREAK',
-    desc: 'Networking and ambient experiences.',
-    duration: '30M',
-    type: 'BREAK'
-  },
-  {
-    id: '04',
-    time: '11:00 AM',
-    title: 'THE PRESENT TENSE',
-    desc: 'Dissecting procrastination and time economics.',
+    time: '09:30 AM',
+    title: 'THE INHERITORS',
+    speaker: 'Liyaan Karbelkar',
+    desc: 'Exploring the systems we must now manage. A deep dive into the socio-economic debts passed down to the youth.',
     duration: '90M',
     type: 'KEYNOTE'
   },
   {
+    id: '04',
+    time: '11:00 AM',
+    title: 'LIQUIDITY BREAK',
+    speaker: 'Networking',
+    desc: 'Fluid environments and ambient networking. Secure resources and exchange temporal insights.',
+    duration: '30M',
+    type: 'BREAK'
+  },
+  {
     id: '05',
-    time: '12:30 PM',
+    time: '11:30 AM',
+    title: 'THE PRESENT TENSE',
+    speaker: 'Hassan Abbas',
+    desc: 'Dissecting the procrastination paradox. Why we borrow against our own future and how to stop.',
+    duration: '90M',
+    type: 'KEYNOTE'
+  },
+  {
+    id: '06',
+    time: '01:00 PM',
     title: 'MID-DAY PAUSE',
-    desc: 'Curated lunch and partner activations.',
+    speaker: 'Lunch & Activations',
+    desc: 'Curated nutrition and partner ecosystem activations.',
     duration: '60M',
     type: 'LUNCH'
   },
   {
-    id: '06',
-    time: '01:30 PM',
+    id: '07',
+    time: '02:00 PM',
     title: 'FUTURE LEGACIES',
-    desc: 'Designing the architecture of tomorrow.',
+    speaker: 'Sada Mbaruk Said',
+    desc: 'Designing the architecture of tomorrow using the three clocks mechanism.',
     duration: '90M',
     type: 'KEYNOTE'
   },
 ];
 
-// Infinite list by tripling the items
-const EXTENDED_ITEMS = [...AGENDA_ITEMS, ...AGENDA_ITEMS, ...AGENDA_ITEMS].map((item, index) => ({
-  ...item,
-  uniqueId: `${item.id}-${index}`
-}));
-
 export default function Agenda() {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Create a massive scroll container
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
-  // Apply heavy friction to the scroll via spring
-  const smoothProgress = useSpring(scrollYProgress, { 
-    stiffness: 50, 
-    damping: 30,
-    mass: 2
-  });
+  // Calculate massive horizontal translate based on vertical scroll
+  // We have 7 items, let's move it left by roughly -300vw
+  const xTranslate = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"]);
 
-  // Map 0-1 progress to an angle. 
-  // We have 18 items. Let's space them 20 degrees apart. Total 360 degrees.
-  const angleOffset = useTransform(smoothProgress, [0, 1], [0, 360]);
-
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [activeDuration, setActiveDuration] = useState(0);
-
-  // We need to continuously track the active index based on current angle
+  // We lock scroll if an item is selected by applying overflow hidden to body
   useEffect(() => {
-    let lastTime = Date.now();
-    
-    const unsub = angleOffset.on("change", (v) => {
-      // Each item is 20 degrees.
-      // the front item is when itemAngle - v ≈ 0
-      const currentIndex = Math.round(v / 20) % EXTENDED_ITEMS.length;
-      
-      if (currentIndex !== activeIndex) {
-        setActiveIndex(currentIndex);
-        setActiveDuration(0); // reset duration
-      } else {
-        // Accumulate hold duration
-        const now = Date.now();
-        setActiveDuration(prev => prev + (now - lastTime));
-      }
-      lastTime = Date.now();
-    });
+    if (selectedId) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selectedId]);
 
-    return () => unsub();
-  }, [angleOffset, activeIndex]);
-
-  // If scroll stops for 1 second, activeDuration keeps growing? 
-  // No, the "change" event only fires when moving.
-  // We need a timer that ticks when activeIndex settles.
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveDuration(prev => prev + 100);
-    }, 100);
-    return () => clearInterval(timer);
-  }, []);
-
-  const showMetadata = activeDuration > 1000; // 1 second threshold
+  const selectedItem = AGENDA_ITEMS.find(item => item.id === selectedId);
 
   return (
-    <div className="bg-[#050507] text-white overflow-hidden relative">
+    <div className="bg-[#050507] text-white">
       
-      {/* 1. Background Layer (Velvet Red Mist + Grain + Blur) */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[#050507] z-0" />
+      {/* 400vh Scroll Container */}
+      <div ref={containerRef} className="h-[400vh] relative">
         
-        {/* The Pooling Mist - Jumps to center when settled */}
-        <motion.div 
-          className="absolute left-1/2 -translate-x-1/2 w-[120vw] md:w-[60vw] h-[40vh] bg-[#E02229] rounded-[100%] opacity-40 mix-blend-screen"
-          style={{ 
-            filter: 'blur(100px)',
-            // When moving fast, scale down and fade out slightly. When settled, pool big.
-            scale: showMetadata ? 1.2 : 0.8,
-            opacity: showMetadata ? 0.6 : 0.2,
-            top: '50%',
-            y: '-50%'
-          }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        />
-
-        {/* Heavy Frosted Glass & Grain */}
-        <div className="absolute inset-0 backdrop-blur-3xl z-10" />
-        <div className="absolute inset-0 z-20 opacity-[0.15] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
-      </div>
-
-      {/* 2. The Cylinder Wheel Scroll Container */}
-      {/* Massive height to allow extensive scrolling. */}
-      <div ref={containerRef} className="h-[500vh] relative z-30">
-        
-        {/* Sticky viewport for the 3D wheel */}
-        <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden perspective-[1000px] md:perspective-[2000px]">
+        {/* Sticky Viewport (100dvh) */}
+        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-[#050507]">
           
-          <div className="relative w-full max-w-7xl h-full flex items-center justify-center transform-style-3d">
-            
-            {EXTENDED_ITEMS.map((item, i) => {
-              // Base angle for this item
-              const itemAngle = i * 20;
+          {/* Phase 1: Background Grid Matrix & Noise */}
+          <div className="absolute inset-0 z-0 pointer-events-none opacity-20"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
+              `,
+              backgroundSize: '4rem 4rem'
+            }}
+          />
+          <div className="absolute inset-0 z-0 opacity-[0.15] mix-blend-overlay pointer-events-none" 
+            style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} 
+          />
 
-              return (
-                <CylinderRow 
-                  key={item.uniqueId} 
+          {/* Phase 1: Left Anchor Elements */}
+          <div className="absolute top-1/2 -translate-y-1/2 left-6 md:left-16 z-10 pointer-events-none">
+            <span className="font-typewriter text-[10px] md:text-xs uppercase tracking-[0.5em] text-brand-secondary block mb-4">
+              [ TRACK // 2026 ]
+            </span>
+            <h1 className="text-6xl md:text-8xl font-title font-black uppercase tracking-tighter leading-none text-white/90" style={{ writingMode: isMobile ? 'vertical-lr' : 'horizontal-tb', transform: isMobile ? 'rotate(180deg)' : 'none' }}>
+              THE <br className="hidden md:block" /> TIMELINE
+            </h1>
+          </div>
+
+          {/* Scroll Indicator */}
+          <motion.div 
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 pointer-events-none"
+            style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}
+          >
+            <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/50">Scroll to Explore</span>
+            <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
+          </motion.div>
+
+          {/* Phase 2: Horizontal Train Wrapper */}
+          <motion.div 
+            className="absolute top-0 h-full flex items-center pt-24 pb-12"
+            style={{ x: xTranslate, paddingLeft: isMobile ? '35vw' : '45vw' }}
+          >
+            <div className="flex gap-8 md:gap-16 items-center px-12">
+              {AGENDA_ITEMS.map((item) => (
+                <AgendaCard 
+                  key={item.id} 
                   item={item} 
-                  itemAngle={itemAngle}
-                  angleOffset={angleOffset}
-                  isActive={i === activeIndex}
-                  showMetadata={showMetadata && i === activeIndex}
+                  onClick={() => setSelectedId(item.id)} 
+                  isSelected={selectedId === item.id}
                 />
-              );
-            })}
-
-          </div>
-
-          {/* Fixed center X-Ray Lens (Emerges when settled) */}
-          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] md:w-[40vw] h-[25vh] rounded-full border border-white/20 pointer-events-none transition-all duration-1000 ease-[0.16,1,0.3,1] flex items-center justify-center z-0 mix-blend-overlay
-            ${showMetadata ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
-          `}>
-            {/* Structural clock vector outline */}
-            <svg width="120" height="120" viewBox="0 0 100 100" fill="none" className="opacity-30">
-              <circle cx="50" cy="50" r="48" stroke="white" strokeWidth="0.5" />
-              <line x1="50" y1="50" x2="50" y2="20" stroke="white" strokeWidth="1" />
-              <line x1="50" y1="50" x2="70" y2="50" stroke="white" strokeWidth="0.5" />
-            </svg>
-          </div>
+              ))}
+              {/* Buffer element at the end so last card reaches center */}
+              <div className="w-[50vw] shrink-0 pointer-events-none" />
+            </div>
+          </motion.div>
 
         </div>
       </div>
+
+      {/* Phase 3: Absolute Click Expansion Detail */}
+      <AnimatePresence>
+        {selectedId && selectedItem && (
+          <div className="fixed inset-0 z-[200] flex flex-col md:flex-row bg-[#050507]">
+            
+            {/* The Expanded Card Component */}
+            <motion.div 
+              layoutId={`card-${selectedItem.id}`}
+              className="relative w-full md:w-1/2 h-[40dvh] md:h-full bg-neutral-900 flex flex-col justify-between p-8 md:p-16 border-r border-b md:border-b-0 border-[#E02229]"
+            >
+              <motion.div layoutId={`card-time-${selectedItem.id}`} className="font-title font-black text-6xl md:text-8xl tracking-tighter uppercase text-white leading-none">
+                {selectedItem.time}
+              </motion.div>
+              
+              <div>
+                <motion.div layoutId={`card-type-${selectedItem.id}`} className="font-typewriter text-[10px] md:text-xs uppercase tracking-[0.5em] text-[#E02229] mb-2">
+                  {selectedItem.type} // {selectedItem.duration}
+                </motion.div>
+                <motion.div layoutId={`card-title-${selectedItem.id}`} className="font-title font-bold text-3xl md:text-5xl uppercase text-white mb-4">
+                  {selectedItem.title}
+                </motion.div>
+                <motion.div layoutId={`card-speaker-${selectedItem.id}`} className="font-editorial text-xl md:text-3xl italic text-white/70">
+                  {selectedItem.speaker}
+                </motion.div>
+              </div>
+
+              {/* Close Button Inside Card */}
+              <button 
+                onClick={() => setSelectedId(null)}
+                className="absolute top-8 right-8 w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors"
+              >
+                <span className="font-typewriter text-[10px] tracking-widest uppercase">Esc</span>
+              </button>
+            </motion.div>
+
+            {/* The Text Content Pane (Fades In) */}
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full md:w-1/2 h-[60dvh] md:h-full p-8 md:p-24 overflow-y-auto flex flex-col justify-center custom-scrollbar"
+            >
+              <div className="max-w-xl">
+                <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white/30 block mb-6">
+                  [ SESSION ABSTRACT // {selectedItem.id} ]
+                </span>
+                <p className="font-editorial text-2xl md:text-4xl italic text-white/90 leading-relaxed">
+                  {selectedItem.desc}
+                </p>
+                
+                <div className="mt-16 flex gap-12 border-t border-white/10 pt-8">
+                  <div>
+                    <span className="font-typewriter text-[8px] uppercase tracking-[0.5em] text-white/30 block mb-2">Status</span>
+                    <span className="font-sans font-bold text-xs uppercase text-brand-secondary">Confirmed</span>
+                  </div>
+                  <div>
+                    <span className="font-typewriter text-[8px] uppercase tracking-[0.5em] text-white/30 block mb-2">Location</span>
+                    <span className="font-sans font-bold text-xs uppercase text-white">Main Stage</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-// Subcomponent for each row to handle its own complex 3D math and interpolation
-function CylinderRow({ item, itemAngle, angleOffset, isActive, showMetadata }: any) {
-  
-  // Calculate relative angle distance from the current camera view (angleOffset)
-  // We want to wrap around 360 to keep the cylinder continuous
-  const relativeAngle = useTransform(angleOffset, (currentOffset: number) => {
-    let diff = (itemAngle - currentOffset) % 360;
-    if (diff > 180) diff -= 360;
-    if (diff < -180) diff += 360;
-    return diff;
-  });
-
-  // Transform angle to 3D CSS
-  const rotateX = useTransform(relativeAngle, (v: number) => `${v}deg`);
-  
-  // Visibility: Only render if within +/- 40 degrees (3 rows visible)
-  const opacity = useTransform(relativeAngle, [-40, -20, 0, 20, 40], [0, 0.2, 1, 0.2, 0]);
-  const scale = useTransform(relativeAngle, [-40, -20, 0, 20, 40], [0.4, 0.5, 1, 0.5, 0.4]);
-  const color = useTransform(relativeAngle, [-20, 0, 20], ['#666666', '#ffffff', '#666666']);
-  const letterSpacing = useTransform(relativeAngle, [-20, 0, 20], ['0.2em', '0em', '0.2em']);
-
-  // Move it out on the Z axis to form a cylinder
-  const translateZ = 400; // Radius of the cylinder
-
-  // When inactive, we can apply blur
-  const filter = useTransform(relativeAngle, [-20, 0, 20], ['blur(4px)', 'blur(0px)', 'blur(4px)']);
-
+function AgendaCard({ item, onClick, isSelected }: { item: any, onClick: () => void, isSelected: boolean }) {
   return (
     <motion.div
-      className="absolute w-full flex flex-col items-center justify-center text-center transform-style-3d pointer-events-none"
-      style={{
-        rotateX,
-        translateZ,
-        opacity,
-        scale,
-        color,
-        letterSpacing,
-        filter
-      }}
+      layoutId={`card-${item.id}`}
+      onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.98 }}
+      className={`group relative shrink-0 h-[60vh] md:h-[70vh] aspect-[3/4] bg-neutral-900 border ${isSelected ? 'border-transparent' : 'border-white/10 hover:border-[#E02229]'} transition-colors duration-500 flex flex-col justify-between p-6 md:p-10 cursor-pointer overflow-hidden`}
     >
-      <div className="font-typewriter text-[10px] md:text-sm uppercase tracking-widest text-[#E02229] mb-4">
-        {item.time}
-      </div>
-      
-      <h2 className="text-4xl md:text-[8vw] font-title font-black uppercase leading-none tracking-tighter whitespace-nowrap">
-        {item.title}
-      </h2>
+      {/* Background Hover Glow */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#E02229]/0 to-[#E02229]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-      {/* The Zero-Jump Accordion Rollout */}
-      {/* Absolute positioning ensures zero layout shifting to the massive text */}
-      <div className="relative w-full h-0 flex justify-center">
-        <motion.div 
-          className="absolute top-8 overflow-hidden flex flex-col items-center gap-2"
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ 
-            height: showMetadata ? 'auto' : 0, 
-            opacity: showMetadata ? 1 : 0 
-          }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <p className="font-editorial text-xl md:text-3xl italic text-white/80 mt-4 max-w-2xl">
-            {item.desc}
-          </p>
-          <div className="flex gap-6 mt-4 font-typewriter text-[9px] md:text-[11px] uppercase tracking-widest text-white/50 border-t border-white/10 pt-4">
-            <span>[ SPEAKER: TBA ]</span>
-            <span>[ DURATION: {item.duration} ]</span>
-            <span>[ STAGE: 01 ]</span>
-          </div>
+      {/* Top: Massive Compressed Time */}
+      <motion.div layoutId={`card-time-${item.id}`} className="font-title font-black text-6xl md:text-7xl tracking-tighter uppercase text-white/90 group-hover:text-white transition-colors leading-none relative z-10">
+        {item.time.replace(' ', '\n')}
+      </motion.div>
+      
+      {/* Bottom: Details with Hover Roll Reveal */}
+      <div className="relative z-10 flex flex-col">
+        <motion.div layoutId={`card-type-${item.id}`} className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-[#E02229] mb-2">
+          {item.type}
         </motion.div>
+        
+        <div className="overflow-hidden">
+          <motion.div layoutId={`card-title-${item.id}`} className="font-title font-bold text-2xl md:text-3xl uppercase text-white">
+            {item.title}
+          </motion.div>
+        </div>
+
+        {/* The Roll Reveal Mask */}
+        <div className="h-0 group-hover:h-8 md:group-hover:h-12 overflow-hidden transition-all duration-500 ease-[0.16,1,0.3,1] mt-0 group-hover:mt-2">
+          <motion.div layoutId={`card-speaker-${item.id}`} className="font-editorial text-lg md:text-2xl italic text-white/50 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]">
+            {item.speaker}
+          </motion.div>
+        </div>
       </div>
     </motion.div>
   );

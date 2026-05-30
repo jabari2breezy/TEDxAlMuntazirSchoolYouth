@@ -54,7 +54,9 @@ export default function Navbar() {
       >
       <div className="flex items-center gap-6 pointer-events-auto">
         <Link to="/" className="flex items-baseline gap-4">
-          <Logo variant="tedx" theme="dark" className="scale-75 md:scale-90 origin-left" />
+          <div id="nav-logo-tedx">
+            <Logo variant="tedx" theme="dark" className="scale-75 md:scale-90 origin-left" />
+          </div>
           <div className="hidden lg:block w-[1px] h-4 bg-white/30" />
           <Logo variant="school" theme="dark" className="hidden lg:block scale-75 origin-left opacity-80 hover:opacity-100 transition-opacity" />
         </Link>
