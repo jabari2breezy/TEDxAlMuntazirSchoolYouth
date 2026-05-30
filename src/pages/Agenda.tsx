@@ -69,7 +69,7 @@ const agendaItems = buildAgenda([
   { duration: 20, title: 'Tea Break', sub: 'Refreshments & networking', theme: 'past', isSpeech: false },
   { duration: 18, title: 'Zahra Moledina', topic: 'The Best Thing Since Sliced Bread', theme: 'present', isSpeech: true, speakerSlug: 'zahra-moledina' },
   { duration: 10, title: 'Kahoot / Blooket', sub: '', theme: 'present', isSpeech: false },
-  { duration: 18, title: 'Speaker TBA', topic: 'Topic to be announced', theme: 'present', isSpeech: true },
+  { duration: 18, title: 'TBA', topic: 'TBA', theme: 'present', isSpeech: true },
   { duration: 5, title: 'Game', sub: '', theme: 'present', isSpeech: false },
   { duration: 18, title: 'Hassan Abbas Muhammad', topic: 'The Procrastination Paradox', theme: 'present', isSpeech: true, speakerSlug: 'hassan-abbas' },
   { duration: 60, title: 'Salah & Food Break', sub: 'Prayer and lunch', theme: 'present', isSpeech: false },
@@ -321,9 +321,8 @@ export default function Agenda() {
                 <span className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase">The assembly</span>
               </MaskReveal>
               <MaskReveal delay={0.2}>
-                <h1 className="text-7xl md:text-[10vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-brand-primary flex flex-col items-center">
-                  <span>Agenda.</span>
-                  <span className="italic font-editorial lowercase text-brand-secondary">Time Unfolding.</span>
+                <h1 className="text-7xl md:text-[15vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-brand-primary flex flex-col items-center">
+                  <span>AGENDA</span>
                 </h1>
               </MaskReveal>
             </motion.div>
