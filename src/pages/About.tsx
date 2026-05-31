@@ -1,7 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { Mail } from 'lucide-react';
-import { ShaderAnimation } from '../components/ui/shader-animation';
 
 export default function About() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -30,13 +29,8 @@ export default function About() {
       exit={{ opacity: 0 }}
       className="pt-40 relative min-h-screen text-white overflow-hidden"
     >
-      {/* Shader animation background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <ShaderAnimation />
-      </div>
-
-      {/* Dark overlay for readability */}
-      <div className="fixed inset-0 z-0 pointer-events-none bg-black/40" />
+      {/* Simple gradient background for performance */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-br from-[#000839] via-[#001a3d] to-[#002a1a]" />
 
       <div className="relative z-10 px-6 md:px-16 max-w-screen-2xl mx-auto pb-32">
         <header className="mb-24 flex flex-col items-center text-center mt-12 md:mt-24 overflow-hidden">

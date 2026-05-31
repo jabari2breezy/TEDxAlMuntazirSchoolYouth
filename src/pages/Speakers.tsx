@@ -3,7 +3,6 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { SEGMENTS, SPEAKERS } from '../constants';
 import { ArrowDown } from 'lucide-react';
 import FloatingBackground from '../components/FloatingBackground';
-import { WarpShaderBackground } from '../components/ui/wrap-shader';
 import { MaskedReveal, MicroTag, IndexNumber, StaggerContainer, StaggerItem, LUXURY_EASE } from '../components/KineticTypography';
 
 interface Speaker {
