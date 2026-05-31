@@ -101,7 +101,6 @@ export default function Footer() {
                 { label: 'Home', to: '/' },
                 { label: 'Theme', to: '/theme' },
                 {label: 'Speakers', to: '/speakers' },
-                { label: 'Agenda', to: '/agenda' },
               ].map((link) => (
                 <Link
                   key={link.label}
