@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'motion/react';
 import Navbar from './components/Navbar';
 import FloatingCursor from './components/FloatingCursor';
 import InteractiveBackground from './components/InteractiveBackground';
@@ -17,7 +16,7 @@ import Checkout from './pages/Checkout';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import IntroScreen from './components/IntroScreen';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -32,30 +31,18 @@ function ScrollToTop() {
 }
 
 function AnimatedRoutes() {
-  const location = useLocation();
-
   return (
-    <AnimatePresence mode="wait">
-      <motion.div 
-        key={location.pathname}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <Routes location={location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/theme" element={<Theme />} />
-          <Route path="/speakers" element={<SpeakersPage />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/agenda" element={<Agenda />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/tickets" element={<Tickets />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Routes>
-      </motion.div>
-    </AnimatePresence>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/theme" element={<Theme />} />
+      <Route path="/speakers" element={<SpeakersPage />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/agenda" element={<Agenda />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/tickets" element={<Tickets />} />
+      <Route path="/team" element={<Team />} />
+      <Route path="/checkout" element={<Checkout />} />
+    </Routes>
   );
 }
 

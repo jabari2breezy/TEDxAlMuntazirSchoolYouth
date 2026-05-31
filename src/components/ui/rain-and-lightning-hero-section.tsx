@@ -255,7 +255,7 @@ const Lightning: React.FC<
       lightningSize,
     ])
 
-    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
   }
 )
 
