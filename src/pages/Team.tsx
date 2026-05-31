@@ -67,12 +67,14 @@ export default function Team() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.85, ease: LUXURY_EASE }}
-      className="pt-40 pb-32 relative bg-brand-primary min-h-screen text-brand-primary overflow-hidden"
+      className="pt-40 pb-32 relative bg-brand-primary min-h-screen text-white overflow-hidden"
     >
       {/* 3D Shader Background — more visible */}
       <div className="absolute inset-0 z-0">
         <BackgroundShaders className="opacity-100" />
       </div>
+      {/* Extra dark overlay to ensure text readability */}
+      <div className="absolute inset-0 z-0 bg-brand-primary/70" />
 
       {/* Noise overlay */}
       <div

@@ -143,6 +143,9 @@ export default function Agenda() {
         <WarpShaderBackground />
       </div>
 
+      {/* Dark overlay for readability */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-brand-primary/60" />
+
       {/* Noise overlay */}
       <div
         className="fixed inset-0 z-0 pointer-events-none opacity-[0.06] mix-blend-overlay"
@@ -163,7 +166,7 @@ export default function Agenda() {
           </div>
         </motion.div>
 
-        {/* Agenda Cards Grid */}
+        {/* Agenda Cards Grid — frosted glass style */}
         <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {AGENDA_ITEMS.map((item, index) => (
@@ -173,12 +176,19 @@ export default function Agenda() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-5%' }}
                 transition={{ duration: 0.6, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                className="relative bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 overflow-hidden group hover:border-white/20 transition-all duration-500"
+                className="relative rounded-3xl overflow-hidden"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+                }}
               >
                 {/* Type color accent */}
                 <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: TYPE_COLORS[item.type] }} />
 
-                <div className="space-y-4">
+                <div className="p-6 md:p-8 space-y-4">
                   {/* Time & Duration */}
                   <div className="flex items-center justify-between">
                     <span className="font-title font-black text-3xl md:text-4xl tracking-tighter uppercase text-white leading-none">
@@ -195,8 +205,8 @@ export default function Agenda() {
                       className="font-typewriter text-[9px] uppercase tracking-[0.3em] px-3 py-1 rounded-full"
                       style={{ 
                         color: TYPE_COLORS[item.type],
-                        backgroundColor: `${TYPE_COLORS[item.type]}15`,
-                        border: `1px solid ${TYPE_COLORS[item.type]}30`
+                        backgroundColor: `${TYPE_COLORS[item.type]}20`,
+                        border: `1px solid ${TYPE_COLORS[item.type]}40`
                       }}
                     >
                       {item.type}

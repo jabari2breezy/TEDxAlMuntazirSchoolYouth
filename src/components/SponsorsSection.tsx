@@ -27,8 +27,8 @@ const SPONSOR_TIERS: SponsorTier[] = [
     logoHeight: 'h-28 sm:h-32 md:h-40 lg:h-48',
     maxWidth: 'max-w-[min(100%,520px)]',
     sponsors: [
-      { src: '/sponsors/asas-hd.png', alt: 'ASAS' },
       { src: '/sponsors/etg-hd.png', alt: 'ETG', isETG: true },
+      { src: '/sponsors/asas-hd.png', alt: 'ASAS' },
     ],
   },
   {
@@ -61,7 +61,6 @@ const SPONSOR_TIERS: SponsorTier[] = [
       { src: '/sponsors/dar-glass-works.png', alt: 'Dar es Salaam Glass Works' },
       { src: '/sponsors/amjad-motors.png', alt: 'AMJAD MOTORS International Limited' },
       { src: '/sponsors/emerson-education.png', alt: 'Emerson Education' },
-      { src: '/sponsors/media__1779565585806.png', alt: 'Image Masters' },
     ],
   },
 ];

@@ -73,14 +73,24 @@ export default function Tickets() {
     offset: ["start start", "end end"]
   });
 
-  // Ticket transforms — no rotation, just position and scale
+  // Ticket 3D Transforms - slower, less sensitive spin
+  const rotateY = useTransform(scrollYProgress,
+    [0, 0.2, 0.35, 0.65, 0.8, 1],
+    [0, 90, 80, 80, 90, 90]
+  );
+   
+  const rotateX = useTransform(scrollYProgress,
+    [0, 0.2, 0.35, 0.65, 0.8, 1],
+    [0, 0, 3, 3, 0, 0]
+  );
+
   const xMovementDesktop = useTransform(scrollYProgress,
-    [0, 0.25, 0.35, 0.65, 0.75, 1],
+    [0, 0.2, 0.35, 0.65, 0.8, 1],
     [0, 0, 80, 80, 0, 0]
   );
    
   const yMovementMobile = useTransform(scrollYProgress,
-    [0, 0.25, 0.35, 0.65, 0.75, 1],
+    [0, 0.2, 0.35, 0.65, 0.8, 1],
     ['0%', '0%', '20%', '20%', '0%', '0%']
   );
 
@@ -89,7 +99,7 @@ export default function Tickets() {
 
   const ticketScale = useTransform(scrollYProgress,
     [0, 0.25, 0.35, 0.65, 0.75, 1],
-    [1, 1, 0.92, 0.92, 1.03, 1.03]
+    [1, 1, 0.85, 0.85, 1.1, 1.1]
   );
 
   const centerContentOpacity = useTransform(scrollYProgress,
@@ -180,8 +190,11 @@ export default function Tickets() {
               {/* 3D Ticket — center/bottom on mobile */}
               <motion.div
                 style={{
+                  rotateX,
+                  rotateY,
                   scale: ticketScale,
                   y: ticketY,
+                  transformStyle: "preserve-3d"
                 }}
                 className="absolute z-20 w-full max-w-[280px] bottom-[8vh] pointer-events-auto group cursor-pointer"
                 onClick={() => { if (isPhase3) window.open('https://tukiio.com/event/tedxalmuntazirschoolsyouth', '_blank'); }}
@@ -227,8 +240,11 @@ export default function Tickets() {
               {/* 3D Ticket — center/right on desktop */}
               <motion.div
                 style={{
+                  rotateX,
+                  rotateY,
                   scale: ticketScale,
                   x: ticketX,
+                  transformStyle: "preserve-3d"
                 }}
                 className="relative z-20 w-full max-w-[400px] pointer-events-auto group cursor-pointer"
                 onClick={() => { if (isPhase3) window.open('https://tukiio.com/event/tedxalmuntazirschoolsyouth', '_blank'); }}

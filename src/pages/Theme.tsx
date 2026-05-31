@@ -10,76 +10,112 @@ import * as THREE from 'three';
 
 function KineticSpine({ scrollYProgress, isMobile }: { scrollYProgress: any, isMobile: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const innerGlowRef = useRef<THREE.Mesh>(null);
   
-  const { geometry } = useMemo(() => {
-    const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(1, 2, 1),
-      new THREE.Vector3(2, 4, 0),
-      new THREE.Vector3(3, 6, -1),
-      new THREE.Vector3(4, 8, 0),
-    ]);
-    const geometry = new THREE.TubeGeometry(curve, 200, 1.2, 8, false);
-    return { geometry };
+  const { geometry, innerGeometry } = useMemo(() => {
+    const points = [];
+    for (let i = 0; i <= 200; i++) {
+      const t = i / 200;
+      const tx = Math.sin(t * Math.PI * 4) * 2;
+      const ty = (t - 0.5) * 20;
+      const tz = Math.cos(t * Math.PI * 4) * 2;
+      points.push(new THREE.Vector3(tx, ty, tz));
+    }
+    const curve = new THREE.CatmullRomCurve3(points);
+    const geometry = new THREE.TubeGeometry(curve, 200, 1.8, 12, false);
+    const innerGeometry = new THREE.TubeGeometry(curve, 200, 0.6, 8, false);
+    return { geometry, innerGeometry };
   }, []);
 
   useFrame(({ clock }) => {
     if (!meshRef.current) return;
     const scroll = scrollYProgress.get();
-    meshRef.current.rotation.y = clock.getElapsedTime() * (0.15 + scroll * 1.5);
+    const baseSpeed = 0.15;
+    const scrollBoost = scroll * 2.0;
+    meshRef.current.rotation.y = clock.getElapsedTime() * (baseSpeed + scrollBoost);
+    if (innerGlowRef.current) {
+      innerGlowRef.current.rotation.y = meshRef.current.rotation.y;
+    }
 
     let targetX = 0;
+    let targetY = 0;
     if (scroll > 0.25 && !isMobile) {
       const progress = Math.min((scroll - 0.25) / 0.5, 1);
-      targetX = 5 * progress;
+      targetX = 6 * progress;
+      targetY = -1 * progress;
+    } else if (scroll > 0.25 && isMobile) {
+      const progress = Math.min((scroll - 0.25) / 0.5, 1);
+      targetY = -8 * progress;
     }
-    meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, targetX, 0.05);
+    meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, targetX, 0.04);
+    meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, targetY, 0.04);
+    if (innerGlowRef.current) {
+      innerGlowRef.current.position.x = meshRef.current.position.x;
+      innerGlowRef.current.position.y = meshRef.current.position.y;
+    }
   });
 
   return (
-    <mesh ref={meshRef} geometry={geometry}>
-      <meshBasicMaterial color="#006d38" wireframe transparent opacity={0.5} blending={THREE.AdditiveBlending} />
-    </mesh>
+    <group>
+      {/* Outer glow shell */}
+      <mesh ref={meshRef} geometry={geometry}>
+        <meshBasicMaterial color="#006d38" wireframe transparent opacity={0.35} blending={THREE.AdditiveBlending} />
+      </mesh>
+      {/* Inner bright core */}
+      <mesh ref={innerGlowRef} geometry={innerGeometry}>
+        <meshBasicMaterial color="#00ff88" wireframe transparent opacity={0.7} blending={THREE.AdditiveBlending} />
+      </mesh>
+    </group>
   );
 }
 
-function ParticleStorm({ active }: { active: boolean }) {
+function ParticleStorm({ active, scrollYProgress }: { active: boolean, scrollYProgress: any }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const count = 2000;
+  const count = 4000;
   
-  const { positions, velocities } = useMemo(() => {
+  const { positions, velocities, basePositions } = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const vel = new Float32Array(count * 3);
+    const base = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 2;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 2;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 2;
-      vel[i * 3] = (Math.random() - 0.5) * 1.5;
-      vel[i * 3 + 1] = (Math.random() - 0.5) * 1.5;
-      vel[i * 3 + 2] = (Math.random() - 0.5) * 1.5 + 3;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 1.5 + Math.random() * 0.5;
+      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      pos[i * 3 + 2] = r * Math.cos(phi);
+      base[i * 3] = pos[i * 3];
+      base[i * 3 + 1] = pos[i * 3 + 1];
+      base[i * 3 + 2] = pos[i * 3 + 2];
+      const speed = 0.02 + Math.random() * 0.06;
+      vel[i * 3] = (Math.random() - 0.5) * speed;
+      vel[i * 3 + 1] = (Math.random() - 0.5) * speed;
+      vel[i * 3 + 2] = Math.random() * speed * 2 + 0.02;
     }
-    return { positions: pos, velocities: vel };
+    return { positions: pos, velocities: vel, basePositions: base };
   }, [count]);
 
   useFrame(() => {
     if (!pointsRef.current) return;
-    if (active) {
+    const scroll = scrollYProgress.get();
+    const attr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute;
+    const arr = attr.array as Float32Array;
+    
+    if (active || scroll > 0.75) {
       pointsRef.current.visible = true;
-      const attr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute;
-      const arr = attr.array as Float32Array;
+      const intensity = scroll > 0.75 ? Math.min((scroll - 0.75) / 0.25, 1) : 0;
       for (let i = 0; i < count; i++) {
-        arr[i * 3] += velocities[i * 3] * 0.4;
-        arr[i * 3 + 1] += velocities[i * 3 + 1] * 0.4;
-        arr[i * 3 + 2] += velocities[i * 3 + 2] * 0.4;
+        arr[i * 3] += velocities[i * 3] * (0.5 + intensity * 3);
+        arr[i * 3 + 1] += velocities[i * 3 + 1] * (0.5 + intensity * 3);
+        arr[i * 3 + 2] += velocities[i * 3 + 2] * (0.5 + intensity * 3);
       }
       attr.needsUpdate = true;
     } else {
       pointsRef.current.visible = false;
-      const attr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute;
       for (let i = 0; i < count; i++) {
-        attr.array[i * 3] = positions[i * 3];
-        attr.array[i * 3 + 1] = positions[i * 3 + 1];
-        attr.array[i * 3 + 2] = positions[i * 3 + 2];
+        arr[i * 3] = basePositions[i * 3];
+        arr[i * 3 + 1] = basePositions[i * 3 + 1];
+        arr[i * 3 + 2] = basePositions[i * 3 + 2];
       }
       attr.needsUpdate = true;
     }
@@ -87,20 +123,32 @@ function ParticleStorm({ active }: { active: boolean }) {
 
   return (
     <Points ref={pointsRef} positions={positions} visible={false}>
-      <PointMaterial transparent color="#006d38" size={0.08} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      <PointMaterial transparent color="#00ff88" size={0.04} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
     </Points>
   );
 }
 
-function SceneCamera({ scrollYProgress }: { scrollYProgress: any }) {
+function SceneCamera({ scrollYProgress, isMobile }: { scrollYProgress: any, isMobile: boolean }) {
   useFrame(({ camera }) => {
     const scroll = scrollYProgress.get();
-    let targetZ = 12;
+    let targetZ = 14;
+    let targetY = 0;
+    
     if (scroll > 0.25) {
       const p = Math.min((scroll - 0.25) / 0.5, 1);
-      targetZ = 12 - 6 * p;
+      targetZ = 14 - 10 * p;
+      targetY = -2 * p;
     }
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
+    
+    if (scroll > 0.75) {
+      const p = Math.min((scroll - 0.75) / 0.25, 1);
+      targetZ = 4 + p * 8;
+      targetY = -2 - p * 4;
+    }
+    
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.04);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.04);
+    camera.lookAt(0, 0, 0);
   });
   return null;
 }
@@ -129,16 +177,16 @@ export default function Theme() {
     return () => unsub();
   }, [scrollYProgress]);
 
-  const phase1Opacity = useTransform(scrollYProgress, [0, 0.2, 0.28], [1, 1, 0]);
-  const phase1Y = useTransform(scrollYProgress, [0, 0.28], [0, -80]);
-  const phase2Opacity = useTransform(scrollYProgress, [0.28, 0.36, 0.72, 0.78], [0, 1, 1, 0]);
+  const phase1Opacity = useTransform(scrollYProgress, [0, 0.15, 0.3], [1, 1, 0]);
+  const phase1Y = useTransform(scrollYProgress, [0, 0.3], [0, -60]);
+  const phase2Opacity = useTransform(scrollYProgress, [0.28, 0.38, 0.7, 0.78], [0, 1, 1, 0]);
   const phase3Opacity = useTransform(scrollYProgress, [0.78, 0.88], [0, 1]);
   const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
 
   return (
     <div className="bg-[#050507] text-white">
-      {/* 400vh Scroll Track */}
-      <div ref={containerRef} className="h-[400vh] relative">
+      {/* 500vh Scroll Track for more dramatic phases */}
+      <div ref={containerRef} className="h-[500vh] relative">
         <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
 
           {/* Scroll Indicator */}
@@ -150,7 +198,7 @@ export default function Theme() {
             <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
           </motion.div>
 
-          {/* Phase 1: Massive Title */}
+          {/* Phase 1: Massive Title — behind the ribbon */}
           <motion.div
             style={{ opacity: phase1Opacity, y: phase1Y }}
             className="absolute inset-0 z-0 pointer-events-none flex flex-col justify-center items-center px-6 md:px-16"
@@ -168,19 +216,19 @@ export default function Theme() {
 
           {/* WebGL Canvas (middle z-index, on top of Phase 1 text) */}
           <div className="absolute inset-0 z-10 pointer-events-none">
-            <Canvas camera={{ position: [0, 0, 12], fov: 45 }} style={{ width: '100%', height: '100%' }}>
-              <SceneCamera scrollYProgress={scrollYProgress} />
+            <Canvas camera={{ position: [0, 0, 14], fov: 45 }} style={{ width: '100%', height: '100%' }}>
+              <SceneCamera scrollYProgress={scrollYProgress} isMobile={isMobile} />
               <KineticSpine scrollYProgress={scrollYProgress} isMobile={isMobile} />
-              <ParticleStorm active={isFractured} />
+              <ParticleStorm active={isFractured} scrollYProgress={scrollYProgress} />
             </Canvas>
           </div>
 
-          {/* Phase 2: Theme Explanation Text (always rendered, opacity controlled) */}
+          {/* Phase 2: Theme Explanation Text */}
           <motion.div
             style={{ opacity: phase2Opacity }}
             className="absolute inset-0 z-20 flex items-center pointer-events-none"
           >
-            <div className={`w-full px-6 md:px-16 ${isMobile ? 'flex flex-col justify-end pb-24 h-full' : 'max-w-2xl'}`}>
+            <div className={`w-full px-6 md:px-16 ${isMobile ? 'flex flex-col justify-end pb-32 h-full' : 'max-w-2xl'}`}>
               <div className="space-y-6 md:space-y-10">
                 <div>
                   <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-brand-secondary block mb-4">
@@ -189,7 +237,7 @@ export default function Theme() {
                   <h2 className="text-4xl md:text-6xl font-title font-black uppercase tracking-tighter leading-[0.9] text-white">
                     Sustainability,<br />
                     Youth Legacy<br />
-                    &amp; Urgency.
+                    & Urgency.
                   </h2>
                 </div>
                 <p className="font-editorial text-xl md:text-3xl italic text-white/60 leading-relaxed max-w-xl">
@@ -213,8 +261,8 @@ export default function Theme() {
               to="/speakers"
               className="pointer-events-auto flex flex-col items-center gap-6 group"
             >
-              <div className="w-20 h-20 rounded-full bg-brand-secondary flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-white group-hover:text-brand-secondary transition-all shadow-[0_0_80px_rgba(0,109,56,0.5)]">
-                <ArrowRight size={32} />
+              <div className="w-24 h-24 rounded-full bg-brand-secondary flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-white group-hover:text-brand-secondary transition-all shadow-[0_0_100px_rgba(0,109,56,0.6)]">
+                <ArrowRight size={40} />
               </div>
               <span className="font-typewriter text-[10px] tracking-[0.5em] uppercase text-white/50 group-hover:text-white transition-colors">
                 ENTER THE STAGE
