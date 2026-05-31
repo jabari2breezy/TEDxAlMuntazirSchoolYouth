@@ -300,3 +300,430 @@ button, a, input, textarea, select, [role="button"] {
 .animate-meteor {
   animation: meteor 4s linear infinite;
 }
+
+/* ─── Light Mode ──────────────────────────────────────────────── */
+:root {
+  --light-bg: #f9f9f9;
+  --light-text: #000839;
+  --light-text-muted: rgba(0, 8, 57, 0.5);
+  --light-border: rgba(0, 8, 57, 0.12);
+  --light-surface: rgba(0, 8, 57, 0.04);
+}
+
+html.light {
+  --bg-primary: var(--light-bg);
+  --text-primary: var(--light-text);
+}
+
+html.light body {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+}
+
+html.light .bg-brand-primary {
+  background-color: var(--light-bg) !important;
+}
+
+html.light .bg-brand-primary\/60 {
+  background-color: rgba(249, 249, 249, 0.6) !important;
+}
+
+html.light .bg-brand-primary\/80 {
+  background-color: rgba(249, 249, 249, 0.8) !important;
+}
+
+html.light .bg-brand-primary\/40 {
+  background-color: rgba(249, 249, 249, 0.4) !important;
+}
+
+html.light .bg-brand-primary\/30 {
+  background-color: rgba(249, 249, 249, 0.3) !important;
+}
+
+html.light .bg-brand-primary\/20 {
+  background-color: var(--light-surface) !important;
+}
+
+html.light .bg-brand-primary\/10 {
+  background-color: rgba(0, 8, 57, 0.03) !important;
+}
+
+html.light .bg-brand-primary\/5 {
+  background-color: rgba(0, 8, 57, 0.02) !important;
+}
+
+html.light .bg-brand-background {
+  background-color: var(--light-bg) !important;
+}
+
+html.light .bg-brand-surface {
+  background-color: #f3f3f4 !important;
+}
+
+html.light .bg-white\/5,
+html.light .bg-white\/10 {
+  background-color: var(--light-surface) !important;
+}
+
+html.light .bg-white\/95 {
+  background-color: var(--light-bg) !important;
+}
+
+html.light .bg-black {
+  background-color: var(--light-bg) !important;
+}
+
+html.light .bg-black\/10 {
+  background-color: var(--light-surface) !important;
+}
+
+html.light .bg-neutral-950,
+html.light .bg-zinc-950 {
+  background-color: var(--light-bg) !important;
+}
+
+html.light .text-white,
+html.light .text-white\/80,
+html.light .text-white\/60,
+html.light .text-white\/50,
+html.light .text-white\/40,
+html.light .text-white\/30 {
+  color: var(--light-text) !important;
+}
+
+html.light .text-white\/20 {
+  color: rgba(0, 8, 57, 0.2) !important;
+}
+
+html.light .text-white\/10 {
+  color: rgba(0, 8, 57, 0.1) !important;
+}
+
+html.light .text-white\/5 {
+  color: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .text-brand-primary {
+  color: var(--light-text) !important;
+}
+
+html.light .text-brand-primary\/30 {
+  color: rgba(0, 8, 57, 0.3) !important;
+}
+
+html.light .text-brand-primary\/40 {
+  color: rgba(0, 8, 57, 0.4) !important;
+}
+
+html.light .text-brand-primary\/50 {
+  color: rgba(0, 8, 57, 0.5) !important;
+}
+
+html.light .text-brand-primary\/60 {
+  color: rgba(0, 8, 57, 0.6) !important;
+}
+
+html.light .text-brand-primary\/70 {
+  color: rgba(0, 8, 57, 0.7) !important;
+}
+
+html.light .text-brand-primary\/80 {
+  color: rgba(0, 8, 57, 0.8) !important;
+}
+
+html.light .text-brand-primary\/90 {
+  color: rgba(0, 8, 57, 0.9) !important;
+}
+
+html.light .text-brand-secondary {
+  color: #006d38 !important;
+}
+
+html.light .text-brand-outline\/20 {
+  color: rgba(118, 118, 129, 0.2) !important;
+}
+
+html.light .border-brand-outline\/20 {
+  border-color: rgba(118, 118, 129, 0.2) !important;
+}
+
+html.light .border-brand-outline\/10 {
+  border-color: rgba(118, 118, 129, 0.1) !important;
+}
+
+html.light .border-white\/10,
+html.light .border-white\/20,
+html.light .border-white\/30 {
+  border-color: var(--light-border) !important;
+}
+
+html.light .border-white {
+  border-color: rgba(0, 8, 57, 0.2) !important;
+}
+
+html.light .border-white\/5 {
+  border-color: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .border-zinc-800 {
+  border-color: rgba(0, 8, 57, 0.15) !important;
+}
+
+html.light .border-zinc-200 {
+  border-color: rgba(0, 8, 57, 0.1) !important;
+}
+
+html.light .bg-gradient-to-br {
+  background: linear-gradient(135deg, #f9f9f9 0%, #e8f5e9 50%, #f9f9f9 100%) !important;
+}
+
+html.light .bg-gradient-to-tr {
+  background: linear-gradient(to top right, transparent, rgba(0, 8, 57, 0.05), transparent) !important;
+}
+
+html.light .bg-gradient-to-t {
+  background: linear-gradient(to top, var(--light-bg), transparent) !important;
+}
+
+html.light .bg-gradient-to-b {
+  background: linear-gradient(to bottom, rgba(0, 8, 57, 0.05), transparent) !important;
+}
+
+html.light .bg-gradient-to-r {
+  background: linear-gradient(to right, transparent, rgba(0, 8, 57, 0.1), transparent) !important;
+}
+
+html.light .backdrop-blur-md,
+html.light .backdrop-blur-lg,
+html.light .backdrop-blur-xl {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+html.light .ring-brand-secondary {
+  --tw-ring-color: #006d38 !important;
+}
+
+html.light .ring-offset-brand-primary {
+  --tw-ring-offset-color: var(--light-bg) !important;
+}
+
+html.light .shadow-\[0_50px_100px_rgba\(0\,0\,0\,0\.5\)\] {
+  box-shadow: 0 50px 100px rgba(0, 8, 57, 0.15) !important;
+}
+
+html.light .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 8, 57, 0.1) !important;
+}
+
+html.light .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 8, 57, 0.08) !important;
+}
+
+html.light .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 8, 57, 0.06) !important;
+}
+
+html.light .mix-blend-difference {
+  mix-blend-mode: normal !important;
+}
+
+html.light .mix-blend-overlay {
+  mix-blend-mode: normal !important;
+}
+
+html.light .mix-blend-multiply {
+  mix-blend-mode: normal !important;
+}
+
+html.light .opacity-\[0\.03\] {
+  opacity: 0.05 !important;
+}
+
+html.light .opacity-\[0\.04\] {
+  opacity: 0.06 !important;
+}
+
+html.light .opacity-\[0\.06\] {
+  opacity: 0.08 !important;
+}
+
+html.light .opacity-\[0\.12\] {
+  opacity: 0.15 !important;
+}
+
+html.light .opacity-\[0\.15\] {
+  opacity: 0.2 !important;
+}
+
+html.light .opacity-10 {
+  opacity: 0.15 !important;
+}
+
+html.light .opacity-20 {
+  opacity: 0.3 !important;
+}
+
+html.light .opacity-30 {
+  opacity: 0.4 !important;
+}
+
+html.light .opacity-40 {
+  opacity: 0.5 !important;
+}
+
+html.light .opacity-50 {
+  opacity: 0.6 !important;
+}
+
+html.light .opacity-60 {
+  opacity: 0.7 !important;
+}
+
+html.light .opacity-70 {
+  opacity: 0.8 !important;
+}
+
+html.light .opacity-80 {
+  opacity: 0.9 !important;
+}
+
+html.light .opacity-90 {
+  opacity: 0.95 !important;
+}
+
+html.light .bg-opacity-5 {
+  --tw-bg-opacity: 0.05 !important;
+}
+
+html.light .bg-opacity-10 {
+  --tw-bg-opacity: 0.1 !important;
+}
+
+html.light .bg-opacity-20 {
+  --tw-bg-opacity: 0.2 !important;
+}
+
+html.light .bg-opacity-30 {
+  --tw-bg-opacity: 0.3 !important;
+}
+
+html.light .bg-opacity-40 {
+  --tw-bg-opacity: 0.4 !important;
+}
+
+html.light .bg-opacity-50 {
+  --tw-bg-opacity: 0.5 !important;
+}
+
+html.light .bg-opacity-60 {
+  --tw-bg-opacity: 0.6 !important;
+}
+
+html.light .bg-opacity-70 {
+  --tw-bg-opacity: 0.7 !important;
+}
+
+html.light .bg-opacity-80 {
+  --tw-bg-opacity: 0.8 !important;
+}
+
+html.light .bg-opacity-90 {
+  --tw-bg-opacity: 0.9 !important;
+}
+
+html.light .bg-opacity-95 {
+  --tw-bg-opacity: 0.95 !important;
+}
+
+html.light .bg-opacity-100 {
+  --tw-bg-opacity: 1 !important;
+}
+
+html.light .text-opacity-5 {
+  --tw-text-opacity: 0.05 !important;
+}
+
+html.light .text-opacity-10 {
+  --tw-text-opacity: 0.1 !important;
+}
+
+html.light .text-opacity-20 {
+  --tw-text-opacity: 0.2 !important;
+}
+
+html.light .text-opacity-30 {
+  --tw-text-opacity: 0.3 !important;
+}
+
+html.light .text-opacity-40 {
+  --tw-text-opacity: 0.4 !important;
+}
+
+html.light .text-opacity-50 {
+  --tw-text-opacity: 0.5 !important;
+}
+
+html.light .text-opacity-60 {
+  --tw-text-opacity: 0.6 !important;
+}
+
+html.light .text-opacity-70 {
+  --tw-text-opacity: 0.7 !important;
+}
+
+html.light .text-opacity-80 {
+  --tw-text-opacity: 0.8 !important;
+}
+
+html.light .text-opacity-90 {
+  --tw-text-opacity: 0.9 !important;
+}
+
+html.light .text-opacity-100 {
+  --tw-text-opacity: 1 !important;
+}
+
+html.light .border-opacity-5 {
+  --tw-border-opacity: 0.05 !important;
+}
+
+html.light .border-opacity-10 {
+  --tw-border-opacity: 0.1 !important;
+}
+
+html.light .border-opacity-20 {
+  --tw-border-opacity: 0.2 !important;
+}
+
+html.light .border-opacity-30 {
+  --tw-border-opacity: 0.3 !important;
+}
+
+html.light .border-opacity-40 {
+  --tw-border-opacity: 0.4 !important;
+}
+
+html.light .border-opacity-50 {
+  --tw-border-opacity: 0.5 !important;
+}
+
+html.light .border-opacity-60 {
+  --tw-border-opacity: 0.6 !important;
+}
+
+html.light .border-opacity-70 {
+  --tw-border-opacity: 0.7 !important;
+}
+
+html.light .border-opacity-80 {
+  --tw-border-opacity: 0.8 !important;
+}
+
+html.light .border-opacity-90 {
+  --tw-border-opacity: 0.9 !important;
+}
+
+html.light .border-opacity-100 {
+  --tw-border-opacity: 1 !important;
+}

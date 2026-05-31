@@ -1,53 +1,8 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, AnimatePresence } from 'motion/react';
-import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star, ChevronDown } from 'lucide-react';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
-
-function GlisteningStars({ count = 80, scrollProgress }: { count?: number; scrollProgress?: any }) {
-  const stars = useMemo(() =>
-    Array.from({ length: count }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 1.5 + 0.5,
-      delay: Math.random() * 5,
-      duration: Math.random() * 3 + 2,
-      parallaxSpeed: (Math.random() * 0.6 + 0.2),
-    })),
-    [count]
-  );
-
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {stars.map(s => (
-        <StarDot key={s.id} s={s} scrollProgress={scrollProgress} />
-      ))}
-    </div>
-  );
-}
-
-function StarDot({ s, scrollProgress }: { s: any; scrollProgress?: any }) {
-  const parallaxY = scrollProgress
-    ? useTransform(scrollProgress, [0, 1], [s.parallaxSpeed * 50, -s.parallaxSpeed * 50])
-    : undefined;
-
-  return (
-    <motion.div
-      className="absolute rounded-full bg-white"
-      style={{
-        left: `${s.x}%`,
-        top: `${s.y}%`,
-        width: s.size,
-        height: s.size,
-        opacity: 0,
-        boxShadow: `0 0 ${s.size * 2}px ${s.size}px rgba(255,255,255,0.15)`,
-        y: parallaxY,
-        animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
-      }}
-    />
-  );
-}
 
 const INCLUDED_ITEMS = [
   { text: 'Full access to all live speaker sessions', icon: Zap },
@@ -73,108 +28,59 @@ export default function Tickets() {
     offset: ["start start", "end end"]
   });
 
-  // Phase 1 (0-20%): Floating oscillation
-  const floatRotateX = useTransform(scrollYProgress,
-    [0, 0.1, 0.2],
-    [12, -8, 5]
+  // Phase 1 (0-25%): Ticket moves down to reveal details
+  const ticketY = useTransform(scrollYProgress,
+    [0, 0.15, 0.25, 0.35],
+    [0, 120, 120, 0]
   );
-  const floatRotateY = useTransform(scrollYProgress,
-    [0, 0.1, 0.2],
-    [-15, 10, -5]
-  );
-  const floatY = useTransform(scrollYProgress,
-    [0, 0.05, 0.1, 0.15, 0.2],
-    [0, -15, 10, -8, 0]
-  );
-
-  // Phase 2 (21-80%): Tumbling
-  const tumbleRotateX = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [5, 5, -180, -180, -190, -190, 0]
-  );
-  const tumbleRotateY = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [-5, -5, 45, 45, -30, -30, 0]
-  );
-  const tumbleRotateZ = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [0, 0, 25, 25, -15, -15, 0]
-  );
-  const tumbleX = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [0, 0, -100, -100, 50, 50, 0]
-  );
-  const tumbleY = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [0, 0, -80, -80, 40, 40, 0]
-  );
-
-  // Phase 2.5 (65-80%): Slow celebratory flips before landing
-  const flipRotateY = useTransform(scrollYProgress,
-    [0.65, 0.72, 0.78, 0.8],
-    [0, 180, 360, 360]
-  );
-  const flipRotateX = useTransform(scrollYProgress,
-    [0.65, 0.72, 0.78, 0.8],
+  const ticketRotateY = useTransform(scrollYProgress,
+    [0, 0.15, 0.25, 0.35],
     [0, 0, 0, 0]
   );
-  const flipScale = useTransform(scrollYProgress,
-    [0.65, 0.72, 0.78, 0.8],
-    [1, 1.1, 1, 1]
+  const ticketRotateX = useTransform(scrollYProgress,
+    [0, 0.15, 0.25, 0.35],
+    [0, 0, 0, 0]
   );
 
-  // Phase 3 (81-100%): Landing
-  const landScale = useTransform(scrollYProgress,
-    [0.8, 0.85, 0.9, 1],
+  // Phase 2 (35-65%): Slow spin
+  const spinRotateY = useTransform(scrollYProgress,
+    [0.35, 0.5, 0.65],
+    [0, 180, 360]
+  );
+  const spinRotateX = useTransform(scrollYProgress,
+    [0.35, 0.5, 0.65],
+    [0, 10, 0]
+  );
+
+  // Phase 3 (70-100%): Final state - Buy Now
+  const finalScale = useTransform(scrollYProgress,
+    [0.7, 0.8, 0.9, 1],
     [1, 1.05, 0.98, 1]
   );
 
   // Combined transforms
-  const rotateX = useTransform(scrollYProgress,
-    [0, 0.2, 0.65, 0.72, 0.78, 0.8, 1],
-    [0, 5, 5, 0, 0, 0, 0]
-  );
   const rotateY = useTransform(scrollYProgress,
-    [0, 0.2, 0.65, 0.72, 0.78, 0.8, 1],
-    [0, -5, -5, 180, 360, 360, 360]
+    [0, 0.25, 0.35, 0.65, 0.7, 1],
+    [0, 0, 0, 360, 360, 360]
   );
-  const rotateZ = useTransform(scrollYProgress,
-    [0, 0.2, 0.65, 0.72, 0.78, 0.8, 1],
-    [0, 0, 0, 0, 0, 0, 0]
+  const rotateX = useTransform(scrollYProgress,
+    [0, 0.25, 0.35, 0.65, 0.7, 1],
+    [0, 0, 0, 0, 0, 0]
   );
-  const ticketX = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 0, 0, 0]
-  );
-  const ticketY = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 0, 0, 0]
-  );
-  const ticketScale = useTransform(scrollYProgress,
-    [0, 0.2, 0.65, 0.72, 0.78, 0.8, 1],
-    [0.9, 1, 1, 1.1, 1, 1, 1]
+  const scale = useTransform(scrollYProgress,
+    [0, 0.25, 0.35, 0.65, 0.7, 0.8, 0.9, 1],
+    [0.9, 1, 1, 1, 1, 1.05, 0.98, 1]
   );
 
-  const centerContentOpacity = useTransform(scrollYProgress,
-    [0.15, 0.3, 0.55, 0.7],
-    [0, 1, 1, 0]
+  const detailsOpacity = useTransform(scrollYProgress,
+    [0, 0.1, 0.25, 0.35],
+    [0, 1, 1, 0.3]
   );
-    
-  const detailsYDesktop = useTransform(scrollYProgress,
-    [0.15, 0.3, 0.55, 0.7],
-    [30, 0, 0, -30]
-  );
-  const detailsYMobile = useTransform(scrollYProgress,
-    [0.15, 0.3, 0.55, 0.7],
-    [-20, 0, 0, -20]
-  );
-
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
 
   const [isPhase3, setIsPhase3] = useState(false);
   useEffect(() => {
     const unsub = scrollYProgress.on("change", (v) => {
-      setIsPhase3(v >= 0.8);
+      setIsPhase3(v >= 0.7);
     });
     return () => unsub();
   }, [scrollYProgress]);
@@ -184,8 +90,8 @@ export default function Tickets() {
       {/* Noise overlay */}
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       
-      {/* 300vh Scroll Track */}
-      <div ref={containerRef} className="h-[300vh] relative">
+      {/* 400vh Scroll Track - more scroll room */}
+      <div ref={containerRef} className="h-[400vh] relative">
         <div 
           className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
           style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
@@ -202,15 +108,20 @@ export default function Tickets() {
               style={{ background: 'radial-gradient(circle, rgba(0,8,57,0.5) 0%, transparent 70%)', transform: 'translate(30%, 30%)' }} />
           </div>
 
-          <GlisteningStars count={80} scrollProgress={scrollYProgress} />
-
-          {/* Scroll Indicator */}
+          {/* Large Scroll Indicator */}
           <motion.div 
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 pointer-events-none"
-            style={{ opacity: scrollIndicatorOpacity }}
+            className="absolute bottom-12 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-3 pointer-events-none"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.8 }}
           >
-            <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/50">Scroll to Explore</span>
-            <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
+            <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white/60">Scroll to Explore</span>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChevronDown size={24} className="text-brand-secondary" />
+            </motion.div>
           </motion.div>
 
           {/* ──── MOBILE LAYOUT ──── */}
@@ -218,8 +129,8 @@ export default function Tickets() {
             <>
               {/* Details panel — top portion of screen on mobile */}
               <motion.div 
-                style={{ opacity: centerContentOpacity, y: detailsYMobile }}
-                className="absolute z-10 top-[5vh] left-0 right-0 px-5 pointer-events-auto"
+                style={{ opacity: detailsOpacity }}
+                className="absolute z-10 top-[3vh] left-0 right-0 px-5 pointer-events-auto"
               >
                 <div className="space-y-3">
                   <div>
@@ -245,13 +156,11 @@ export default function Tickets() {
                 style={{
                   rotateX,
                   rotateY,
-                  rotateZ,
-                  scale: ticketScale,
+                  scale,
                   y: ticketY,
-                  x: ticketX,
                   transformStyle: "preserve-3d"
                 }}
-                className="absolute z-20 w-full max-w-[280px] bottom-[8vh] pointer-events-auto group cursor-pointer"
+                className="absolute z-20 w-full max-w-[280px] bottom-[5vh] pointer-events-auto group cursor-pointer"
                 onClick={() => { if (isPhase3) window.open('https://tukiio.com/event/tedxalmuntazirschoolsyouth', '_blank'); }}
               >
                 <TicketCard isPhase3={isPhase3} />
@@ -264,7 +173,7 @@ export default function Tickets() {
             <>
               {/* Details panel — left side on desktop */}
               <motion.div 
-                style={{ opacity: centerContentOpacity, y: detailsYDesktop }}
+                style={{ opacity: detailsOpacity }}
                 className="absolute z-10 w-full max-w-xl px-6 left-[8vw] pointer-events-auto"
               >
                 <div className="space-y-8">
@@ -297,9 +206,7 @@ export default function Tickets() {
                 style={{
                   rotateX,
                   rotateY,
-                  rotateZ,
-                  scale: ticketScale,
-                  x: ticketX,
+                  scale,
                   y: ticketY,
                   transformStyle: "preserve-3d"
                 }}
@@ -322,12 +229,6 @@ function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
       
       {/* Ticket Top */}
       <div className="bg-[#000839] px-8 md:px-14 pt-10 md:pt-16 pb-12 md:pb-14 relative overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0"
-          animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-        />
-        
         <div className="flex justify-between items-start relative z-10">
           <div className="flex-1">
             <span className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/30 block mb-3">

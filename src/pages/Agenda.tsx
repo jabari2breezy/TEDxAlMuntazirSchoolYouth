@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
-import { WarpShaderBackground } from '../components/ui/wrap-shader';
+import { motion } from 'motion/react';
 
 type AgendaItem = {
   id: string;
@@ -128,61 +127,45 @@ const TYPE_COLORS: Record<string, string> = {
 
 export default function Agenda() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-  const headerY = useTransform(scrollYProgress, [0, 0.1], [0, -40]);
 
   return (
     <div className="relative bg-brand-primary min-h-screen text-white overflow-hidden">
-      {/* WarpShader background — same as speakers */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <WarpShaderBackground />
-      </div>
+      {/* Simple gradient background - no heavy shader */}
+      <div className="fixed inset-0 z-0 pointer-events-none" style={{
+        background: 'linear-gradient(135deg, #000839 0%, #001a0d 50%, #050507 100%)'
+      }} />
 
-      {/* Dark overlay for readability */}
-      <div className="fixed inset-0 z-0 pointer-events-none bg-brand-primary/60" />
-
-      {/* Noise overlay */}
-      <div
-        className="fixed inset-0 z-0 pointer-events-none opacity-[0.06] mix-blend-overlay"
-        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }}
-      />
+      {/* Subtle radial accents */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-30" style={{
+        background: 'radial-gradient(circle at 20% 30%, rgba(0,109,56,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(0,8,57,0.5) 0%, transparent 50%)'
+      }} />
 
       <div ref={containerRef} className="relative z-10">
         {/* Sticky Header */}
-        <motion.div 
-          style={{ opacity: headerOpacity, y: headerY }}
-          className="sticky top-0 z-20 bg-brand-primary/80 backdrop-blur-md border-b border-white/10"
-        >
+        <div className="sticky top-0 z-20 bg-brand-primary/80 backdrop-blur-md border-b border-white/10">
           <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-8">
             <span className="font-typewriter text-[10px] text-brand-secondary tracking-[0.5em] uppercase block mb-2">The Timeline</span>
             <h1 className="text-5xl md:text-7xl font-title font-black uppercase tracking-tighter text-white leading-none">
               Full Agenda
             </h1>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Agenda Cards Grid — frosted glass style */}
+        {/* Agenda Cards Grid - simplified for performance */}
         <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {AGENDA_ITEMS.map((item, index) => (
-              <motion.div
+              <div
                 key={item.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-5%' }}
-                transition={{ duration: 0.6, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                className="relative rounded-3xl overflow-hidden mobile-agenda-card"
+                className="relative rounded-3xl overflow-hidden agenda-card"
                 style={{
                   background: 'rgba(255, 255, 255, 0.08)',
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+                  willChange: 'transform',
+                  contain: 'layout style',
                 }}
               >
                 {/* Type color accent */}
@@ -249,7 +232,7 @@ export default function Agenda() {
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

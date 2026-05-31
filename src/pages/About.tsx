@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { Mail } from 'lucide-react';
-import { Meteors } from '../components/ui/meteors';
+import { ShaderAnimation } from '../components/ui/shader-animation';
 
 export default function About() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -29,32 +29,14 @@ export default function About() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="pt-40 relative min-h-screen text-white overflow-hidden"
-      style={{ background: '#0a0a0a' }}
     >
-      {/* Gradient background using site colors */}
-      <div className="fixed inset-0 z-0 pointer-events-none" style={{
-        background: 'linear-gradient(135deg, #000839 0%, #001a0d 50%, #050507 100%)'
-      }} />
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.15]" style={{
-        background: 'radial-gradient(circle at 20% 30%, rgba(0,109,56,0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(0,8,57,0.6) 0%, transparent 50%)'
-      }} />
-
-      {/* Shooting stars — dense, full viewport, all around */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <Meteors number={200} />
-      </div>
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <Meteors number={200} />
-      </div>
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <Meteors number={200} />
+      {/* Shader animation background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <ShaderAnimation />
       </div>
 
-      {/* Noise texture */}
-      <div
-        className="fixed inset-0 z-0 pointer-events-none opacity-[0.04] mix-blend-multiply"
-        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }}
-      />
+      {/* Dark overlay for readability */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-black/40" />
 
       <div className="relative z-10 px-6 md:px-16 max-w-screen-2xl mx-auto pb-32">
         <header className="mb-24 flex flex-col items-center text-center mt-12 md:mt-24 overflow-hidden">

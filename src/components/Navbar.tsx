@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, useScroll } from 'motion/react';
-import { X } from 'lucide-react';
+import { X, Sun, Moon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
@@ -9,10 +9,19 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [quote, setQuote] = useState<{ text: string, author: string } | null>(null);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const location = useLocation();
   const { scrollYProgress } = useScroll();
 
   useEffect(() => { setMounted(true); }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', theme === 'light');
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -106,6 +115,19 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-4 md:gap-8 pointer-events-auto">
+        {/* Theme Toggle */}
+        <button 
+          onClick={toggleTheme}
+          className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center transition-all hover:border-white hover:bg-white/10"
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? (
+            <Sun size={16} className="text-white" />
+          ) : (
+            <Moon size={16} className="text-[#000839]" />
+          )}
+        </button>
+
         {/* Menu Toggle */}
         <button 
           className="group flex items-center gap-4 border border-white/30 rounded-full pl-6 pr-4 py-2 transition-all hover:border-white"
