@@ -12,15 +12,13 @@ function KineticSpine({ scrollYProgress, isMobile }: { scrollYProgress: any, isM
   const meshRef = useRef<THREE.Mesh>(null);
   
   const { geometry } = useMemo(() => {
-    class SpineCurve extends THREE.Curve<THREE.Vector3> {
-      getPoint(t: number, optionalTarget = new THREE.Vector3()) {
-        const tx = Math.sin(t * Math.PI * 4) * 2;
-        const ty = (t - 0.5) * 20;
-        const tz = Math.cos(t * Math.PI * 4) * 2;
-        return optionalTarget.set(tx, ty, tz);
-      }
-    }
-    const curve = new SpineCurve();
+    const curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(1, 2, 1),
+      new THREE.Vector3(2, 4, 0),
+      new THREE.Vector3(3, 6, -1),
+      new THREE.Vector3(4, 8, 0),
+    ]);
     const geometry = new THREE.TubeGeometry(curve, 200, 1.2, 8, false);
     return { geometry };
   }, []);
