@@ -31,12 +31,9 @@ export default function About() {
       className="pt-40 relative min-h-screen text-brand-primary overflow-hidden"
       style={{ background: '#f5f0e8' }}
     >
-      {/* Shooting stars — dense, full viewport, all around */}
+      {/* Shooting stars — all around */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <Meteors number={400} />
-      </div>
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <Meteors number={300} />
+        <Meteors number={80} />
       </div>
 
       {/* Noise texture */}
