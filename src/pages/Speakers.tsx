@@ -1,19 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { SEGMENTS, SPEAKERS } from '../constants';
-import { ArrowDown } from 'lucide-react';
-import FloatingBackground from '../components/FloatingBackground';
 import { WarpShaderBackground } from '../components/ui/wrap-shader';
-import { MaskedReveal, MicroTag, IndexNumber, StaggerContainer, StaggerItem, LUXURY_EASE } from '../components/KineticTypography';
-import HeroScrollAnimation from '../components/ui/hero-scroll-animation';
+import { IndexNumber, LUXURY_EASE } from '../components/KineticTypography';
 
 interface Speaker {
   id: string;
   name: string;
   topic: string;
-  segmentId: string;
   bio: string;
   talk_description: string;
+  segmentId: string;
 }
 
 /* ────────── Scroll-driven text reveal ────────── */
@@ -136,8 +133,8 @@ const floaters: Record<string, { shape: string; x: string; y: string; size: numb
   ],
 };
 
-function FloatingElements({ speakerId, isNavy }: { speakerId: string; isNavy: boolean }) {
-  const items = floaters[speakerId] || floaters['1'];
+function FloatingElements({ speakerId, isNavy, reduceMotion }: { speakerId: string; isNavy: boolean; reduceMotion?: boolean }) {
+  const items = reduceMotion ? floaters[speakerId]?.slice(0, 2) || floaters['1'].slice(0, 2) : floaters[speakerId] || floaters['1'];
   const color = isNavy ? 'rgba(255,255,255,0.06)' : 'rgba(0,8,57,0.05)';
 
   return (
@@ -208,12 +205,14 @@ function SpeakerChapter({
   segmentLabel,
   segmentIdx,
   total,
+  reduceMotion,
 }: {
   speaker: Speaker;
   index: number;
   segmentLabel: string;
   segmentIdx: number;
   total: number;
+  reduceMotion?: boolean;
 }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -230,11 +229,11 @@ function SpeakerChapter({
   const cardProgress = useTransform(scrollYProgress, [0, 0.8], [0, 1]);
 
   return (
-    <div ref={sectionRef} className="relative h-[300dvh]">
+    <div ref={sectionRef} className="relative h-[250dvh]">
       <div className="sticky top-0 h-dvh overflow-hidden" style={{ backgroundColor: bg }}>
 
-        {/* Floating objects */}
-        <FloatingElements speakerId={speaker.id} isNavy={isEven} />
+        {/* Floating objects - reduced on mobile */}
+        <FloatingElements speakerId={speaker.id} isNavy={isEven} reduceMotion={reduceMotion} />
 
         {/* Watermark */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
@@ -357,10 +356,15 @@ function SpeakerChapter({
 export default function Speakers() {
   const [speakersData, setSpeakersData] = useState<Speaker[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setSpeakersData(SPEAKERS as Speaker[]);
     setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   if (speakersData.length === 0) {
@@ -373,16 +377,15 @@ export default function Speakers() {
     );
   }
 
+  const reduceMotion = isMobile;
+
   return (
     <div className="relative bg-brand-primary">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <WarpShaderBackground />
       </div>
 
-      <HeroSection mounted={mounted} speakersCount={speakersData.length} />
-
-      {/* Scroll-driven transition between hero and speakers */}
-      <HeroScrollAnimation />
+      {/* Removed HeroSection - no more "AN HERO SECTION..." or "IMAGES THAT DOESN'T..." */}
 
       {speakersData.map((speaker, i) => {
         const seg = SEGMENTS.find(s => s.id === speaker.segmentId);
@@ -396,6 +399,7 @@ export default function Speakers() {
             segmentLabel={segLabel}
             segmentIdx={segIdx}
             total={speakersData.length}
+            reduceMotion={reduceMotion}
           />
         );
       })}
@@ -442,108 +446,6 @@ export default function Speakers() {
           </motion.p>
         </div>
       </section>
-    </div>
-  );
-}
-
-/* ────────── Hero ────────── */
-
-function HeroSection({
-  mounted,
-  speakersCount,
-}: {
-  mounted: boolean;
-  speakersCount: number;
-}) {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [1, 1, 0.5, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [1, 1, 0.92, 0.88]);
-  const heroY = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 0, -40, -80]);
-
-  const titleWords = 'The Assembly'.split(' ');
-  const subtitle = `${speakersCount} Speakers, One Stage`;
-
-  return (
-    <div ref={heroRef} className="relative h-[200dvh]">
-      <motion.div
-        style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-        className="sticky top-0 h-dvh flex flex-col justify-center items-center px-6 overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-brand-primary" />
-        <FloatingBackground />
-
-        {mounted && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-            <span className="text-[30vw] md:text-[20vw] font-title font-black uppercase leading-none tracking-tighter text-white whitespace-nowrap opacity-[0.04]">
-              2026
-            </span>
-          </div>
-        )}
-
-        <div className="relative z-10 text-center max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={mounted ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center justify-center gap-3 mb-8"
-          >
-            <span className="w-2 h-2 rounded-full bg-brand-secondary" />
-            <span className="font-typewriter text-[10px] md:text-[11px] uppercase tracking-[0.45em] text-white/40 font-semibold">
-              {subtitle}
-            </span>
-          </motion.div>
-
-          <h1 className="overflow-hidden">
-            {titleWords.map((word, i) => (
-              <motion.span
-                key={i}
-                initial={{ y: '110%', opacity: 0 }}
-                animate={mounted ? { y: '0%', opacity: 1 } : {}}
-                transition={{
-                  duration: 0.85,
-                  delay: 0.4 + i * 0.12,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="inline-block text-[14vw] md:text-[8vw] lg:text-[6.5vw] font-title font-black uppercase leading-[0.82] tracking-tighter text-white mr-[0.15em]"
-              >
-                {word}
-              </motion.span>
-            ))}
-          </h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={mounted ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 font-editorial italic text-xl md:text-2xl lg:text-3xl text-white/50"
-          >
-            &ldquo;Time is the currency of attention&rdquo;
-          </motion.p>
-
-          {/* Scroll arrow */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={mounted ? { opacity: 1 } : {}}
-            transition={{ delay: 1.4, duration: 0.8 }}
-            className="mt-16 md:mt-24 flex flex-col items-center gap-3"
-          >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <ArrowDown size={20} className="text-white/25" strokeWidth={1.5} />
-            </motion.div>
-            <span className="font-typewriter text-[7px] uppercase tracking-[0.5em] text-white/15">
-              Scroll
-            </span>
-          </motion.div>
-        </div>
-      </motion.div>
     </div>
   );
 }
