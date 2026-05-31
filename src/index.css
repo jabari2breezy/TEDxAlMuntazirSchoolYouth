@@ -727,3 +727,116 @@ html.light .border-opacity-90 {
 html.light .border-opacity-100 {
   --tw-border-opacity: 1 !important;
 }
+
+/* Light mode for new components */
+html.light .bg-\[\#050507\] {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .bg-\[\#08080a\] {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .bg-\[\#0a0a0d\] {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .border-\[\#050507\]\/90 {
+  border-color: rgba(0, 8, 57, 0.1) !important;
+}
+
+html.light .from-\[\#050507\]\/90 {
+  --tw-gradient-from: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .via-\[\#050507\]\/50 {
+  --tw-gradient-via: rgba(0, 8, 57, 0.03) !important;
+}
+
+html.light .to-\[\#050507\] {
+  --tw-gradient-to: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .bg-\[\#050507\]\/90 {
+  background-color: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .bg-\[\#050507\]\/50 {
+  background-color: rgba(0, 8, 57, 0.03) !important;
+}
+
+html.light .border-\[\#050507\]\/5 {
+  border-color: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .border-\[\#050507\]\/10 {
+  border-color: rgba(0, 8, 57, 0.1) !important;
+}
+
+html.light .text-\[\#EBEBEB\] {
+  color: #000839 !important;
+}
+
+html.light .bg-\[\#08080a\] {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .border-white\/5 {
+  border-color: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .bg-\[\#0a0a0d\] {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .border-white\/10 {
+  border-color: rgba(0, 8, 57, 0.1) !important;
+}
+
+html.light .text-\[\#e62b1e\] {
+  color: #e62b1e !important;
+}
+
+html.light .bg-\[\#050507\] {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .bg-\[\#08080a\] {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .bg-\[\#0a0a0d\] {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .text-\[\#EBEBEB\] {
+  color: #000839 !important;
+}
+
+html.light .border-\[\#050507\]\/5 {
+  border-color: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .border-\[\#050507\]\/10 {
+  border-color: rgba(0, 8, 57, 0.1) !important;
+}
+
+html.light .from-\[\#050507\]\/90 {
+  --tw-gradient-from: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .via-\[\#050507\]\/50 {
+  --tw-gradient-via: rgba(0, 8, 57, 0.03) !important;
+}
+
+html.light .to-\[\#050507\] {
+  --tw-gradient-to: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .bg-\[\#050507\]\/90 {
+  background-color: rgba(0, 8, 57, 0.05) !important;
+}
+
+html.light .bg-\[\#050507\]\/50 {
+  background-color: rgba(0, 8, 57, 0.03) !important;
+}

@@ -93,10 +93,20 @@ export default function Tickets() {
       {/* 400vh Scroll Track - more scroll room */}
       <div ref={containerRef} className="h-[400vh] relative">
         <div 
-          className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
+          className="sticky top-0 w-full flex flex-col items-center justify-center overflow-hidden"
           style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
         >
           
+          {/* Huge TICKETS! title */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-[20vw] md:text-[16vw] font-title font-black uppercase tracking-tighter text-white leading-none z-30 mb-4"
+          >
+            TICKETS!
+          </motion.h1>
+
           {/* Fixed dark background */}
           <div className="absolute inset-0 bg-[#050507] z-0" />
 
@@ -127,10 +137,10 @@ export default function Tickets() {
           {/* ──── MOBILE LAYOUT ──── */}
           {isMobile && (
             <>
-              {/* Details panel — top portion of screen on mobile */}
+              {/* Details panel — below title on mobile */}
               <motion.div 
                 style={{ opacity: detailsOpacity }}
-                className="absolute z-10 top-[3vh] left-0 right-0 px-5 pointer-events-auto"
+                className="absolute z-10 top-[22vh] left-0 right-0 px-5 pointer-events-auto"
               >
                 <div className="space-y-3">
                   <div>

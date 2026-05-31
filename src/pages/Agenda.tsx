@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion } from 'motion/react';
+import { WeatherEffect } from '../components/ui/rain-and-lightning-hero-section';
 
 type AgendaItem = {
   id: string;
@@ -16,99 +17,99 @@ const AGENDA_ITEMS: AgendaItem[] = [
   {
     id: '00',
     time: '09:30 AM',
-    title: 'REGISTRATION',
+    title: 'Registration',
     speaker: 'Welcome Desk',
-    desc: 'Enter the monolithic space and receive your credentials. Access the primary viewing arrays and prepare for the temporal shift.',
+    desc: 'Grab your badge, find your seat, and get ready for a day of big ideas.',
     duration: '30M',
     type: 'EXPERIENCE'
   },
   {
     id: '01',
     time: '10:00 AM',
-    title: 'INTRO SESSION',
-    speaker: 'Opening',
-    desc: 'The beginning of the end. An orientation to the systems and structures of Borrowed Time.',
+    title: 'Opening Session',
+    speaker: 'Your Hosts',
+    desc: 'Kickoff with a quick welcome and a video that sets the tone for the day.',
     duration: '20M',
     type: 'SESSION',
     sub: [
-      { id: '01a', time: '10:00', title: 'Welcome Address', speaker: 'Hosts', desc: 'Opening welcome to all attendees and a framing of the day ahead.', duration: '10M', type: 'EXPERIENCE' },
-      { id: '01b', time: '10:10', title: 'Intro Video', speaker: 'Screen', desc: 'A cinematic video setting the tone for the Borrowed Time theme.', duration: '10M', type: 'VIDEO' },
+      { id: '01a', time: '10:00', title: 'Welcome Address', speaker: 'Hosts', desc: 'Quick hello and what to expect today.', duration: '10M', type: 'EXPERIENCE' },
+      { id: '01b', time: '10:10', title: 'Intro Video', speaker: 'Screen', desc: 'A short film that gets you in the zone.', duration: '10M', type: 'VIDEO' },
     ]
   },
   {
     id: '02',
     time: '10:20 AM',
-    title: 'SESSION 1',
+    title: 'Session 1',
     speaker: '3 Speakers + Game',
-    desc: 'The first block of ideas worth spreading, featuring three transformative speakers and an interactive game.',
+    desc: 'Three speakers share their take on how we spend our time, plus a quick game to wake everyone up.',
     duration: '70M',
     type: 'SESSION',
     sub: [
-      { id: '02a', time: '10:20', title: 'Speaker 1: Ridhwan Mohammed', speaker: 'Alumni Speaker', desc: 'An alumni perspective on borrowed time and life beyond school walls.', duration: '15M', type: 'KEYNOTE' },
-      { id: '02b', time: '10:35', title: 'Short Break', speaker: '', desc: 'A brief reset between speakers.', duration: '5M', type: 'BREAK' },
-      { id: '02c', time: '10:40', title: 'Speaker 2: Anaya Rashid', speaker: 'Culture of Time', desc: 'Exploring how different cultures perceive, value, and manage their time differently across the globe.', duration: '15M', type: 'KEYNOTE' },
-      { id: '02d', time: '10:55', title: 'Interactive Game', speaker: 'Audience', desc: 'A fast-paced interactive game connecting the audience to the theme.', duration: '10M', type: 'GAME' },
-      { id: '02e', time: '11:05', title: 'Speaker 3: Zahra Datoo', speaker: 'Nostalgia', desc: 'A deep exploration of nostalgia — why we look back, what it costs us, and what it can teach us.', duration: '15M', type: 'KEYNOTE' },
+      { id: '02a', time: '10:20', title: 'Ridhwan Mohammed', speaker: 'Alumni Speaker', desc: 'What school actually preps you for — and what it doesn\'t.', duration: '15M', type: 'KEYNOTE' },
+      { id: '02b', time: '10:35', title: 'Quick Break', speaker: '', desc: 'Stretch your legs, grab a snack.', duration: '5M', type: 'BREAK' },
+      { id: '02c', time: '10:40', title: 'Anaya Rashid', speaker: 'Culture of Time', desc: 'How different cultures see time — and what we can learn from each other.', duration: '15M', type: 'KEYNOTE' },
+      { id: '02d', time: '10:55', title: 'Interactive Game', speaker: 'Audience', desc: 'A fast, fun game that ties into the theme.', duration: '10M', type: 'GAME' },
+      { id: '02e', time: '11:05', title: 'Zahra Datoo', speaker: 'Nostalgia', desc: 'Why we look back, what it costs us, and what it actually gives us.', duration: '15M', type: 'KEYNOTE' },
     ]
   },
   {
     id: '03',
     time: '11:30 AM',
-    title: 'TEA BREAK',
+    title: 'Tea Break',
     speaker: 'Refreshments',
-    desc: 'Curated refreshments and ambient networking. Recharge, connect, and exchange ideas.',
+    desc: 'Grab a drink, chat with people, and recharge before the next block.',
     duration: '20M',
     type: 'BREAK'
   },
   {
     id: '04',
     time: '11:50 AM',
-    title: 'SESSION 2',
+    title: 'Session 2',
     speaker: '3 Speakers + Game',
-    desc: 'The second block of ideas — exploring innovation, urgency, and the cost of procrastination.',
+    desc: 'More talks, more ideas, and another game to keep the energy up.',
     duration: '70M',
     type: 'SESSION',
     sub: [
-      { id: '04a', time: '11:50', title: 'Speaker 4: Zahra Moledina', speaker: 'The Best Thing Since Sliced Bread', desc: 'How breakthroughs happen, why we miss them, and why the next big thing is already here.', duration: '15M', type: 'KEYNOTE' },
-      { id: '04b', time: '12:05', title: 'Kahoot / Blooket', speaker: 'Audience', desc: 'An energizing quiz game to test and celebrate knowledge from the sessions so far.', duration: '10M', type: 'GAME' },
-      { id: '04c', time: '12:15', title: 'Speaker 5: TBD', speaker: 'Speaker', desc: 'A surprise talk from a yet-to-be-announced speaker — the unknown is part of the borrowed time experience.', duration: '18M', type: 'KEYNOTE' },
-      { id: '04d', time: '12:33', title: 'Mini Game', speaker: 'Audience', desc: 'A short interactive game before the final speaker of the session.', duration: '5M', type: 'GAME' },
-      { id: '04e', time: '12:38', title: 'Speaker 6: Hassan Abbas Muhammad', speaker: 'Procrastination', desc: 'Dissecting the procrastination paradox — why we borrow against our own future and how to finally stop.', duration: '15M', type: 'KEYNOTE' },
-      { id: '04f', time: '12:53', title: '[ Buffer ]', speaker: '', desc: 'Schedule buffer to ensure the session finishes on time.', duration: '7M', type: 'BREAK' },
+      { id: '04a', time: '11:50', title: 'Zahra Moledina', speaker: 'The Best Thing Since Sliced Bread', desc: 'How breakthroughs happen, why we miss them, and why the next big thing is already here.', duration: '15M', type: 'KEYNOTE' },
+      { id: '04b', time: '12:05', title: 'Kahoot / Blooket', speaker: 'Audience', desc: 'A quick quiz game to test what you\'ve picked up so far.', duration: '10M', type: 'GAME' },
+      { id: '04c', time: '12:15', title: 'TBD Speaker', speaker: 'Surprise Guest', desc: 'A talk from someone we\'re still finalizing — expect the unexpected.', duration: '18M', type: 'KEYNOTE' },
+      { id: '04d', time: '12:33', title: 'Mini Game', speaker: 'Audience', desc: 'A short, silly game before the last speaker of the session.', duration: '5M', type: 'GAME' },
+      { id: '04e', time: '12:38', title: 'Hassan Abbas Muhammad', speaker: 'Procrastination', desc: 'Why we put things off, and how to actually stop doing it.', duration: '15M', type: 'KEYNOTE' },
+      { id: '04f', time: '12:53', title: 'Buffer', speaker: '', desc: 'Quick breather so we stay on schedule.', duration: '7M', type: 'BREAK' },
     ]
   },
   {
     id: '05',
     time: '01:00 PM',
-    title: 'SALAH & LUNCH',
+    title: 'Salah & Lunch',
     speaker: 'Prayer + Food',
-    desc: 'Salah break followed by a curated lunch experience and partner activations. Refuel for the final session.',
+    desc: 'Salah break, then lunch with some partner activations mixed in.',
     duration: '60M',
     type: 'LUNCH'
   },
   {
     id: '06',
     time: '02:00 PM',
-    title: 'SESSION 3',
+    title: 'Session 3',
     speaker: '3 Speakers + 2 Games',
-    desc: 'The grand finale — three visionary speakers and two games bring the Borrowed Time theme to its crescendo.',
+    desc: 'The final block — three speakers and two games to close out the main program.',
     duration: '75M',
     type: 'SESSION',
     sub: [
-      { id: '06a', time: '02:00', title: 'Speaker 7: Yunus Osman', speaker: 'The Art of Scheduling (Alumni)', desc: 'An alumni master-class on how to design your time intentionally and build systems that work.', duration: '15M', type: 'KEYNOTE' },
-      { id: '06b', time: '02:15', title: 'Interactive Game', speaker: 'Audience', desc: 'An audience game to reset energy before the next speaker.', duration: '10M', type: 'GAME' },
-      { id: '06c', time: '02:25', title: 'Speaker 8: Sada Mbaruk', speaker: 'End of the World', desc: 'A provocative exploration of what happens when we run out of borrowed time — individually and globally.', duration: '15M', type: 'KEYNOTE' },
-      { id: '06d', time: '02:40', title: 'Imposter Game', speaker: 'Audience', desc: 'The iconic imposter social deduction game — who can you trust with your time?', duration: '10M', type: 'GAME' },
-      { id: '06e', time: '02:50', title: 'Speaker 9: Liyaan Karbelkar', speaker: 'How to Take Your Wealth With You', desc: 'How to build legacy, purpose, and impact that outlasts the finite window of your borrowed time.', duration: '15M', type: 'KEYNOTE' },
-      { id: '06f', time: '03:05', title: '[ Buffer ]', speaker: '', desc: 'Schedule buffer to ensure clean handoff to closing.', duration: '10M', type: 'BREAK' },
+      { id: '06a', time: '02:00', title: 'Yunus Osman', speaker: 'The Art of Scheduling (Alumni)', desc: 'How to actually plan your time so it works for you.', duration: '15M', type: 'KEYNOTE' },
+      { id: '06b', time: '02:15', title: 'Interactive Game', speaker: 'Audience', desc: 'A quick game to reset the room before the next talk.', duration: '10M', type: 'GAME' },
+      { id: '06c', time: '02:25', title: 'Sada Mbaruk', speaker: 'End of the World', desc: 'What happens when we run out of time — and why that matters now.', duration: '15M', type: 'KEYNOTE' },
+      { id: '06d', time: '02:40', title: 'Imposter Game', speaker: 'Audience', desc: 'The classic social deduction game — who can you trust with your time?', duration: '10M', type: 'GAME' },
+      { id: '06e', time: '02:50', title: 'Liyaan Karbelkar', speaker: 'How to Take Your Wealth With You', desc: 'Building something that lasts longer than you do.', duration: '15M', type: 'KEYNOTE' },
+      { id: '06f', time: '03:05', title: 'Buffer', speaker: '', desc: 'Quick buffer before closing.', duration: '10M', type: 'BREAK' },
     ]
   },
   {
     id: '07',
     time: '03:15 PM',
-    title: 'CLOSING CEREMONY',
-    speaker: 'All',
-    desc: 'The temporal window closes. Awards, acknowledgements, and the final message — make the most of your borrowed time.',
+    title: 'Closing Ceremony',
+    speaker: 'Everyone',
+    desc: 'Awards, shoutouts, and a final message to send you home inspired.',
     duration: '45M',
     type: 'CEREMONY'
   },
@@ -130,15 +131,26 @@ export default function Agenda() {
 
   return (
     <div className="relative bg-brand-primary min-h-screen text-white overflow-hidden">
-      {/* Simple gradient background - no heavy shader */}
-      <div className="fixed inset-0 z-0 pointer-events-none" style={{
-        background: 'linear-gradient(135deg, #000839 0%, #001a0d 50%, #050507 100%)'
-      }} />
+      {/* Rain and lightning background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <WeatherEffect
+          rainIntensity={60}
+          rainSpeed={0.15}
+          rainAngle={12}
+          rainColor="rgba(0, 200, 100, 0.4)"
+          lightningEnabled={true}
+          lightningFrequency={5}
+          lightningHue={140}
+          lightningSpeed={0.8}
+          lightningIntensity={1.2}
+          lightningSize={1.5}
+          thunderEnabled={false}
+          className="bg-[#050507]"
+        />
+      </div>
 
-      {/* Subtle radial accents */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-30" style={{
-        background: 'radial-gradient(circle at 20% 30%, rgba(0,109,56,0.3) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(0,8,57,0.5) 0%, transparent 50%)'
-      }} />
+      {/* Dark overlay for readability */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-brand-primary/50" />
 
       <div ref={containerRef} className="relative z-10">
         {/* Sticky Header */}
@@ -151,7 +163,7 @@ export default function Agenda() {
           </div>
         </div>
 
-        {/* Agenda Cards Grid - simplified for performance */}
+        {/* Agenda Cards Grid */}
         <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {AGENDA_ITEMS.map((item, index) => (
