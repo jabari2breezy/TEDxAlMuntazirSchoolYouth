@@ -108,12 +108,10 @@ export default function Tickets() {
               style={{ background: 'radial-gradient(circle, rgba(0,8,57,0.5) 0%, transparent 70%)', transform: 'translate(30%, 30%)' }} />
           </div>
 
-          {/* Huge TICKETS! Title */}
-          <motion.h1 
-            className="absolute top-12 left-1/2 -translate-x-1/2 z-40 font-title font-black text-[12vw] md:text-[10vw] tracking-tighter text-white/90 pointer-events-none select-none"
-            initial={{ opacity: 0, y: -30, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          {/* Huge TICKETS! Title - fades on scroll */}
+          <motion.h1
+            style={{ opacity: useTransform(scrollYProgress, [0, 0.15], [1, 0]) }}
+            className="absolute top-8 left-1/2 -translate-x-1/2 z-40 font-title font-black text-[22vw] md:text-[18vw] leading-none tracking-tighter text-white pointer-events-none select-none"
           >
             TICKETS!
           </motion.h1>

@@ -8,7 +8,6 @@ import Countdown from '../components/Countdown';
 import PrecisionButton from '../components/PrecisionButton';
 import { TICKETS_URL, SOCIALS } from '../constants';
 import SponsorsSection from '../components/SponsorsSection';
-import Preloader from '../components/Preloader';
 
 const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -166,7 +165,6 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [eventStatus, setEventStatus] = useState<EventStatus | null>(null);
   const [updates, setUpdates] = useState<Update[]>([]);
-  const [introComplete, setIntroComplete] = useState(false);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -222,23 +220,6 @@ export default function Home() {
         style={{ scaleX: scrollYProgress }}
       />
 
-      {/* Intro Preloader */}
-      <Preloader onComplete={() => setIntroComplete(true)} />
-
-      {/* Cinematic bridge: soft flash as preloader hands off to hero */}
-      <AnimatePresence>
-        {introComplete && (
-          <motion.div
-            key="entrance-flash"
-            className="fixed inset-0 z-[9997] pointer-events-none bg-brand-secondary/20"
-            initial={{ opacity: 0.4 }}
-            animate={{ opacity: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-          />
-        )}
-      </AnimatePresence>
-
       {/* Tiny Background Blur Layer */}
       <motion.div 
         className="fixed inset-0 z-0 pointer-events-none backdrop-blur-[1px]"
@@ -251,8 +232,8 @@ export default function Home() {
       <motion.div
         className="min-h-screen flex flex-col relative overflow-hidden bg-[#050507] text-white"
         initial={{ opacity: 0, scale: 1.06, filter: 'blur(14px)' }}
-        animate={introComplete ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 1.06, filter: 'blur(14px)' }}
-        transition={{ duration: 1.35, ease: [0.16, 1, 0.3, 1], delay: introComplete ? 0.05 : 0 }}
+        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+        transition={{ duration: 1.35, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
       >
         <div className="absolute inset-0 z-0 bg-[#08080a]">
           <FluidBackground />
@@ -269,7 +250,7 @@ export default function Home() {
             variants={titleVariants}
             className="max-w-7xl mb-12 flex flex-col items-center w-full"
             initial={{ opacity: 0, y: 48 }}
-            animate={introComplete ? { opacity: 1, y: 0 } : {}}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
             <h1 className="sr-only">TEDx Al Muntazir Schools Youth 2026</h1>
@@ -284,7 +265,7 @@ export default function Home() {
               </span>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
-                animate={introComplete ? { opacity: 0.35, y: 0 } : {}}
+                animate={{ opacity: 0.35, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 className="font-title font-black text-[clamp(1.5rem,7vw,4rem)] tracking-tighter text-white mt-2"
               >
@@ -293,8 +274,7 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {introComplete && (
-            <>
+          <>
               <motion.div variants={itemVariants} className="max-w-3xl mb-16">
                  <p className="hero-text font-editorial text-4xl md:text-6xl text-white/50 italic leading-[1.1]">
                    We're living on <span className="text-white font-medium">BORROWED TIME.</span>
@@ -315,7 +295,6 @@ export default function Home() {
                 </Link>
               </motion.div>
             </>
-          )}
           
           {/* Scroll Indicator (Mobile / Bottom Hero) */}
           <motion.div 
