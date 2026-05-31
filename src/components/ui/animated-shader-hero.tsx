@@ -68,10 +68,10 @@ void main(void) {
 
 export function AnimatedShaderBackground({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number | null>(null);
+  const animationFrameRef = useRef<number>();
   const glRef = useRef<WebGL2RenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
-  const startTimeRef = useRef<number>(typeof performance !== 'undefined' ? performance.now() : 0);
+  const startTimeRef = useRef<number>(performance.now());
 
   useEffect(() => {
     const canvas = canvasRef.current;

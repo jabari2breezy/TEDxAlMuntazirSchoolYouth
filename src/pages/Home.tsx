@@ -6,7 +6,7 @@ import FloatingBackground from '../components/FloatingBackground';
 import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
-import ShutterText from '../components/ui/shutter-text';
+import HeroText from '../components/ui/hero-shutter-text';
 import PrecisionButton from '../components/PrecisionButton';
 import { TICKETS_URL, SOCIALS } from '../constants';
 import SponsorsSection from '../components/SponsorsSection';
@@ -279,14 +279,7 @@ export default function Home() {
             <h1 className="sr-only">TEDx Al Muntazir Schools Youth 2026</h1>
             <div className="flex flex-col items-center gap-1 md:gap-2 w-full mix-blend-difference">
               {introComplete && (
-                <>
-                  <ShutterText text="TEDx" sizeClass="text-[clamp(2.5rem,14vw,8rem)]" />
-                  <ShutterText text="AL MUNTAZIR" sizeClass="text-[clamp(2rem,11vw,6.5rem)]" />
-                  <ShutterText
-                    text="SCHOOLS YOUTH"
-                    sizeClass="text-[clamp(1.75rem,9vw,5rem)] text-brand-secondary"
-                  />
-                </>
+                <HeroText text="TEDx AL MUNTAZIR SCHOOLS YOUTH" />
               )}
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
