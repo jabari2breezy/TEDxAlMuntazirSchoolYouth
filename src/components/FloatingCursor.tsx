@@ -5,6 +5,8 @@ export default function FloatingCursor() {
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
   const [hoverType, setHoverType] = useState<'default' | 'button' | 'text'>('default');
+  const isCoarsePointer =
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
   // Ultra-smooth buttery spring config
   const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
@@ -12,6 +14,8 @@ export default function FloatingCursor() {
   const smoothY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
+    if (isCoarsePointer) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -31,7 +35,7 @@ export default function FloatingCursor() {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [isCoarsePointer, mouseX, mouseY]);
 
   return (
     <>

@@ -123,7 +123,7 @@ export default function Footer() {
                 { label: 'FAQ', to: '/faq' },
                 { label: 'About', to: '/about' },
                 { label: 'The Team', to: '/team' },
-                { label: 'Tickets', to: TICKETS_URL, external: true },
+                { label: 'Tickets', to: TICKETS_URL, external: false },
               ].map((link) => (
                 link.external ? (
                   <a

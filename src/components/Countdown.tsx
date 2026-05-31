@@ -10,6 +10,8 @@ interface TimeLeft {
 
 export default function Countdown() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
+  const isCoarsePointer =
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
   useEffect(() => {
     const targetDate = new Date('2026-06-14T08:30:00').getTime();
@@ -47,14 +49,20 @@ export default function Countdown() {
       ].map((item, i) => (
         <div key={item.label} className="flex flex-col items-center">
           <div className="relative overflow-hidden group">
-            <motion.span 
-              key={item.value}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="text-5xl md:text-7xl font-title font-black text-white block tabular-nums drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-            >
-              {item.value.toString().padStart(2, '0')}
-            </motion.span>
+            {isCoarsePointer ? (
+              <span className="text-5xl md:text-7xl font-title font-black text-white block tabular-nums drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                {item.value.toString().padStart(2, '0')}
+              </span>
+            ) : (
+              <motion.span 
+                key={item.value}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="text-5xl md:text-7xl font-title font-black text-white block tabular-nums drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+              >
+                {item.value.toString().padStart(2, '0')}
+              </motion.span>
+            )}
           </div>
           <span className="font-typewriter text-[10px] uppercase tracking-[0.4em] text-white/40 mt-3">
             {item.label}

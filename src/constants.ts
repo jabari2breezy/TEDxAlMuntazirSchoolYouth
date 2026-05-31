@@ -56,6 +56,7 @@ export const SOCIALS = {
 };
 
 export const TICKETS_URL = '/tickets';
+export const TUKIIO_CHECKOUT_URL = 'https://tukiio.com/event/tedxalmuntazirschoolsyouth';
 
 export const SPEAKERS: Speaker[] = [
   {
