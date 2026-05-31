@@ -130,7 +130,7 @@ export default function Agenda() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="relative bg-brand-primary min-h-screen text-white overflow-hidden">
+    <div className="relative bg-brand-primary min-h-screen text-white">
       {/* Rain and Lightning background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <WeatherEffect

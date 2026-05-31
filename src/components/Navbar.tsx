@@ -16,12 +16,17 @@ export default function Navbar() {
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    if (theme === 'light') {
+    const path = location.pathname;
+    const forceDark = path === '/' || path === '/speakers' || path === '/tickets';
+    
+    if (forceDark) {
+      document.documentElement.classList.remove('light');
+    } else if (theme === 'light') {
       document.documentElement.classList.add('light');
     } else {
       document.documentElement.classList.remove('light');
     }
-  }, [theme]);
+  }, [theme, location.pathname]);
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
