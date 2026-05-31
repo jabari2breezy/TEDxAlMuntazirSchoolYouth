@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'motion/react';
+import { motion, useScroll, useTransform, useMotionValue, AnimatePresence } from 'motion/react';
 import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star } from 'lucide-react';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
@@ -73,33 +73,72 @@ export default function Tickets() {
     offset: ["start start", "end end"]
   });
 
-  // Bottle-like spin journey: starts angled, spins, ends facing screen
-  const rotateY = useTransform(scrollYProgress,
-    [0, 0.15, 0.35, 0.65, 0.85, 1],
-    [-25, -25, 0, 0, 0, 0]
+  // Phase 1 (0-20%): Floating oscillation
+  const floatRotateX = useTransform(scrollYProgress,
+    [0, 0.1, 0.2],
+    [12, -8, 5]
   );
-   
+  const floatRotateY = useTransform(scrollYProgress,
+    [0, 0.1, 0.2],
+    [-15, 10, -5]
+  );
+  const floatY = useTransform(scrollYProgress,
+    [0, 0.05, 0.1, 0.15, 0.2],
+    [0, -15, 10, -8, 0]
+  );
+
+  // Phase 2 (21-80%): Tumbling
+  const tumbleRotateX = useTransform(scrollYProgress,
+    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
+    [5, 5, -180, -180, -190, -190, 0]
+  );
+  const tumbleRotateY = useTransform(scrollYProgress,
+    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
+    [-5, -5, 45, 45, -30, -30, 0]
+  );
+  const tumbleRotateZ = useTransform(scrollYProgress,
+    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
+    [0, 0, 25, 25, -15, -15, 0]
+  );
+  const tumbleX = useTransform(scrollYProgress,
+    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
+    [0, 0, -100, -100, 50, 50, 0]
+  );
+  const tumbleY = useTransform(scrollYProgress,
+    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
+    [0, 0, -80, -80, 40, 40, 0]
+  );
+
+  // Phase 3 (81-100%): Landing
+  const landScale = useTransform(scrollYProgress,
+    [0.8, 0.85, 0.9, 1],
+    [1, 1.05, 0.98, 1]
+  );
+
+  // Combined transforms
   const rotateX = useTransform(scrollYProgress,
-    [0, 0.15, 0.35, 0.65, 0.85, 1],
-    [15, 15, 0, 0, 0, 0]
+    [0, 0.2, 0.8, 1],
+    [0, 5, 0, 0]
   );
-
-  const xMovementDesktop = useTransform(scrollYProgress,
-    [0, 0.15, 0.35, 0.65, 0.85, 1],
-    [0, 0, 0, 0, 0, 0]
+  const rotateY = useTransform(scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, -5, 0, 0]
   );
-   
-  const yMovementMobile = useTransform(scrollYProgress,
-    [0, 0.15, 0.35, 0.65, 0.85, 1],
-    ['0%', '0%', '0%', '0%', '0%', '0%']
+  const rotateZ = useTransform(scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 0, 0, 0]
   );
-
-  const ticketX = isMobile ? 0 : xMovementDesktop;
-  const ticketY = isMobile ? yMovementMobile : 0;
-
+  const ticketX = useTransform(scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 0, 0, 0]
+  );
+  const ticketY = useTransform(scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 0, 0, 0]
+  );
   const ticketScale = useTransform(scrollYProgress,
-    [0, 0.15, 0.35, 0.65, 0.85, 1],
-    [0.9, 0.9, 1, 1, 1.05, 1.05]
+    [0, 0.2, 0.8, 1],
+    [0.9, 1, 1, 1]
   );
 
   const centerContentOpacity = useTransform(scrollYProgress,
@@ -121,7 +160,7 @@ export default function Tickets() {
   const [isPhase3, setIsPhase3] = useState(false);
   useEffect(() => {
     const unsub = scrollYProgress.on("change", (v) => {
-      setIsPhase3(v >= 0.7);
+      setIsPhase3(v >= 0.8);
     });
     return () => unsub();
   }, [scrollYProgress]);
@@ -131,17 +170,17 @@ export default function Tickets() {
       {/* Noise overlay */}
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       
-      {/* Shorter scroll — enough to read details, then reach buy */}
-      <div ref={containerRef} className="h-[180vh] relative">
+      {/* 300vh Scroll Track */}
+      <div ref={containerRef} className="h-[300vh] relative">
         <div 
           className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
           style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
         >
           
-          {/* Fixed dark background — ensures no white flash on mobile */}
+          {/* Fixed dark background */}
           <div className="absolute inset-0 bg-[#050507] z-0" />
 
-          {/* Ambient glow blobs — dark-only, works on all devices */}
+          {/* Ambient glow blobs */}
           <div className="absolute inset-0 z-0 pointer-events-none">
             <div className="absolute top-0 left-0 w-[60vw] h-[60vh] rounded-full opacity-10"
               style={{ background: 'radial-gradient(circle, rgba(0,109,56,0.4) 0%, transparent 70%)', transform: 'translate(-30%, -30%)' }} />
@@ -192,8 +231,10 @@ export default function Tickets() {
                 style={{
                   rotateX,
                   rotateY,
+                  rotateZ,
                   scale: ticketScale,
                   y: ticketY,
+                  x: ticketX,
                   transformStyle: "preserve-3d"
                 }}
                 className="absolute z-20 w-full max-w-[280px] bottom-[8vh] pointer-events-auto group cursor-pointer"
@@ -242,8 +283,10 @@ export default function Tickets() {
                 style={{
                   rotateX,
                   rotateY,
+                  rotateZ,
                   scale: ticketScale,
                   x: ticketX,
+                  y: ticketY,
                   transformStyle: "preserve-3d"
                 }}
                 className="relative z-20 w-full max-w-[400px] pointer-events-auto group cursor-pointer"

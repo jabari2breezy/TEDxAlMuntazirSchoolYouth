@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useAnimation } from 'motion/react';
+import { motion } from 'motion/react';
 
 interface PreloaderProps {
   onComplete: () => void;
@@ -9,8 +9,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const [isMounted, setIsMounted] = useState(true);
   const [progress, setProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const logoRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -19,7 +17,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
 
-    const duration = 2200;
+    const duration = 1800;
     const startTime = Date.now();
 
     const tick = () => {
@@ -32,9 +30,9 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       } else {
         setTimeout(() => {
           if (containerRef.current) {
-            containerRef.current.style.transition = 'opacity 0.6s ease-out, filter 0.6s ease-out';
+            containerRef.current.style.transition = 'opacity 0.5s ease-out, filter 0.5s ease-out';
             containerRef.current.style.opacity = '0';
-            containerRef.current.style.filter = 'blur(8px)';
+            containerRef.current.style.filter = 'blur(4px)';
           }
           setTimeout(() => {
             onComplete();
@@ -43,8 +41,8 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             document.body.style.overflow = '';
             document.body.style.position = '';
             document.body.style.width = '';
-          }, 600);
-        }, 200);
+          }, 500);
+        }, 150);
       }
     };
 
@@ -66,49 +64,48 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       className="fixed inset-0 z-[9999] overflow-hidden pointer-events-auto bg-[#050507]"
       style={{ height: '100dvh' }}
     >
-      {/* Subtle grid pattern */}
+      {/* Subtle grid pattern — 4wide.jp inspired */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage: `linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
+          backgroundSize: '80px 80px',
         }}
       />
 
-      {/* Center content */}
+      {/* Center content — casadisolare.com inspired minimalism */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full">
-        {/* Logo mark */}
+        {/* TEDx mark */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-6"
         >
           <div className="flex items-baseline gap-2">
-            <span className="text-[#e62b1e] font-sans font-black text-4xl md:text-5xl tracking-tighter">TED</span>
-            <span className="text-[#e62b1e] font-sans font-black text-2xl md:text-3xl">x</span>
+            <span className="text-[#e62b1e] font-solare text-5xl md:text-6xl font-black italic tracking-tighter">TED</span>
+            <span className="text-[#e62b1e] font-solare text-3xl md:text-4xl font-black">x</span>
           </div>
         </motion.div>
 
         {/* Brand name */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-12"
+          transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center mb-16"
         >
-          <div className="font-sans font-bold text-lg md:text-xl tracking-[0.3em] text-white/90 uppercase">
+          <div className="font-solare font-bold text-lg md:text-xl tracking-[0.25em] text-white/90 uppercase">
             Al Muntazir
           </div>
-          <div className="font-sans font-normal text-xs tracking-[0.5em] text-white/40 uppercase mt-2">
+          <div className="font-solare font-normal text-xs tracking-[0.4em] text-white/40 uppercase mt-2">
             Schools Youth
           </div>
         </motion.div>
 
-        {/* Progress line */}
-        <div className="w-48 md:w-64 h-[1px] bg-white/10 relative overflow-hidden">
+        {/* Thin progress line */}
+        <div className="w-32 md:w-48 h-[1px] bg-white/10 relative overflow-hidden">
           <motion.div
-            ref={lineRef}
             className="absolute inset-y-0 left-0 bg-white/60"
             style={{ width: `${progress * 100}%` }}
           />
@@ -118,15 +115,15 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="mt-6 font-typewriter text-sm text-white/30 tabular-nums"
+          transition={{ delay: 0.3 }}
+          className="mt-5 font-typewriter text-xs text-white/25 tabular-nums"
         >
           {Math.round(progress * 100)}
         </motion.div>
 
         {/* Bottom label */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-          <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/15">
+          <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/10">
             [ BORROWED TIME // 2026 ]
           </span>
         </div>
