@@ -176,7 +176,7 @@ export default function Agenda() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-5%' }}
                 transition={{ duration: 0.6, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                className="relative rounded-3xl overflow-hidden"
+                className="relative rounded-3xl overflow-hidden mobile-agenda-card"
                 style={{
                   background: 'rgba(255, 255, 255, 0.08)',
                   backdropFilter: 'blur(20px)',

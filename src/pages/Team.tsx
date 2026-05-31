@@ -36,7 +36,8 @@ const TEAM_GROUPS = [
     members: [
       { name: 'Mehreen Akthar', year: '12', lead: true, title: 'Team Lead' },
       { name: 'Malka Khalid', year: '10' },
-      { name: 'Kazim sherzaman', year: '12' }
+      { name: 'Kazim Sherzaman', year: '12' },
+      { name: 'Sarah Sumar', year: '12' }
     ]
   },
   {
@@ -55,7 +56,7 @@ const TEAM_GROUPS = [
     members: [
       { name: 'Falak Mawji', year: '12', lead: true, title: 'Team Lead' },
       { name: 'Amaan Sheriff', year: '12' },
-      { name: 'Mohammad raza muraj', year: '11' }
+      { name: 'Mohammad Raza Muraj', year: '11' }
     ]
   }
 ];
@@ -99,7 +100,7 @@ export default function Team() {
             </motion.div>
             <h1 className="text-[16vw] md:text-[14vw] font-title font-black tracking-tighter leading-[0.8] uppercase text-white flex flex-col items-center">
               <span>The</span>
-              <span className="italic font-editorial lowercase text-white">Architects.</span>
+              <span className="italic font-editorial lowercase text-brand-secondary">Architects.</span>
             </h1>
           </motion.div>
         </header>

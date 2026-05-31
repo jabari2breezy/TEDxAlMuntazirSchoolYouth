@@ -16,7 +16,8 @@ import Team from './pages/Team';
 import Checkout from './pages/Checkout';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
-import { useEffect } from 'react';
+import IntroScreen from './components/IntroScreen';
+import { useEffect, useState } from 'react';
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function App() {
           <CurtainTransition />
           <FloatingCursor />
           <ScrollToTop />
+          <IntroScreen />
           <Navbar />
           <main className="flex-grow">
             <AnimatedRoutes />

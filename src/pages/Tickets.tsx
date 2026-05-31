@@ -109,6 +109,20 @@ export default function Tickets() {
     [0, 0, -80, -80, 40, 40, 0]
   );
 
+  // Phase 2.5 (65-80%): Slow celebratory flips before landing
+  const flipRotateY = useTransform(scrollYProgress,
+    [0.65, 0.72, 0.78, 0.8],
+    [0, 180, 360, 360]
+  );
+  const flipRotateX = useTransform(scrollYProgress,
+    [0.65, 0.72, 0.78, 0.8],
+    [0, 0, 0, 0]
+  );
+  const flipScale = useTransform(scrollYProgress,
+    [0.65, 0.72, 0.78, 0.8],
+    [1, 1.1, 1, 1]
+  );
+
   // Phase 3 (81-100%): Landing
   const landScale = useTransform(scrollYProgress,
     [0.8, 0.85, 0.9, 1],
@@ -117,16 +131,16 @@ export default function Tickets() {
 
   // Combined transforms
   const rotateX = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 5, 0, 0]
+    [0, 0.2, 0.65, 0.72, 0.78, 0.8, 1],
+    [0, 5, 5, 0, 0, 0, 0]
   );
   const rotateY = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, -5, 0, 0]
+    [0, 0.2, 0.65, 0.72, 0.78, 0.8, 1],
+    [0, -5, -5, 180, 360, 360, 360]
   );
   const rotateZ = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 0, 0, 0]
+    [0, 0.2, 0.65, 0.72, 0.78, 0.8, 1],
+    [0, 0, 0, 0, 0, 0, 0]
   );
   const ticketX = useTransform(scrollYProgress,
     [0, 0.2, 0.8, 1],
@@ -137,8 +151,8 @@ export default function Tickets() {
     [0, 0, 0, 0]
   );
   const ticketScale = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0.9, 1, 1, 1]
+    [0, 0.2, 0.65, 0.72, 0.78, 0.8, 1],
+    [0.9, 1, 1, 1.1, 1, 1, 1]
   );
 
   const centerContentOpacity = useTransform(scrollYProgress,
