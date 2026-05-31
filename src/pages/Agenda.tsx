@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-import { motion } from 'motion/react';
+import React from 'react';
 import { WeatherEffect } from '../components/ui/rain-and-lightning-hero-section';
 
 type AgendaItem = {
@@ -127,17 +126,15 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default function Agenda() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   return (
-    <div className="relative bg-brand-primary min-h-screen text-white">
+    <div className="relative min-h-screen bg-white text-gray-900">
       {/* Rain and Lightning background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="fixed inset-0 z-0">
         <WeatherEffect
           rainIntensity={40}
           rainSpeed={0.15}
           rainAngle={12}
-          rainColor="rgba(174, 194, 224, 0.5)"
+          rainColor="rgba(100, 120, 150, 0.4)"
           lightningEnabled={true}
           lightningFrequency={5}
           lightningHue={140}
@@ -145,120 +142,112 @@ export default function Agenda() {
           lightningIntensity={1.2}
           lightningSize={1.5}
           thunderEnabled={false}
-          className="bg-brand-primary"
         />
       </div>
 
-      {/* Dark overlay for readability */}
-      <div className="fixed inset-0 z-0 pointer-events-none bg-brand-primary/70" />
-
-      <div ref={containerRef} className="relative z-10">
-        {/* Sticky Header */}
-        <div className="sticky top-0 z-20 bg-brand-primary/80 backdrop-blur-md border-b border-white/10">
-          <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-8">
-            <span className="font-typewriter text-[10px] text-brand-secondary tracking-[0.5em] uppercase block mb-2">The Timeline</span>
-            <h1 className="text-5xl md:text-7xl font-title font-black uppercase tracking-tighter text-white leading-none">
-              Full Agenda
-            </h1>
-          </div>
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-8">
+          <span className="font-typewriter text-[10px] text-brand-secondary tracking-[0.5em] uppercase block mb-2">The Timeline</span>
+          <h1 className="text-5xl md:text-7xl font-title font-black uppercase tracking-tighter text-gray-900 leading-none">
+            Full Agenda
+          </h1>
         </div>
+      </div>
 
-        {/* Agenda Cards Grid */}
-        <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {AGENDA_ITEMS.map((item, index) => (
-              <div
-                key={item.id}
-                className="relative rounded-3xl overflow-hidden agenda-card"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-                  willChange: 'transform',
-                  contain: 'layout style',
-                }}
-              >
-                {/* Type color accent */}
-                <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: TYPE_COLORS[item.type] }} />
+      {/* Agenda Cards Grid */}
+      <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {AGENDA_ITEMS.map((item) => (
+            <div
+              key={item.id}
+              className="relative rounded-3xl overflow-hidden"
+              style={{
+                background: 'rgba(255, 255, 255, 0.85)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
+              }}
+            >
+              {/* Type color accent */}
+              <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: TYPE_COLORS[item.type] }} />
 
-                <div className="p-6 md:p-8 space-y-4">
-                  {/* Time & Duration */}
-                  <div className="flex items-center justify-between">
-                    <span className="font-title font-black text-3xl md:text-4xl tracking-tighter uppercase text-white leading-none">
-                      {item.time}
-                    </span>
-                    <span className="font-typewriter text-[9px] uppercase tracking-widest text-white/40">
-                      {item.duration}
-                    </span>
-                  </div>
-
-                  {/* Type badge */}
-                  <div className="inline-block">
-                    <span 
-                      className="font-typewriter text-[9px] uppercase tracking-[0.3em] px-3 py-1 rounded-full"
-                      style={{ 
-                        color: TYPE_COLORS[item.type],
-                        backgroundColor: `${TYPE_COLORS[item.type]}20`,
-                        border: `1px solid ${TYPE_COLORS[item.type]}40`
-                      }}
-                    >
-                      {item.type}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="font-title font-black text-xl md:text-2xl uppercase tracking-tight text-white leading-tight">
-                    {item.title}
-                  </h3>
-
-                  {/* Speaker */}
-                  {item.speaker && (
-                    <p className="font-editorial text-base italic text-white/60">
-                      {item.speaker}
-                    </p>
-                  )}
-
-                  {/* Description */}
-                  <p className="font-sans text-sm text-white/50 leading-relaxed">
-                    {item.desc}
-                  </p>
-
-                  {/* Sub-items */}
-                  {item.sub && item.sub.length > 0 && (
-                    <div className="pt-4 border-t border-white/10 space-y-3">
-                      {item.sub.map((sub) => (
-                        <div key={sub.id} className="flex items-start gap-3">
-                          <span className="font-typewriter text-[9px] text-white/30 shrink-0 mt-1">
-                            {sub.time}
-                          </span>
-                          <div>
-                            <p className="font-sans text-sm text-white/80 font-medium">{sub.title}</p>
-                            {sub.speaker && (
-                              <p className="font-editorial text-xs italic text-white/40">{sub.speaker}</p>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+              <div className="p-6 md:p-8 space-y-4">
+                {/* Time & Duration */}
+                <div className="flex items-center justify-between">
+                  <span className="font-title font-black text-3xl md:text-4xl tracking-tighter uppercase text-gray-900 leading-none">
+                    {item.time}
+                  </span>
+                  <span className="font-typewriter text-[9px] uppercase tracking-widest text-gray-400">
+                    {item.duration}
+                  </span>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Footer */}
-        <div className="max-w-screen-2xl mx-auto px-6 md:px-16 pb-20">
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <span className="font-typewriter text-[10px] text-white/30 uppercase tracking-widest">
-              June 14, 2026 — Al Muntazir Nursery Campus
-            </span>
-            <span className="font-typewriter text-[10px] text-white/30 uppercase tracking-widest">
-              Doors Open 9:30 AM
-            </span>
-          </div>
+                {/* Type badge */}
+                <div className="inline-block">
+                  <span 
+                    className="font-typewriter text-[9px] uppercase tracking-[0.3em] px-3 py-1 rounded-full"
+                    style={{ 
+                      color: TYPE_COLORS[item.type],
+                      backgroundColor: `${TYPE_COLORS[item.type]}15`,
+                      border: `1px solid ${TYPE_COLORS[item.type]}30`
+                    }}
+                  >
+                    {item.type}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3 className="font-title font-black text-xl md:text-2xl uppercase tracking-tight text-gray-900 leading-tight">
+                  {item.title}
+                </h3>
+
+                {/* Speaker */}
+                {item.speaker && (
+                  <p className="font-editorial text-base italic text-gray-500">
+                    {item.speaker}
+                  </p>
+                )}
+
+                {/* Description */}
+                <p className="font-sans text-sm text-gray-500 leading-relaxed">
+                  {item.desc}
+                </p>
+
+                {/* Sub-items */}
+                {item.sub && item.sub.length > 0 && (
+                  <div className="pt-4 border-t border-gray-100 space-y-3">
+                    {item.sub.map((sub) => (
+                      <div key={sub.id} className="flex items-start gap-3">
+                        <span className="font-typewriter text-[9px] text-gray-300 shrink-0 mt-1">
+                          {sub.time}
+                        </span>
+                        <div>
+                          <p className="font-sans text-sm text-gray-700 font-medium">{sub.title}</p>
+                          {sub.speaker && (
+                            <p className="font-editorial text-xs italic text-gray-400">{sub.speaker}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="max-w-screen-2xl mx-auto px-6 md:px-16 pb-20">
+        <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <span className="font-typewriter text-[10px] text-gray-400 uppercase tracking-widest">
+            June 14, 2026 — Al Muntazir Nursery Campus
+          </span>
+          <span className="font-typewriter text-[10px] text-gray-400 uppercase tracking-widest">
+            Doors Open 9:30 AM
+          </span>
         </div>
       </div>
     </div>

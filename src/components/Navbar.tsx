@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, useScroll } from 'motion/react';
-import { X, Sun, Moon } from 'lucide-react';
+import { X, Sun, Moon, Slash } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './Logo';
@@ -125,15 +125,18 @@ export default function Navbar() {
 
       <div className="flex items-center gap-4 md:gap-8 pointer-events-auto">
         {/* Theme Toggle */}
-        <button 
+        <button
           onClick={toggleTheme}
-          className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center transition-all hover:border-white hover:bg-white/10"
+          className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center transition-all hover:border-white hover:bg-white/10 relative"
           aria-label="Toggle theme"
         >
           {theme === 'dark' ? (
             <Sun size={16} className="text-white" />
           ) : (
             <Moon size={16} className="text-[#000839]" />
+          )}
+          {(location.pathname === '/' || location.pathname === '/speakers' || location.pathname === '/tickets') && (
+            <Slash size={14} className="absolute text-red-400 rotate-[-30deg]" strokeWidth={3} />
           )}
         </button>
 
