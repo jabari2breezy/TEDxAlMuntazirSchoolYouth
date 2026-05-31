@@ -11,12 +11,12 @@ export default function Logo({ className = '', variant = 'tedx', theme = 'light'
 
   if (variant === 'tedx') {
     return (
-      <div className={`flex items-end gap-2 ${className}`}>
-        <div className="flex items-baseline font-sans font-black tracking-tighter leading-none text-[36px] md:text-[48px]">
+      <div className={`flex items-center gap-2 ${className}`}>
+        <div className="flex items-baseline font-sans font-black tracking-tighter leading-none text-[28px] md:text-[36px]">
           <span className="text-[#e62b1e]">TED</span>
-          <span className="text-[#e62b1e] text-[0.8em] ml-[2px]">x</span>
+          <span className="text-[#e62b1e] text-[0.75em] ml-[2px]">x</span>
         </div>
-        <div className={`font-sans font-normal tracking-tight pb-[4px] md:pb-[6px] leading-none text-[17px] md:text-[22px] ${subTextColor}`}>
+        <div className={`font-sans font-normal tracking-tight leading-tight text-[13px] md:text-[17px] ${subTextColor}`}>
           Al Muntazir<br />Schools Youth
         </div>
       </div>

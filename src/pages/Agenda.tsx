@@ -28,12 +28,12 @@ const AGENDA_ITEMS: AgendaItem[] = [
     time: '10:00 AM',
     title: 'Opening Session',
     speaker: 'Your Hosts',
-    desc: 'Kickoff with a quick welcome and a video that sets the tone for the day.',
+    desc: 'Quick welcome, what TEDx is all about, and the vibe for the day.',
     duration: '20M',
     type: 'SESSION',
     sub: [
-      { id: '01a', time: '10:00', title: 'Welcome Address', speaker: 'Hosts', desc: 'Quick hello and what to expect today.', duration: '10M', type: 'EXPERIENCE' },
-      { id: '01b', time: '10:10', title: 'Intro Video', speaker: 'Screen', desc: 'A short film that gets you in the zone.', duration: '10M', type: 'VIDEO' },
+      { id: '01a', time: '10:00', title: 'Welcome Address', speaker: 'Hosts', desc: 'Kickoff and what to expect.', duration: '10M', type: 'EXPERIENCE' },
+      { id: '01b', time: '10:10', title: 'Intro Video', speaker: 'Screen', desc: 'A short film to set the mood.', duration: '10M', type: 'VIDEO' },
     ]
   },
   {
@@ -41,15 +41,15 @@ const AGENDA_ITEMS: AgendaItem[] = [
     time: '10:20 AM',
     title: 'Session 1',
     speaker: '3 Speakers + Game',
-    desc: 'Three speakers share their take on how we spend our time, plus a quick game to wake everyone up.',
+    desc: 'Three speakers, one interactive game. Ideas that hit different.',
     duration: '70M',
     type: 'SESSION',
     sub: [
-      { id: '02a', time: '10:20', title: 'Ridhwan Mohammed', speaker: 'Alumni Speaker', desc: 'What school actually preps you for — and what it doesn\'t.', duration: '15M', type: 'KEYNOTE' },
-      { id: '02b', time: '10:35', title: 'Quick Break', speaker: '', desc: 'Stretch your legs, grab a snack.', duration: '5M', type: 'BREAK' },
-      { id: '02c', time: '10:40', title: 'Anaya Rashid', speaker: 'Culture of Time', desc: 'How different cultures see time — and what we can learn from each other.', duration: '15M', type: 'KEYNOTE' },
-      { id: '02d', time: '10:55', title: 'Interactive Game', speaker: 'Audience', desc: 'A fast, fun game that ties into the theme.', duration: '10M', type: 'GAME' },
-      { id: '02e', time: '11:05', title: 'Zahra Datoo', speaker: 'Nostalgia', desc: 'Why we look back, what it costs us, and what it actually gives us.', duration: '15M', type: 'KEYNOTE' },
+      { id: '02a', time: '10:20', title: 'Ridhwan Mohammed', speaker: 'Alumni Speaker', desc: 'What school never taught you about time.', duration: '15M', type: 'KEYNOTE' },
+      { id: '02b', time: '10:35', title: 'Quick Break', speaker: '', desc: 'Stretch, grab water, reset.', duration: '5M', type: 'BREAK' },
+      { id: '02c', time: '10:40', title: 'Anaya Rashid', speaker: 'Culture of Time', desc: 'How different cultures actually treat time — and what we can learn.', duration: '15M', type: 'KEYNOTE' },
+      { id: '02d', time: '10:55', title: 'Interactive Game', speaker: 'Audience', desc: 'Get involved. No sitting this one out.', duration: '10M', type: 'GAME' },
+      { id: '02e', time: '11:05', title: 'Zahra Datoo', speaker: 'Nostalgia', desc: 'Why we look back, what it costs us, and why it still matters.', duration: '15M', type: 'KEYNOTE' },
     ]
   },
   {
@@ -57,7 +57,7 @@ const AGENDA_ITEMS: AgendaItem[] = [
     time: '11:30 AM',
     title: 'Tea Break',
     speaker: 'Refreshments',
-    desc: 'Grab a drink, chat with people, and recharge before the next block.',
+    desc: 'Snacks, drinks, and a chance to chat with people.',
     duration: '20M',
     type: 'BREAK'
   },
@@ -66,15 +66,15 @@ const AGENDA_ITEMS: AgendaItem[] = [
     time: '11:50 AM',
     title: 'Session 2',
     speaker: '3 Speakers + Game',
-    desc: 'More talks, more ideas, and another game to keep the energy up.',
+    desc: 'More talks, more games, more reasons to pay attention.',
     duration: '70M',
     type: 'SESSION',
     sub: [
-      { id: '04a', time: '11:50', title: 'Zahra Moledina', speaker: 'The Best Thing Since Sliced Bread', desc: 'How breakthroughs happen, why we miss them, and why the next big thing is already here.', duration: '15M', type: 'KEYNOTE' },
-      { id: '04b', time: '12:05', title: 'Kahoot / Blooket', speaker: 'Audience', desc: 'A quick quiz game to test what you\'ve picked up so far.', duration: '10M', type: 'GAME' },
-      { id: '04c', time: '12:15', title: 'TBD Speaker', speaker: 'Surprise Guest', desc: 'A talk from someone we\'re still finalizing — expect the unexpected.', duration: '18M', type: 'KEYNOTE' },
-      { id: '04d', time: '12:33', title: 'Mini Game', speaker: 'Audience', desc: 'A short, silly game before the last speaker of the session.', duration: '5M', type: 'GAME' },
-      { id: '04e', time: '12:38', title: 'Hassan Abbas Muhammad', speaker: 'Procrastination', desc: 'Why we put things off, and how to actually stop doing it.', duration: '15M', type: 'KEYNOTE' },
+      { id: '04a', time: '11:50', title: 'Zahra Moledina', speaker: 'The Best Thing Since Sliced Bread', desc: 'Why the next big thing is already here — and why you might be missing it.', duration: '15M', type: 'KEYNOTE' },
+      { id: '04b', time: '12:05', title: 'Kahoot / Blooket', speaker: 'Audience', desc: 'Quiz time. Compete, laugh, win.', duration: '10M', type: 'GAME' },
+      { id: '04c', time: '12:15', title: 'TBD Speaker', speaker: 'Surprise Guest', desc: 'Someone unexpected. Stay tuned.', duration: '18M', type: 'KEYNOTE' },
+      { id: '04d', time: '12:33', title: 'Mini Game', speaker: 'Audience', desc: 'Quick energy boost before the last speaker.', duration: '5M', type: 'GAME' },
+      { id: '04e', time: '12:38', title: 'Hassan Abbas Muhammad', speaker: 'Procrastination', desc: 'Why we put things off — and how to actually stop.', duration: '15M', type: 'KEYNOTE' },
       { id: '04f', time: '12:53', title: 'Buffer', speaker: '', desc: 'Quick breather so we stay on schedule.', duration: '7M', type: 'BREAK' },
     ]
   },
@@ -83,7 +83,7 @@ const AGENDA_ITEMS: AgendaItem[] = [
     time: '01:00 PM',
     title: 'Salah & Lunch',
     speaker: 'Prayer + Food',
-    desc: 'Salah break, then lunch with some partner activations mixed in.',
+    desc: 'Prayer break, then food. Come back recharged.',
     duration: '60M',
     type: 'LUNCH'
   },
@@ -92,16 +92,16 @@ const AGENDA_ITEMS: AgendaItem[] = [
     time: '02:00 PM',
     title: 'Session 3',
     speaker: '3 Speakers + 2 Games',
-    desc: 'The final block — three speakers and two games to close out the main program.',
+    desc: 'The final stretch. Three speakers, two games, one unforgettable close.',
     duration: '75M',
     type: 'SESSION',
     sub: [
-      { id: '06a', time: '02:00', title: 'Yunus Osman', speaker: 'The Art of Scheduling (Alumni)', desc: 'How to actually plan your time so it works for you.', duration: '15M', type: 'KEYNOTE' },
-      { id: '06b', time: '02:15', title: 'Interactive Game', speaker: 'Audience', desc: 'A quick game to reset the room before the next talk.', duration: '10M', type: 'GAME' },
-      { id: '06c', time: '02:25', title: 'Sada Mbaruk', speaker: 'End of the World', desc: 'What happens when we run out of time — and why that matters now.', duration: '15M', type: 'KEYNOTE' },
-      { id: '06d', time: '02:40', title: 'Imposter Game', speaker: 'Audience', desc: 'The classic social deduction game — who can you trust with your time?', duration: '10M', type: 'GAME' },
-      { id: '06e', time: '02:50', title: 'Liyaan Karbelkar', speaker: 'How to Take Your Wealth With You', desc: 'Building something that lasts longer than you do.', duration: '15M', type: 'KEYNOTE' },
-      { id: '06f', time: '03:05', title: 'Buffer', speaker: '', desc: 'Quick buffer before closing.', duration: '10M', type: 'BREAK' },
+      { id: '06a', time: '02:00', title: 'Yunus Osman', speaker: 'The Art of Scheduling (Alumni)', desc: 'How to actually manage your time without burning out.', duration: '15M', type: 'KEYNOTE' },
+      { id: '06b', time: '02:15', title: 'Interactive Game', speaker: 'Audience', desc: 'Reset the room before the next talk.', duration: '10M', type: 'GAME' },
+      { id: '06c', time: '02:25', title: 'Sada Mbaruk', speaker: 'End of the World', desc: 'What happens when we run out of time — and why it matters now.', duration: '15M', type: 'KEYNOTE' },
+      { id: '06d', time: '02:40', title: 'Imposter Game', speaker: 'Audience', desc: 'Social deduction. Who can you trust with your time?', duration: '10M', type: 'GAME' },
+      { id: '06e', time: '02:50', title: 'Liyaan Karbelkar', speaker: 'How to Take Your Wealth With You', desc: 'Building something that lasts longer than you.', duration: '15M', type: 'KEYNOTE' },
+      { id: '06f', time: '03:05', title: 'Buffer', speaker: '', desc: 'Final buffer before closing.', duration: '10M', type: 'BREAK' },
     ]
   },
   {
@@ -109,7 +109,7 @@ const AGENDA_ITEMS: AgendaItem[] = [
     time: '03:15 PM',
     title: 'Closing Ceremony',
     speaker: 'Everyone',
-    desc: 'Awards, shoutouts, and a final message to send you home inspired.',
+    desc: 'Awards, shoutouts, and the final word. Make the most of what you have.',
     duration: '45M',
     type: 'CEREMONY'
   },
@@ -131,26 +131,26 @@ export default function Agenda() {
 
   return (
     <div className="relative bg-brand-primary min-h-screen text-white overflow-hidden">
-      {/* Rain and lightning background */}
+      {/* Rain and Lightning background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <WeatherEffect
-          rainIntensity={60}
+          rainIntensity={40}
           rainSpeed={0.15}
           rainAngle={12}
-          rainColor="rgba(0, 200, 100, 0.4)"
+          rainColor="rgba(174, 194, 224, 0.5)"
           lightningEnabled={true}
           lightningFrequency={5}
           lightningHue={140}
-          lightningSpeed={0.8}
+          lightningSpeed={0.5}
           lightningIntensity={1.2}
           lightningSize={1.5}
           thunderEnabled={false}
-          className="bg-[#050507]"
+          className="bg-brand-primary"
         />
       </div>
 
       {/* Dark overlay for readability */}
-      <div className="fixed inset-0 z-0 pointer-events-none bg-brand-primary/50" />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-brand-primary/70" />
 
       <div ref={containerRef} className="relative z-10">
         {/* Sticky Header */}

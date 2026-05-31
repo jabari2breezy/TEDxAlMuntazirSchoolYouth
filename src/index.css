@@ -728,115 +728,245 @@ html.light .border-opacity-100 {
   --tw-border-opacity: 1 !important;
 }
 
-/* Light mode for new components */
+/* ─── Light Mode: Rain & Lightning ──────────────────────────── */
+html.light .weather-rain {
+  opacity: 0.4 !important;
+}
+
+html.light .lightning-flash {
+  background: radial-gradient(circle, rgba(0, 109, 56, 0.15) 0%, transparent 70%) !important;
+}
+
+/* ─── Light Mode: Sponsors Section ──────────────────────────── */
 html.light .bg-\[\#050507\] {
   background-color: #f9f9f9 !important;
 }
 
-html.light .bg-\[\#08080a\] {
-  background-color: #f9f9f9 !important;
+html.light .bg-brand-primary\/5 {
+  background-color: rgba(0, 8, 57, 0.02) !important;
 }
 
-html.light .bg-\[\#0a0a0d\] {
-  background-color: #f9f9f9 !important;
+html.light .bg-brand-secondary\/5 {
+  background-color: rgba(0, 109, 56, 0.05) !important;
 }
 
-html.light .border-\[\#050507\]\/90 {
-  border-color: rgba(0, 8, 57, 0.1) !important;
+html.light .text-white\/50 {
+  color: rgba(0, 8, 57, 0.5) !important;
 }
 
-html.light .from-\[\#050507\]\/90 {
-  --tw-gradient-from: rgba(0, 8, 57, 0.05) !important;
+html.light .text-white\/40 {
+  color: rgba(0, 8, 57, 0.4) !important;
 }
 
-html.light .via-\[\#050507\]\/50 {
-  --tw-gradient-via: rgba(0, 8, 57, 0.03) !important;
+html.light .text-white\/30 {
+  color: rgba(0, 8, 57, 0.3) !important;
 }
 
-html.light .to-\[\#050507\] {
-  --tw-gradient-to: rgba(0, 8, 57, 0.05) !important;
+html.light .text-white\/20 {
+  color: rgba(0, 8, 57, 0.2) !important;
 }
 
-html.light .bg-\[\#050507\]\/90 {
-  background-color: rgba(0, 8, 57, 0.05) !important;
+html.light .text-white\/10 {
+  color: rgba(0, 8, 57, 0.1) !important;
 }
 
-html.light .bg-\[\#050507\]\/50 {
-  background-color: rgba(0, 8, 57, 0.03) !important;
-}
-
-html.light .border-\[\#050507\]\/5 {
-  border-color: rgba(0, 8, 57, 0.05) !important;
-}
-
-html.light .border-\[\#050507\]\/10 {
-  border-color: rgba(0, 8, 57, 0.1) !important;
-}
-
-html.light .text-\[\#EBEBEB\] {
-  color: #000839 !important;
-}
-
-html.light .bg-\[\#08080a\] {
-  background-color: #f9f9f9 !important;
+html.light .text-white\/5 {
+  color: rgba(0, 8, 57, 0.05) !important;
 }
 
 html.light .border-white\/5 {
   border-color: rgba(0, 8, 57, 0.05) !important;
 }
 
-html.light .bg-\[\#0a0a0d\] {
-  background-color: #f9f9f9 !important;
-}
-
 html.light .border-white\/10 {
   border-color: rgba(0, 8, 57, 0.1) !important;
 }
 
-html.light .text-\[\#e62b1e\] {
-  color: #e62b1e !important;
+html.light .border-white\/20 {
+  border-color: rgba(0, 8, 57, 0.15) !important;
 }
 
-html.light .bg-\[\#050507\] {
-  background-color: #f9f9f9 !important;
+html.light .border-white\/30 {
+  border-color: rgba(0, 8, 57, 0.2) !important;
 }
 
-html.light .bg-\[\#08080a\] {
-  background-color: #f9f9f9 !important;
+html.light .bg-white\/5 {
+  background-color: rgba(0, 8, 57, 0.03) !important;
 }
 
-html.light .bg-\[\#0a0a0d\] {
-  background-color: #f9f9f9 !important;
-}
-
-html.light .text-\[\#EBEBEB\] {
-  color: #000839 !important;
-}
-
-html.light .border-\[\#050507\]\/5 {
-  border-color: rgba(0, 8, 57, 0.05) !important;
-}
-
-html.light .border-\[\#050507\]\/10 {
-  border-color: rgba(0, 8, 57, 0.1) !important;
-}
-
-html.light .from-\[\#050507\]\/90 {
-  --tw-gradient-from: rgba(0, 8, 57, 0.05) !important;
-}
-
-html.light .via-\[\#050507\]\/50 {
-  --tw-gradient-via: rgba(0, 8, 57, 0.03) !important;
-}
-
-html.light .to-\[\#050507\] {
-  --tw-gradient-to: rgba(0, 8, 57, 0.05) !important;
-}
-
-html.light .bg-\[\#050507\]\/90 {
+html.light .bg-white\/10 {
   background-color: rgba(0, 8, 57, 0.05) !important;
 }
 
-html.light .bg-\[\#050507\]\/50 {
-  background-color: rgba(0, 8, 57, 0.03) !important;
+html.light .bg-white\/20 {
+  background-color: rgba(0, 8, 57, 0.08) !important;
 }
+
+html.light .bg-white\/30 {
+  background-color: rgba(0, 8, 57, 0.12) !important;
+}
+
+html.light .bg-white\/40 {
+  background-color: rgba(0, 8, 57, 0.15) !important;
+}
+
+html.light .bg-white\/50 {
+  background-color: rgba(0, 8, 57, 0.2) !important;
+}
+
+html.light .bg-white\/60 {
+  background-color: rgba(0, 8, 57, 0.3) !important;
+}
+
+html.light .bg-white\/70 {
+  background-color: rgba(0, 8, 57, 0.4) !important;
+}
+
+html.light .bg-white\/80 {
+  background-color: rgba(0, 8, 57, 0.5) !important;
+}
+
+html.light .bg-white\/90 {
+  background-color: rgba(0, 8, 57, 0.6) !important;
+}
+
+html.light .bg-white {
+  background-color: #f9f9f9 !important;
+}
+
+html.light .bg-opacity-5 {
+  --tw-bg-opacity: 0.05 !important;
+}
+
+html.light .bg-opacity-10 {
+  --tw-bg-opacity: 0.1 !important;
+}
+
+html.light .bg-opacity-20 {
+  --tw-bg-opacity: 0.2 !important;
+}
+
+html.light .bg-opacity-30 {
+  --tw-bg-opacity: 0.3 !important;
+}
+
+html.light .bg-opacity-40 {
+  --tw-bg-opacity: 0.4 !important;
+}
+
+html.light .bg-opacity-50 {
+  --tw-bg-opacity: 0.5 !important;
+}
+
+html.light .bg-opacity-60 {
+  --tw-bg-opacity: 0.6 !important;
+}
+
+html.light .bg-opacity-70 {
+  --tw-bg-opacity: 0.7 !important;
+}
+
+html.light .bg-opacity-80 {
+  --tw-bg-opacity: 0.8 !important;
+}
+
+html.light .bg-opacity-90 {
+  --tw-bg-opacity: 0.9 !important;
+}
+
+html.light .bg-opacity-95 {
+  --tw-bg-opacity: 0.95 !important;
+}
+
+html.light .bg-opacity-100 {
+  --tw-bg-opacity: 1 !important;
+}
+
+html.light .text-opacity-5 {
+  --tw-text-opacity: 0.05 !important;
+}
+
+html.light .text-opacity-10 {
+  --tw-text-opacity: 0.1 !important;
+}
+
+html.light .text-opacity-20 {
+  --tw-text-opacity: 0.2 !important;
+}
+
+html.light .text-opacity-30 {
+  --tw-text-opacity: 0.3 !important;
+}
+
+html.light .text-opacity-40 {
+  --tw-text-opacity: 0.4 !important;
+}
+
+html.light .text-opacity-50 {
+  --tw-text-opacity: 0.5 !important;
+}
+
+html.light .text-opacity-60 {
+  --tw-text-opacity: 0.6 !important;
+}
+
+html.light .text-opacity-70 {
+  --tw-text-opacity: 0.7 !important;
+}
+
+html.light .text-opacity-80 {
+  --tw-text-opacity: 0.8 !important;
+}
+
+html.light .text-opacity-90 {
+  --tw-text-opacity: 0.9 !important;
+}
+
+html.light .text-opacity-100 {
+  --tw-text-opacity: 1 !important;
+}
+
+html.light .border-opacity-5 {
+  --tw-border-opacity: 0.05 !important;
+}
+
+html.light .border-opacity-10 {
+  --tw-border-opacity: 0.1 !important;
+}
+
+html.light .border-opacity-20 {
+  --tw-border-opacity: 0.2 !important;
+}
+
+html.light .border-opacity-30 {
+  --tw-border-opacity: 0.3 !important;
+}
+
+html.light .border-opacity-40 {
+  --tw-border-opacity: 0.4 !important;
+}
+
+html.light .border-opacity-50 {
+  --tw-border-opacity: 0.5 !important;
+}
+
+html.light .border-opacity-60 {
+  --tw-border-opacity: 0.6 !important;
+}
+
+html.light .border-opacity-70 {
+  --tw-border-opacity: 0.7 !important;
+}
+
+html.light .border-opacity-80 {
+  --tw-border-opacity: 0.8 !important;
+}
+
+html.light .border-opacity-90 {
+  --tw-border-opacity: 0.9 !important;
+}
+
+html.light .border-opacity-100 {
+  --tw-border-opacity: 1 !important;
+}
+

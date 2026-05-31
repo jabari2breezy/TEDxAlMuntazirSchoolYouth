@@ -16,7 +16,11 @@ export default function Navbar() {
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('light', theme === 'light');
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+    }
   }, [theme]);
 
   const toggleTheme = () => {
