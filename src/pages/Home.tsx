@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'motion/react';
 import { Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import React, { useRef, useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import FloatingBackground from '../components/FloatingBackground';
 import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import Preloader from '../components/Preloader';
+import ShutterText from '../components/ui/shutter-text';
 import PrecisionButton from '../components/PrecisionButton';
 import { TICKETS_URL, SOCIALS } from '../constants';
 import SponsorsSection from '../components/SponsorsSection';
@@ -168,6 +169,7 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [eventStatus, setEventStatus] = useState<EventStatus | null>(null);
   const [updates, setUpdates] = useState<Update[]>([]);
+  const [introComplete, setIntroComplete] = useState(false);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -214,12 +216,26 @@ export default function Home() {
     <motion.div 
       variants={containerVariants}
       initial="hidden"
-      animate="visible"
+      animate={introComplete ? "visible" : "hidden"}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
       className="relative pt-4 bg-[#08080a] text-[#EBEBEB]"
       ref={containerRef}
     >
-      <Preloader onComplete={() => {}} />
+      <Preloader onComplete={() => setIntroComplete(true)} />
+
+      {/* Cinematic bridge: soft flash as preloader hands off to hero */}
+      <AnimatePresence>
+        {introComplete && (
+          <motion.div
+            key="entrance-flash"
+            className="fixed inset-0 z-[9997] pointer-events-none bg-brand-secondary/20"
+            initial={{ opacity: 0.4 }}
+            animate={{ opacity: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          />
+        )}
+      </AnimatePresence>
 
       {/* High-End Scroll Progress Bar */}
       <motion.div 
@@ -236,7 +252,12 @@ export default function Home() {
       <FloatingBackground />
 
       {/* Hero Section */}
-      <div className="min-h-screen flex flex-col relative overflow-hidden bg-[#050507] text-white">
+      <motion.div
+        className="min-h-screen flex flex-col relative overflow-hidden bg-[#050507] text-white"
+        initial={{ opacity: 0, scale: 1.06, filter: 'blur(14px)' }}
+        animate={introComplete ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 1.06, filter: 'blur(14px)' }}
+        transition={{ duration: 1.35, ease: [0.16, 1, 0.3, 1], delay: introComplete ? 0.05 : 0 }}
+      >
         <div className="absolute inset-0 z-0 bg-[#08080a]">
           <FluidBackground />
           <div className="absolute inset-0 bg-gradient-to-b from-[#050507]/90 via-[#050507]/50 to-[#050507]" />
@@ -248,14 +269,34 @@ export default function Home() {
         </div>
 
         <div className="flex-1 w-full max-w-screen-2xl mx-auto px-6 md:px-16 pt-40 pb-20 relative z-10 flex flex-col justify-center items-center text-center">
-          <motion.div variants={titleVariants} className="max-w-7xl mb-12 flex flex-col items-center">
-            <h1 className="hero-text hero-flicker text-[18vw] md:text-[14vw] font-title font-black leading-[0.75] tracking-tighter uppercase text-white mix-blend-difference text-center">
-              <span className="home-hero-almuntazir inline-block">ALMUNTAZIR</span> <br />
-              <div className="home-hero-suffix inline-block">
-                <span className="text-brand-secondary">SCHOOLS YOUTH</span> <br />
-                <span className="opacity-30">2026</span>
-              </div>
-            </h1>
+          <motion.div
+            variants={titleVariants}
+            className="max-w-7xl mb-12 flex flex-col items-center w-full"
+            initial={{ opacity: 0, y: 48 }}
+            animate={introComplete ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1.1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h1 className="sr-only">TEDx Al Muntazir Schools Youth 2026</h1>
+            <div className="flex flex-col items-center gap-1 md:gap-2 w-full mix-blend-difference">
+              {introComplete && (
+                <>
+                  <ShutterText text="TEDx" sizeClass="text-[clamp(2.5rem,14vw,8rem)]" />
+                  <ShutterText text="AL MUNTAZIR" sizeClass="text-[clamp(2rem,11vw,6.5rem)]" />
+                  <ShutterText
+                    text="SCHOOLS YOUTH"
+                    sizeClass="text-[clamp(1.75rem,9vw,5rem)] text-brand-secondary"
+                  />
+                </>
+              )}
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={introComplete ? { opacity: 0.35, y: 0 } : {}}
+                transition={{ duration: 0.9, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                className="font-title font-black text-[clamp(1.5rem,7vw,4rem)] tracking-tighter text-white mt-2"
+              >
+                2026
+              </motion.span>
+            </div>
           </motion.div>
 
           <motion.div variants={itemVariants} className="max-w-3xl mb-16">
@@ -311,7 +352,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Hourglass Scroll Interaction Indicator */}
       <div className="fixed right-8 top-1/2 -translate-y-1/2 h-40 w-1 bg-white/10 z-[60] hidden xl:block overflow-hidden rounded-full">
@@ -372,7 +413,7 @@ export default function Home() {
             
             <div className="flex flex-wrap justify-center gap-6">
                <a 
-                 href={`https://wa.me/?text=${encodeURIComponent("Join us at TEDxAlMuntazirSchoolsYouth 2026: Borrowed Time. June 14, 2026. " + window.location.origin)}`} 
+                 href={`https://wa.me/?text=${encodeURIComponent("Join us at TEDx Al Muntazir Schools Youth 2026: Borrowed Time. June 14, 2026. " + window.location.origin)}`} 
                  target="_blank" rel="noopener noreferrer"
                  className="px-12 py-5 bg-transparent border border-white/20 text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all shadow-xl shadow-black/5"
                >

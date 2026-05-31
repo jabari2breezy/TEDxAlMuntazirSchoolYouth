@@ -98,7 +98,7 @@ export default function Loader3D() {
                 BORROWED <span className="text-brand-secondary">TIME</span>
               </h1>
               <span className="font-typewriter text-[10px] text-white/40 tracking-[0.8em] uppercase">
-                TEDx AlMuntazir Schools Youth
+                TEDx Al Muntazir Schools Youth
               </span>
             </motion.div>
 

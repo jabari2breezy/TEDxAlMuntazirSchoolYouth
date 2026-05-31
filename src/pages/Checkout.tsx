@@ -96,7 +96,7 @@ export default function Checkout() {
             <motion.div variants={itemVariants} className="bg-brand-surface p-8 md:p-12 border border-brand-outline rounded-sm">
               <div className="mb-12">
                 <h1 className="text-4xl font-title font-black uppercase tracking-tighter mb-2">Checkout</h1>
-                <p className="font-editorial text-lg text-brand-primary/60">Complete your registration for TEDxAlMuntazirSchoolsYouth.</p>
+                <p className="font-editorial text-lg text-brand-primary/60">Complete your registration for TEDx Al Muntazir Schools Youth.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-8">

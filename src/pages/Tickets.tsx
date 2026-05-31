@@ -53,7 +53,7 @@ const INCLUDED_ITEMS = [
   { text: 'Full access to all live speaker sessions', icon: Zap },
   { text: 'Interactive workshop zones', icon: Star },
   { text: 'Premium networking breaks', icon: ShieldCheck },
-  { text: 'Official TEDxAlmuntazir merch', icon: Zap },
+  { text: 'Official TEDx Al Muntazir merch', icon: Zap },
   { text: 'Curated lunch & refreshments', icon: Star }
 ];
 
@@ -73,26 +73,24 @@ export default function Tickets() {
     offset: ["start start", "end end"]
   });
 
-  // Ticket 3D Transforms
+  // Ticket 3D Transforms - adjusted for shorter scroll
   const rotateY = useTransform(scrollYProgress, 
-    [0, 0.2, 0.3, 0.8, 0.9, 1], 
+    [0, 0.12, 0.22, 0.62, 0.72, 1], 
     [0, 360, 345, 345, 360, 360]
   );
   
   const rotateX = useTransform(scrollYProgress,
-    [0, 0.2, 0.3, 0.8, 0.9, 1],
+    [0, 0.12, 0.22, 0.62, 0.72, 1],
     [0, 0, 10, 10, 0, 0]
   );
 
-  // Desktop: ticket shifts right, details appear left
   const xMovementDesktop = useTransform(scrollYProgress,
-    [0, 0.2, 0.3, 0.8, 0.9, 1],
+    [0, 0.12, 0.22, 0.62, 0.72, 1],
     [0, 0, 240, 240, 0, 0]
   );
   
-  // Mobile: ticket slides DOWN so details can appear ABOVE
   const yMovementMobile = useTransform(scrollYProgress,
-    [0, 0.2, 0.3, 0.8, 0.9, 1],
+    [0, 0.12, 0.22, 0.62, 0.72, 1],
     ['0%', '0%', '55%', '55%', '0%', '0%']
   );
 
@@ -100,35 +98,30 @@ export default function Tickets() {
   const ticketY = isMobile ? yMovementMobile : 0;
 
   const ticketScale = useTransform(scrollYProgress,
-    [0, 0.2, 0.3, 0.8, 0.9, 1],
+    [0, 0.12, 0.22, 0.62, 0.72, 1],
     [1, 1, 0.75, 0.75, 1.15, 1.15]
   );
 
-  // Details content opacity - Phase 2
   const centerContentOpacity = useTransform(scrollYProgress,
-    [0.25, 0.35, 0.75, 0.85],
+    [0.14, 0.24, 0.58, 0.68],
     [0, 1, 1, 0]
   );
   
-  // Desktop: details slide in from left
-  // Mobile: details appear from the TOP of the screen (above the ticket)
   const detailsYDesktop = useTransform(scrollYProgress,
-    [0.25, 0.35, 0.75, 0.85],
+    [0.14, 0.24, 0.58, 0.68],
     [50, 0, 0, -50]
   );
   const detailsYMobile = useTransform(scrollYProgress,
-    [0.25, 0.35, 0.75, 0.85],
+    [0.14, 0.24, 0.58, 0.68],
     [-40, 0, 0, -40]
   );
 
-  // Scroll indicator
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
 
-  // Phase 3 text swap
   const [isPhase3, setIsPhase3] = useState(false);
   useEffect(() => {
     const unsub = scrollYProgress.on("change", (v) => {
-      setIsPhase3(v >= 0.88);
+      setIsPhase3(v >= 0.7);
     });
     return () => unsub();
   }, [scrollYProgress]);
@@ -138,8 +131,8 @@ export default function Tickets() {
       {/* Noise overlay */}
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       
-      {/* 400vh scroll container for the 3 phases */}
-      <div ref={containerRef} className="h-[400vh] relative">
+      {/* Shorter scroll — enough to read details, then reach buy */}
+      <div ref={containerRef} className="h-[180vh] relative">
         <div 
           className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
           style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
@@ -281,7 +274,7 @@ function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
         <div className="flex justify-between items-start relative z-10">
           <div className="flex-1">
             <span className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/30 block mb-3">
-              TEDxAlMuntazir
+              TEDx Al Muntazir
             </span>
             <h2 className="font-title font-black text-4xl md:text-6xl uppercase text-white tracking-tighter leading-[0.8]">
               Borrowed<br/><span className="text-brand-secondary">Time</span>

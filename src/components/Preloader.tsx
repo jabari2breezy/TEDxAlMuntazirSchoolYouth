@@ -30,16 +30,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       gsap.set('.pl-x-clip', { clipPath: 'inset(100% 0% 0% 0%)' });
 
       const counter = { val: 0 };
-      const tl = gsap.timeline({
-        onComplete: () => {
-          document.documentElement.style.overflow = '';
-          document.body.style.overflow = '';
-          document.body.style.position = '';
-          document.body.style.width = '';
-          setIsMounted(false);
-          onComplete();
-        }
-      });
+      const tl = gsap.timeline();
 
       // Phase 1: Reveal TED and x text from bottom (like image reveal)
       tl.to('.pl-ted-clip', {
@@ -116,6 +107,33 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         ease: 'power3.in',
       }, '<');
 
+      // Phase 5: Awwwards-style handoff — wipe + zoom blur, reveal home underneath
+      tl.call(() => {
+        onComplete();
+      }, [], '+=0.1');
+
+      tl.to(containerRef.current, {
+        clipPath: 'inset(0 0 100% 0)',
+        scale: 1.08,
+        filter: 'blur(12px)',
+        duration: 1.15,
+        ease: 'power4.inOut',
+      }, 'exit');
+
+      tl.to(containerRef.current, {
+        opacity: 0,
+        duration: 0.35,
+        ease: 'power2.in',
+      }, 'exit+=0.75');
+
+      tl.call(() => {
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        setIsMounted(false);
+      }, [], 'exit+=1.05');
+
     }, containerRef);
 
     return () => {
@@ -132,8 +150,8 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] overflow-hidden pointer-events-none bg-[#050507]"
-      style={{ height: '100dvh' }}
+      className="fixed inset-0 z-[9999] overflow-hidden pointer-events-auto bg-[#050507]"
+      style={{ height: '100dvh', clipPath: 'inset(0 0 0 0)' }}
     >
       {/* Noise texture */}
       <div

@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { SEGMENTS, SPEAKERS } from '../constants';
 import { ArrowDown } from 'lucide-react';
 import FloatingBackground from '../components/FloatingBackground';
+import { WarpShaderBackground } from '../components/ui/wrap-shader';
 import { MaskedReveal, MicroTag, IndexNumber, StaggerContainer, StaggerItem, LUXURY_EASE } from '../components/KineticTypography';
 
 interface Speaker {
@@ -339,7 +340,7 @@ function SpeakerChapter({
               <div className="flex items-center gap-3">
                 <div className="w-6 h-[2px]" style={{ backgroundColor: brandGreen }} />
                 <span className={`font-typewriter text-[8px] md:text-[8px] uppercase tracking-[0.25em] ${mutedColor}`}>
-                  TEDxAlMuntazirSchoolYouth 2026
+                  TEDx Al Muntazir Schools Youth 2026
                 </span>
               </div>
             </StaggerLine>
@@ -373,7 +374,9 @@ export default function Speakers() {
 
   return (
     <div className="relative bg-brand-primary">
-      <FloatingBackground />
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <WarpShaderBackground />
+      </div>
 
       <HeroSection mounted={mounted} speakersCount={speakersData.length} />
 

@@ -198,7 +198,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/8 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-sans text-[9px] text-white/20 text-center md:text-left">
-            This independent TEDx event is operated under license from TED. © 2026 TEDxAlMuntazirSchoolsYouth.
+            This independent TEDx event is operated under license from TED. © 2026 TEDx Al Muntazir Schools Youth.
           </p>
           <p className="font-typewriter text-[8px] uppercase tracking-[0.3em] text-white/15">
             Dar Es Salaam, Tanzania

@@ -1,41 +1,7 @@
-import { useState, FormEvent, useEffect, useRef, useMemo } from 'react';
+import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { Mail } from 'lucide-react';
-
-const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
-
-// Floating star dot component
-function StarField() {
-  const stars = useMemo(() =>
-    Array.from({ length: 120 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 2 + 0.8,
-      duration: Math.random() * 4 + 3,
-      delay: Math.random() * 6,
-    })),
-  []);
-  return (
-    <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
-      {stars.map(s => (
-        <div
-          key={s.id}
-          className="absolute rounded-full"
-          style={{
-            left: `${s.x}%`,
-            top: `${s.y}%`,
-            width: s.size,
-            height: s.size,
-            background: 'rgba(0,8,57,0.5)',
-            boxShadow: `0 0 ${s.size * 3}px ${s.size}px rgba(0,109,56,0.15)`,
-            animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+import { Meteors } from '../components/ui/meteors';
 
 export default function About() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -65,8 +31,10 @@ export default function About() {
       className="pt-40 relative min-h-screen text-brand-primary overflow-hidden"
       style={{ background: '#f5f0e8' }}
     >
-      {/* Full-page star field */}
-      <StarField />
+      {/* Shooting stars — dense, full viewport */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <Meteors number={200} />
+      </div>
 
       {/* Noise texture */}
       <div
@@ -109,7 +77,7 @@ export default function About() {
                 text: "In the spirit of ideas worth spreading, TEDx is a program of local, self-organized events that bring people together to share a TED-like experience. At a TEDx event, TED Talks video and live speakers combine to spark deep discussion and connection."
               },
               {
-                title: "TEDxAlMuntazirSchoolsYouth",
+                title: "TEDx Al Muntazir Schools Youth",
                 text: "Our event is run entirely by students, for the community of Dar es Salaam. We are exploring the theme of 'Borrowed Time' and how we individually and collectively choose to spend the moments we have."
               }
             ].map((item, i) => (

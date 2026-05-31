@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Ticket, MapPin, Lightbulb } from 'lucide-react';
-import { Meteors } from '../components/ui/meteors';
+import { BackgroundPaths } from '../components/ui/background-paths';
 
 const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
@@ -16,11 +16,11 @@ const FAQ_DATA = [
       },
       {
         q: "What does my ticket include?",
-        a: "Your ticket grants you full access to all live speaker sessions, interactive workshop zones, premium networking breaks, official TEDxAlMuntazir merchandise, and a curated lunch/refreshments experience."
+        a: "Your ticket grants you full access to all live speaker sessions, interactive workshop zones, premium networking breaks, official TEDx Al Muntazir merchandise, and a curated lunch/refreshments experience."
       },
       {
         q: "Can I get a refund or transfer my ticket to someone else?",
-        a: "All ticket sales are final and non-refundable. However, you can transfer your ticket to another AlMuntazir student up to 48 hours before the event, provided you notify the organizers beforehand."
+        a: "All ticket sales are final and non-refundable. However, you can transfer your ticket to another Al Muntazir student up to 48 hours before the event, provided you notify the organizers beforehand."
       }
     ]
   },
@@ -29,7 +29,7 @@ const FAQ_DATA = [
     icon: <MapPin size={18} />,
     questions: [
       {
-        q: "When and where is TEDxAlMuntazir taking place?",
+        q: "When and where is TEDx Al Muntazir taking place?",
         a: "The event takes place in 2026 at the Al Muntazir Islamic International Schools - Nursery Campus. Doors open strictly at 9:30 AM for registration and morning networking, with the first session starting at 10:00 AM."
       },
       {
@@ -38,7 +38,7 @@ const FAQ_DATA = [
       },
       {
         q: "Will the event be streamed online?",
-        a: "TEDxAlMuntazir is designed as an immersive, in-person experience to maximize networking and engagement. While the talks will be recorded and uploaded to the official TEDx YouTube channel after the event, there will be no live stream on the day."
+        a: "TEDx Al Muntazir is designed as an immersive, in-person experience to maximize networking and engagement. While the talks will be recorded and uploaded to the official TEDx YouTube channel after the event, there will be no live stream on the day."
       }
     ]
   },
@@ -91,9 +91,9 @@ export default function FAQ() {
       className="min-h-screen text-white relative overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0a0d1a 0%, #050507 60%, #001a0d 100%)' }}
     >
-      {/* Meteor Background */}
+      {/* Animated path background — dominant layer */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <Meteors number={50} />
+        <BackgroundPaths />
       </div>
 
       {/* Fixed ambient glow nodes */}
@@ -134,7 +134,7 @@ export default function FAQ() {
                 <button
                   key={cat.category}
                   onClick={() => scrollToCategory(cat.category)}
-                  className={`w-full text-left p-5 rounded-2xl flex items-center justify-between transition-all duration-500 group border ${
+                  className={`w-full text-left p-5 rounded-2xl flex items-center justify-between transition-all duration-500 group relative border ${
                     activeCategory === cat.category
                       ? 'bg-brand-secondary/20 border-brand-secondary/50 text-white shadow-lg shadow-brand-secondary/10'
                       : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
@@ -192,10 +192,10 @@ export default function FAQ() {
                         className="w-full text-left p-6 md:p-8 flex items-start justify-between gap-4"
                         onClick={() => setOpenQuestion(openQuestion === `${cat.category}-${i}` ? null : `${cat.category}-${i}`)}
                       >
-                        <h4 className="text-xl md:text-2xl font-title font-black uppercase text-white tracking-tighter leading-none flex-1">
+                        <h4 className="text-xl md:text-2xl font-title font-black uppercase tracking-tighter text-white leading-none flex-1">
                           {faq.q}
                         </h4>
-                        <div className={`shrink-0 w-8 h-8 rounded-full border border-brand-outline/30 flex items-center justify-center transition-all duration-300 ${openQuestion === `${cat.category}-${i}` ? 'rotate-45 border-brand-secondary/50 bg-brand-secondary/10' : ''}`}>
+                        <div className={`shrink-0 w-8 h-8 rounded-full border border-brand-outline/30 flex items-center justify-center transition-all ${openQuestion === `${cat.category}-${i}` ? 'rotate-45 border-brand-secondary/50 bg-brand-secondary/10' : ''}`}>
                           <Plus size={14} className={openQuestion === `${cat.category}-${i}` ? 'text-brand-secondary' : 'text-white/40'} />
                         </div>
                       </button>

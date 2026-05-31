@@ -14,6 +14,7 @@
   "dependencies": {
     "@google/genai": "^1.29.0",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@paper-design/shaders-react": "^0.0.76",
     "@prisma/client": "^7.8.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",

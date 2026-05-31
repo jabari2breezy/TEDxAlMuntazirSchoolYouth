@@ -39,7 +39,7 @@ const fragmentShader = `
     float glow = 1.0 - length(uv - 0.5) * 1.8;
     glow = clamp(pow(glow, 1.5), 0.0, 1.0);
     
-    gl_FragColor = vec4(color, glow * 0.7);
+    gl_FragColor = vec4(color, glow * 0.95);
   }
 `;
 
@@ -57,7 +57,7 @@ function ShaderPlane({
   const uniforms = useMemo(
     () => ({
       time: { value: 0 },
-      intensity: { value: 1.0 },
+      intensity: { value: 1.35 },
       color1: { value: new THREE.Color(color1) },
       color2: { value: new THREE.Color(color2) },
     }),
@@ -67,7 +67,7 @@ function ShaderPlane({
   useFrame((state) => {
     if (mesh.current) {
       uniforms.time.value = state.clock.elapsedTime * 0.4;
-      uniforms.intensity.value = 0.8 + Math.sin(state.clock.elapsedTime * 1.5) * 0.2;
+      uniforms.intensity.value = 1.1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.25;
     }
   });
 
