@@ -30,7 +30,7 @@ export default function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-40 relative min-h-screen bg-brand-background text-brand-primary overflow-hidden"
+      className="pt-40 relative min-h-screen bg-transparent text-brand-primary overflow-hidden"
     >
       {/* WebGL Shader Background */}
       <AnimatedShaderBackground className="opacity-60" />

@@ -88,7 +88,7 @@ export default function FAQ() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={transition}
-      className="min-h-screen bg-brand-background text-brand-primary relative overflow-hidden"
+      className="min-h-screen bg-transparent text-brand-primary relative overflow-hidden"
     >
       {/* Meteor Background */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">

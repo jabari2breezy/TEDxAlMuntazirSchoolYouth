@@ -1,9 +1,6 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'motion/react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star } from 'lucide-react';
-import InteractiveBackground from '../components/InteractiveBackground';
-
-const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
 function GlisteningStars({ count = 80, scrollProgress }: { count?: number; scrollProgress?: any }) {
   const stars = useMemo(() =>
@@ -41,7 +38,7 @@ function StarDot({ s, scrollProgress }: { s: any; scrollProgress?: any }) {
         top: `${s.y}%`,
         width: s.size,
         height: s.size,
-        opacity: 0,
+        opacity: 0.8,
         boxShadow: `0 0 ${s.size * 2}px ${s.size}px rgba(255,255,255,0.15)`,
         y: parallaxY,
         animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
@@ -75,10 +72,6 @@ export default function Tickets() {
   });
 
   // Ticket 3D Transforms
-  // Phase 1 (0 - 0.2): 360 degree showcase rotation
-  // Phase 2 (0.2 - 0.8): Settled at angle
-  // Phase 3 (0.8 - 1.0): Snap flat to 0
-  
   const rotateY = useTransform(scrollYProgress, 
     [0, 0.2, 0.3, 0.8, 0.9, 1], 
     [0, 360, 345, 345, 360, 360]
@@ -89,15 +82,13 @@ export default function Tickets() {
     [0, 0, 10, 10, 0, 0]
   );
 
-  // Translate ticket
-  // Phase 1: Center (0)
-  // Phase 2 Desktop: Shift Right. Phase 2 Mobile: Ticket goes DOWN, details come UP
-  // Phase 3: Center (0)
+  // Desktop horizontal shift
   const xMovementDesktop = useTransform(scrollYProgress,
     [0, 0.2, 0.3, 0.8, 0.9, 1],
     [0, 0, 250, 250, 0, 0]
   );
-  // On mobile: ticket slides DOWN out of the way
+  
+  // Mobile vertical shift
   const yMovementMobile = useTransform(scrollYProgress,
     [0, 0.2, 0.3, 0.8, 0.9, 1],
     [0, 0, 260, 260, 0, 0]
@@ -106,11 +97,18 @@ export default function Tickets() {
   const ticketX = isMobile ? 0 : xMovementDesktop;
   const ticketY = isMobile ? yMovementMobile : 0;
 
-  // Scale ticket
-  const ticketScale = useTransform(scrollYProgress,
+  // Scales
+  const ticketScaleDesktop = useTransform(scrollYProgress,
     [0, 0.2, 0.3, 0.8, 0.9, 1],
-    [1, 1, 0.8, 0.8, 1.2, 1.2] // massive scale at the end
+    [1, 1, 0.8, 0.8, 1.2, 1.2]
   );
+  
+  const ticketScaleMobile = useTransform(scrollYProgress,
+    [0, 0.2, 0.3, 0.8, 0.9, 1],
+    [1, 1, 0.65, 0.65, 1.1, 1.1]
+  );
+  
+  const ticketScale = isMobile ? ticketScaleMobile : ticketScaleDesktop;
 
   // Content Opacity (Phase 2)
   const centerContentOpacity = useTransform(scrollYProgress,
@@ -118,10 +116,17 @@ export default function Tickets() {
     [0, 1, 1, 0]
   );
   
-  const centerContentY = useTransform(scrollYProgress,
+  const centerContentYDesktop = useTransform(scrollYProgress,
     [0.25, 0.35, 0.75, 0.85],
     [50, 0, 0, -50]
   );
+
+  const centerContentYMobile = useTransform(scrollYProgress, 
+    [0.25, 0.35, 0.75, 0.85], 
+    [80, 0, 0, -40]
+  );
+
+  const contentY = isMobile ? centerContentYMobile : centerContentYDesktop;
 
   // Phase 3 text swap
   const [isPhase3, setIsPhase3] = useState(false);
@@ -133,16 +138,15 @@ export default function Tickets() {
   }, [scrollYProgress]);
 
   return (
-    <div className="bg-[#050507] text-white">
+    <div className="bg-[#050507] text-white min-h-screen">
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       
-      {/* 300vh scroll container for the 3 phases */}
-      <div ref={containerRef} className="h-[400vh] relative">
-        <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden perspective-[1500px]">
+      {/* 400vh scroll container for the 3 phases */}
+      <div ref={containerRef} className="h-[400vh] relative bg-[#050507]">
+        <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden perspective-[1500px] bg-[#050507]">
           
-          <motion.div className="absolute inset-0 z-0">
-            <InteractiveBackground />
-            <GlisteningStars count={100} scrollProgress={scrollYProgress} />
+          <motion.div className="absolute inset-0 z-0 bg-[#050507]">
+            <GlisteningStars count={120} scrollProgress={scrollYProgress} />
           </motion.div>
 
           {/* Scroll Indicator */}
@@ -156,7 +160,7 @@ export default function Tickets() {
 
           {/* Center Details Content (Phase 2) - slides UP from bottom on mobile */}
           <motion.div 
-            style={{ opacity: centerContentOpacity, y: isMobile ? useTransform(scrollYProgress, [0.25, 0.35, 0.75, 0.85], [80, 0, 0, -40]) : centerContentY }}
+            style={{ opacity: centerContentOpacity, y: contentY }}
             className={`absolute z-10 w-full max-w-xl px-6 pointer-events-auto ${isMobile ? 'top-[5%] left-0 right-0 flex flex-col justify-start' : 'left-[10vw]'}`}
           >
             <div className="space-y-4 md:space-y-8">

@@ -4,66 +4,75 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 const AGENDA_ITEMS = [
   {
     id: '01',
-    time: '08:00 AM',
+    time: '09:30 AM',
     title: 'THE ARRIVAL',
     speaker: 'Registration',
-    desc: 'Enter the monolithic space and receive your credentials. Access the primary viewing arrays and prepare for the temporal shift.',
-    duration: '60M',
+    desc: 'Enter the temporal space, check in, and receive your credentials. Gather at the primary staging area and prepare for the event opening.',
+    duration: '30M',
     type: 'EXPERIENCE'
   },
   {
     id: '02',
-    time: '09:00 AM',
-    title: 'INTRO',
-    speaker: 'Opening Address',
-    desc: 'The beginning of the end. An orientation to the systems and structures of Borrowed Time.',
-    duration: '30M',
-    type: 'KEYNOTE'
+    time: '10:00 AM',
+    title: 'INTRO REMARKS',
+    speaker: 'Welcome & Video',
+    desc: 'The journey begins. Opening remarks and welcome address (10m) followed by the official TEDxAlMuntazir theme launch video (10m).',
+    duration: '20M',
+    type: 'INTRO'
   },
   {
     id: '03',
-    time: '09:30 AM',
-    title: 'THE INHERITORS',
-    speaker: 'Liyaan Karbelkar',
-    desc: 'Exploring the systems we must now manage. A deep dive into the socio-economic debts passed down to the youth.',
-    duration: '90M',
-    type: 'KEYNOTE'
+    time: '10:20 AM',
+    title: 'SESSION ONE',
+    speaker: 'Ridhwan, Anaya & Zahra D.',
+    desc: 'Speaker 1: Ridhwan Mohammed - Alumni (15m), Break (10m), Speaker 2: Anaya Rashid - Culture of Time (15m), Game (15m), Speaker 3: Zahra Datoo - Nostalgia (15m).',
+    duration: '70M',
+    type: 'SESSION'
   },
   {
     id: '04',
-    time: '11:00 AM',
-    title: 'LIQUIDITY BREAK',
-    speaker: 'Networking',
-    desc: 'Fluid environments and ambient networking. Secure resources and exchange temporal insights.',
-    duration: '30M',
+    time: '11:30 AM',
+    title: 'TEA INTERLUDE',
+    speaker: 'Networking Break',
+    desc: 'Enjoy mid-morning refreshments and interact with other attendees in the custom activation zone.',
+    duration: '20M',
     type: 'BREAK'
   },
   {
     id: '05',
-    time: '11:30 AM',
-    title: 'THE PRESENT TENSE',
-    speaker: 'Hassan Abbas',
-    desc: 'Dissecting the procrastination paradox. Why we borrow against our own future and how to stop.',
-    duration: '90M',
-    type: 'KEYNOTE'
+    time: '11:50 AM',
+    title: 'SESSION TWO',
+    speaker: 'Zahra M., TBD & Hassan',
+    desc: 'Speaker 4: Zahra Moledina - Sliced Bread (15m), Interactive Kahoot/Blooket (10m), Speaker 5: TBD (18m), Game challenge (12m), Speaker 6: Hassan Abbas Muhammad - Procrastination (15m).',
+    duration: '70M',
+    type: 'SESSION'
   },
   {
     id: '06',
     time: '01:00 PM',
     title: 'MID-DAY PAUSE',
-    speaker: 'Lunch & Activations',
-    desc: 'Curated nutrition and partner ecosystem activations.',
+    speaker: 'Salah & Food Break',
+    desc: 'Congregational prayers followed by a premium lunch experience and dynamic networking activations.',
     duration: '60M',
-    type: 'LUNCH'
+    type: 'PAUSE'
   },
   {
     id: '07',
     time: '02:00 PM',
-    title: 'FUTURE LEGACIES',
-    speaker: 'Sada Mbaruk Said',
-    desc: 'Designing the architecture of tomorrow using the three clocks mechanism.',
-    duration: '90M',
-    type: 'KEYNOTE'
+    title: 'SESSION THREE',
+    speaker: 'Yunus, Sada & Liyaan',
+    desc: 'Speaker 7: Yunus Osman - Art of Scheduling (15m), Game activity (10m), Speaker 8: Sada Mbaruk - End of the World (15m), Imposter game (20m), Speaker 9: Liyaan Karblekar - Taking Wealth with You (15m).',
+    duration: '75M',
+    type: 'SESSION'
+  },
+  {
+    id: '08',
+    time: '03:15 PM',
+    title: 'CLOSING CEREMONY',
+    speaker: 'Awards & Wrap-up',
+    desc: 'Reflective recap, organizer and curation credits, special award presentations, and final photo captures. The stage closes at 4:00 PM.',
+    duration: '45M',
+    type: 'CEREMONY'
   },
 ];
 

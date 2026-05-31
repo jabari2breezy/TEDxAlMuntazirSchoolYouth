@@ -139,7 +139,7 @@ void main(){gl_Position=position;}`;
   return (
     <canvas
       ref={canvasRef}
-      className={`absolute inset-0 w-full h-full ${className}`}
+      className={`fixed inset-0 w-full h-full ${className}`}
       style={{ display: 'block' }}
     />
   );
