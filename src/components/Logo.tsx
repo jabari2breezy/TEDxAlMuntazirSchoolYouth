@@ -17,7 +17,7 @@ export default function Logo({ className = '', variant = 'tedx', theme = 'light'
           <span className="text-[#e62b1e] text-[0.8em] ml-[1px]">x</span>
         </div>
         <div className={`font-sans font-normal tracking-tight pb-[3px] md:pb-[4px] leading-none text-[15px] md:text-[19px] ${subTextColor}`}>
-          AlMuntazirSchoolsYouth
+          Al Muntazir<br />Schools Youth
         </div>
       </div>
     );

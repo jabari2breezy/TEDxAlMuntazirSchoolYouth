@@ -17,7 +17,6 @@ import Checkout from './pages/Checkout';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { useEffect } from 'react';
-
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {

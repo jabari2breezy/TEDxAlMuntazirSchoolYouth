@@ -73,46 +73,46 @@ export default function Tickets() {
     offset: ["start start", "end end"]
   });
 
-  // Ticket 3D Transforms - slower, less sensitive spin
+  // Bottle-like spin journey: starts angled, spins, ends facing screen
   const rotateY = useTransform(scrollYProgress,
-    [0, 0.2, 0.35, 0.65, 0.8, 1],
-    [0, 90, 80, 80, 90, 90]
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    [-25, -25, 0, 0, 0, 0]
   );
    
   const rotateX = useTransform(scrollYProgress,
-    [0, 0.2, 0.35, 0.65, 0.8, 1],
-    [0, 0, 3, 3, 0, 0]
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    [15, 15, 0, 0, 0, 0]
   );
 
   const xMovementDesktop = useTransform(scrollYProgress,
-    [0, 0.2, 0.35, 0.65, 0.8, 1],
-    [0, 0, 80, 80, 0, 0]
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    [0, 0, 0, 0, 0, 0]
   );
    
   const yMovementMobile = useTransform(scrollYProgress,
-    [0, 0.2, 0.35, 0.65, 0.8, 1],
-    ['0%', '0%', '20%', '20%', '0%', '0%']
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    ['0%', '0%', '0%', '0%', '0%', '0%']
   );
 
   const ticketX = isMobile ? 0 : xMovementDesktop;
   const ticketY = isMobile ? yMovementMobile : 0;
 
   const ticketScale = useTransform(scrollYProgress,
-    [0, 0.25, 0.35, 0.65, 0.75, 1],
-    [1, 1, 0.85, 0.85, 1.1, 1.1]
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    [0.9, 0.9, 1, 1, 1.05, 1.05]
   );
 
   const centerContentOpacity = useTransform(scrollYProgress,
-    [0.2, 0.3, 0.55, 0.65],
+    [0.15, 0.3, 0.55, 0.7],
     [0, 1, 1, 0]
   );
-   
+    
   const detailsYDesktop = useTransform(scrollYProgress,
-    [0.2, 0.3, 0.55, 0.65],
+    [0.15, 0.3, 0.55, 0.7],
     [30, 0, 0, -30]
   );
   const detailsYMobile = useTransform(scrollYProgress,
-    [0.2, 0.3, 0.55, 0.65],
+    [0.15, 0.3, 0.55, 0.7],
     [-20, 0, 0, -20]
   );
 
@@ -121,7 +121,7 @@ export default function Tickets() {
   const [isPhase3, setIsPhase3] = useState(false);
   useEffect(() => {
     const unsub = scrollYProgress.on("change", (v) => {
-      setIsPhase3(v >= 0.65);
+      setIsPhase3(v >= 0.7);
     });
     return () => unsub();
   }, [scrollYProgress]);
@@ -132,7 +132,7 @@ export default function Tickets() {
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       
       {/* Shorter scroll — enough to read details, then reach buy */}
-      <div ref={containerRef} className="h-[160vh] relative">
+      <div ref={containerRef} className="h-[180vh] relative">
         <div 
           className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
           style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}

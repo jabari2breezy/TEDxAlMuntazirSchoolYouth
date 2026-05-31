@@ -2,6 +2,7 @@ import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { Mail } from 'lucide-react';
 import { Meteors } from '../components/ui/meteors';
+import { WarpShaderBackground } from '../components/ui/wrap-shader';
 
 export default function About() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -28,9 +29,15 @@ export default function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-40 relative min-h-screen text-brand-primary overflow-hidden"
-      style={{ background: '#f5f0e8' }}
+      className="pt-40 relative min-h-screen text-white overflow-hidden"
+      style={{ background: '#0a0a0a' }}
     >
+      {/* Warp shader background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <WarpShaderBackground />
+      </div>
+      <div className="fixed inset-0 z-0 pointer-events-none bg-black/60" />
+
       {/* Shooting stars — dense, full viewport, all around */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
         <Meteors number={200} />
@@ -63,7 +70,7 @@ export default function About() {
             >
               Registry / Info
             </motion.div>
-            <h1 className="text-[16vw] md:text-[14vw] font-title font-black tracking-tighter leading-[0.8] uppercase text-brand-primary flex flex-col items-center">
+            <h1 className="text-[16vw] md:text-[14vw] font-title font-black tracking-tighter leading-[0.8] uppercase text-white flex flex-col items-center">
               <span>What it's</span>
               <span className="italic font-editorial lowercase text-brand-secondary">all about.</span>
             </h1>
@@ -105,8 +112,8 @@ export default function About() {
                     className="h-[1px] flex-grow bg-brand-outline/20 origin-left"
                   />
                 </div>
-                <h3 className="text-3xl md:text-4xl font-title font-black tracking-tighter uppercase text-brand-primary break-words">{item.title}</h3>
-                <p className="font-editorial text-xl text-brand-primary/50 leading-tight italic">{item.text}</p>
+                <h3 className="text-3xl md:text-4xl font-title font-black tracking-tighter uppercase text-white break-words">{item.title}</h3>
+                <p className="font-editorial text-xl text-white/50 leading-tight italic">{item.text}</p>
               </motion.div>
             ))}
           </div>
@@ -120,9 +127,9 @@ export default function About() {
             transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
             className="space-y-12"
           >
-            <div className="p-8 md:p-12 border border-brand-outline/20 bg-brand-surface backdrop-blur-sm space-y-8 rounded-[2.5rem]">
+            <div className="p-8 md:p-12 border border-white/10 bg-white/5 backdrop-blur-md space-y-8 rounded-[2.5rem]">
               <Mail className="text-brand-secondary" size={32} />
-              <h2 className="text-4xl md:text-5xl font-title font-black tracking-tighter uppercase leading-none text-brand-primary">
+              <h2 className="text-4xl md:text-5xl font-title font-black tracking-tighter uppercase leading-none text-white">
                 Get <br /> Involved.
               </h2>
 
@@ -133,32 +140,32 @@ export default function About() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8">
                   <div className="space-y-2 border-b border-brand-outline/20 pb-4 focus-within:border-brand-secondary transition-colors">
-                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/30">Full Name</label>
+                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-white/30">Full Name</label>
                     <input
                       type="text"
                       placeholder="e.g. Salim Ahmed"
-                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-brand-primary placeholder:text-brand-primary/30 outline-none"
+                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-white placeholder:text-white/30 outline-none"
                       required
                       value={formState.name}
                       onChange={e => setFormState({ ...formState, name: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2 border-b border-brand-outline/20 pb-4 focus-within:border-brand-secondary transition-colors">
-                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/30">Email Address</label>
+                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-white/30">Email Address</label>
                     <input
                       type="email"
                       placeholder="hello@example.com"
-                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-brand-primary placeholder:text-brand-primary/30 outline-none"
+                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-white placeholder:text-white/30 outline-none"
                       required
                       value={formState.email}
                       onChange={e => setFormState({ ...formState, email: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2 border-b border-brand-outline/20 pb-4 focus-within:border-brand-secondary transition-colors">
-                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/30">How do you want to help?</label>
+                    <label className="font-typewriter text-[9px] uppercase tracking-widest text-white/30">How do you want to help?</label>
                     <textarea
                       placeholder="Tell us about your ideas..."
-                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-brand-primary placeholder:text-brand-primary/30 min-h-[100px] resize-none outline-none"
+                      className="w-full bg-transparent border-none focus:ring-0 font-editorial text-2xl italic text-white placeholder:text-white/30 min-h-[100px] resize-none outline-none"
                       value={formState.message}
                       onChange={e => setFormState({ ...formState, message: e.target.value })}
                     />

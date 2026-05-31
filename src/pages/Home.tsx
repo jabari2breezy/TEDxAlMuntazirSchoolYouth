@@ -1,12 +1,10 @@
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'motion/react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
 import { Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import React, { useRef, useEffect, useState } from 'react';
 import FloatingBackground from '../components/FloatingBackground';
 import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
-import Preloader from '../components/Preloader';
-import HeroText from '../components/ui/hero-shutter-text';
 import PrecisionButton from '../components/PrecisionButton';
 import { TICKETS_URL, SOCIALS } from '../constants';
 import SponsorsSection from '../components/SponsorsSection';
@@ -65,8 +63,6 @@ function TiltCard({ children, className = "" }: TiltCardProps) {
   useEffect(() => {
     const handleOrientation = (e: DeviceOrientationEvent) => {
       if (e.beta !== null && e.gamma !== null) {
-        // gamma: -90 to 90 (left/right)
-        // beta: -180 to 180 (front/back)
         const xPct = Math.max(-1, Math.min(1, e.gamma / 30));
         const yPct = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
         x.set(xPct * 0.5);
@@ -169,14 +165,12 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [eventStatus, setEventStatus] = useState<EventStatus | null>(null);
   const [updates, setUpdates] = useState<Update[]>([]);
-  const [introComplete, setIntroComplete] = useState(false);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
   });
 
-  // Skip expensive spring computation on mobile
   const smoothProgress = isMobile
     ? scrollYProgress
     : useSpring(scrollYProgress, { stiffness: 30, damping: 25 });
@@ -196,7 +190,6 @@ export default function Home() {
       .then(setUpdates);
   }, []);
 
-
   const hapticTick = () => {
     if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
       window.navigator.vibrate(10);
@@ -205,7 +198,7 @@ export default function Home() {
 
   const lastDragPos = useRef(0);
   const handleDrag = (_: any, info: any) => {
-    const threshold = 60; // px between ticks
+    const threshold = 60;
     if (Math.abs(info.point.x - lastDragPos.current) > threshold) {
       hapticTick();
       lastDragPos.current = info.point.x;
@@ -216,34 +209,18 @@ export default function Home() {
     <motion.div 
       variants={containerVariants}
       initial="hidden"
-      animate={introComplete ? "visible" : "hidden"}
+      animate="visible"
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
       className="relative pt-4 bg-[#08080a] text-[#EBEBEB]"
       ref={containerRef}
     >
-      <Preloader onComplete={() => setIntroComplete(true)} />
-
-      {/* Cinematic bridge: soft flash as preloader hands off to hero */}
-      <AnimatePresence>
-        {introComplete && (
-          <motion.div
-            key="entrance-flash"
-            className="fixed inset-0 z-[9997] pointer-events-none bg-brand-secondary/20"
-            initial={{ opacity: 0.4 }}
-            animate={{ opacity: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-          />
-        )}
-      </AnimatePresence>
-
       {/* High-End Scroll Progress Bar */}
       <motion.div 
         className="fixed top-0 left-0 right-0 h-[2px] bg-brand-secondary z-[100] origin-left"
         style={{ scaleX: scrollYProgress }}
       />
 
-      {/* Tiny Background Blur Layer as requested */}
+      {/* Tiny Background Blur Layer */}
       <motion.div 
         className="fixed inset-0 z-0 pointer-events-none backdrop-blur-[1px]"
         style={{ opacity: useTransform(scrollYProgress, [0, 0.05], [0, 1]) }}
@@ -254,9 +231,9 @@ export default function Home() {
       {/* Hero Section */}
       <motion.div
         className="min-h-screen flex flex-col relative overflow-hidden bg-[#050507] text-white"
-        initial={{ opacity: 0, scale: 1.06, filter: 'blur(14px)' }}
-        animate={introComplete ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 1.06, filter: 'blur(14px)' }}
-        transition={{ duration: 1.35, ease: [0.16, 1, 0.3, 1], delay: introComplete ? 0.05 : 0 }}
+        initial={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+        transition={{ duration: 0 }}
       >
         <div className="absolute inset-0 z-0 bg-[#08080a]">
           <FluidBackground />
@@ -273,17 +250,22 @@ export default function Home() {
             variants={titleVariants}
             className="max-w-7xl mb-12 flex flex-col items-center w-full"
             initial={{ opacity: 0, y: 48 }}
-            animate={introComplete ? { opacity: 1, y: 0 } : {}}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
             <h1 className="sr-only">TEDx Al Muntazir Schools Youth 2026</h1>
             <div className="flex flex-col items-center gap-1 md:gap-2 w-full mix-blend-difference">
-              {introComplete && (
-                <HeroText text="TEDx AL MUNTAZIR SCHOOLS YOUTH" />
-              )}
+              <div className="flex flex-wrap justify-center items-center">
+                <span className="font-solare text-[12vw] md:text-[10vw] font-black italic tracking-tighter text-[#e62b1e] leading-none">TED</span>
+                <span className="font-solare text-[12vw] md:text-[10vw] font-black tracking-tighter text-white leading-none">x</span>
+                <span className="font-solare text-[12vw] md:text-[10vw] font-black tracking-tighter text-white leading-none ml-[0.2em]">AL MUNTAZIR</span>
+              </div>
+              <span className="font-solare text-[8vw] md:text-[6vw] font-black tracking-tighter text-white leading-none mt-2">
+                SCHOOLS YOUTH
+              </span>
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
-                animate={introComplete ? { opacity: 0.35, y: 0 } : {}}
+                animate={{ opacity: 0.35, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 className="font-title font-black text-[clamp(1.5rem,7vw,4rem)] tracking-tighter text-white mt-2"
               >
@@ -412,13 +394,13 @@ export default function Home() {
                >
                  WhatsApp
                </a>
-                <a 
-                  href={`https://instagram.com/${SOCIALS.instagram.replace('@','')}`} 
-                  target="_blank" rel="noopener noreferrer"
-                  className="px-12 py-5 bg-transparent border border-white/20 text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all shadow-xl shadow-black/5"
-                >
-                  Instagram
-                </a>
+                 <a 
+                   href={`https://instagram.com/${SOCIALS.instagram.replace('@','')}`} 
+                   target="_blank" rel="noopener noreferrer"
+                   className="px-12 py-5 bg-transparent border border-white/20 text-white rounded-full font-typewriter text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all shadow-xl shadow-black/5"
+                 >
+                   Instagram
+                 </a>
             </div>
           </motion.div>
         </div>
