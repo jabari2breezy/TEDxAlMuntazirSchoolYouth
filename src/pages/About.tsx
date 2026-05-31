@@ -2,7 +2,7 @@ import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { Mail } from 'lucide-react';
 import { Meteors } from '../components/ui/meteors';
-import { WarpShaderBackground } from '../components/ui/wrap-shader';
+import { ShaderAnimation } from '../components/ui/shader-animation';
 
 export default function About() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -32,11 +32,11 @@ export default function About() {
       className="pt-40 relative min-h-screen text-white overflow-hidden"
       style={{ background: '#0a0a0a' }}
     >
-      {/* Warp shader background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <WarpShaderBackground />
+      {/* Shader animation background */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-60">
+        <ShaderAnimation />
       </div>
-      <div className="fixed inset-0 z-0 pointer-events-none bg-black/60" />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-black/70" />
 
       {/* Shooting stars — dense, full viewport, all around */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">

@@ -5,6 +5,7 @@ import { ArrowDown } from 'lucide-react';
 import FloatingBackground from '../components/FloatingBackground';
 import { WarpShaderBackground } from '../components/ui/wrap-shader';
 import { MaskedReveal, MicroTag, IndexNumber, StaggerContainer, StaggerItem, LUXURY_EASE } from '../components/KineticTypography';
+import HeroScrollAnimation from '../components/ui/hero-scroll-animation';
 
 interface Speaker {
   id: string;
@@ -379,6 +380,9 @@ export default function Speakers() {
       </div>
 
       <HeroSection mounted={mounted} speakersCount={speakersData.length} />
+
+      {/* Scroll-driven transition between hero and speakers */}
+      <HeroScrollAnimation />
 
       {speakersData.map((speaker, i) => {
         const seg = SEGMENTS.find(s => s.id === speaker.segmentId);

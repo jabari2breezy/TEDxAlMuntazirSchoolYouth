@@ -60,6 +60,7 @@ const INCLUDED_ITEMS = [
 export default function Tickets() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -73,72 +74,80 @@ export default function Tickets() {
     offset: ["start start", "end end"]
   });
 
-  // Phase 1 (0-20%): Floating oscillation
-  const floatRotateX = useTransform(scrollYProgress,
-    [0, 0.1, 0.2],
-    [12, -8, 5]
-  );
-  const floatRotateY = useTransform(scrollYProgress,
-    [0, 0.1, 0.2],
-    [-15, 10, -5]
-  );
-  const floatY = useTransform(scrollYProgress,
-    [0, 0.05, 0.1, 0.15, 0.2],
-    [0, -15, 10, -8, 0]
-  );
+  // Track elapsed time for floating animation
+  useEffect(() => {
+    let frameId: number;
+    const startTime = Date.now();
+    const tick = () => {
+      setElapsed((Date.now() - startTime) / 1000);
+      frameId = requestAnimationFrame(tick);
+    };
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
 
-  // Phase 2 (21-80%): Tumbling
-  const tumbleRotateX = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [5, 5, -180, -180, -190, -190, 0]
-  );
-  const tumbleRotateY = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [-5, -5, 45, 45, -30, -30, 0]
-  );
-  const tumbleRotateZ = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [0, 0, 25, 25, -15, -15, 0]
-  );
-  const tumbleX = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [0, 0, -100, -100, 50, 50, 0]
-  );
-  const tumbleY = useTransform(scrollYProgress,
-    [0.2, 0.35, 0.4, 0.55, 0.6, 0.75, 0.8],
-    [0, 0, -80, -80, 40, 40, 0]
-  );
+  // ─── PHASE 1: Ambient Drift (0% – 25%) ───
+  // Camera: Z=5, X=1.5, Y=0
+  // Floating: Y = sin(elapsed) * 0.15
+  // Rotation: X=15°, Y=-25°
+  const phase1Progress = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
+  const floatY = useTransform(() => Math.sin(elapsed) * 0.15);
+  const phase1RotateX = useTransform(scrollYProgress, [0, 0.25], [15, 12]);
+  const phase1RotateY = useTransform(scrollYProgress, [0, 0.25], [-25, -20]);
+  const phase1X = useTransform(scrollYProgress, [0, 0.25], [1.5, 1.2]);
 
-  // Phase 3 (81-100%): Landing
-  const landScale = useTransform(scrollYProgress,
-    [0.8, 0.85, 0.9, 1],
-    [1, 1.05, 0.98, 1]
-  );
+  // ─── PHASE 2A: Flip & Dive (26% – 50%) ───
+  // Path: X=-1.2, Y=-0.5
+  // Rotation: 180° Y-axis flip
+  // Camera Z: 5 → 3.8
+  const phase2aProgress = useTransform(scrollYProgress, [0.25, 0.5], [0, 1]);
+  const phase2aRotateY = useTransform(scrollYProgress, [0.25, 0.5], [-20, 180]);
+  const phase2aX = useTransform(scrollYProgress, [0.25, 0.5], [1.2, -1.2]);
+  const phase2aY = useTransform(scrollYProgress, [0.25, 0.5], [0, -0.5]);
 
-  // Combined transforms
+  // ─── PHASE 2B: Leaf-Fall Spiral (51% – 75%) ───
+  // Path: X=-1.2 → X=1.0, Y=-1.2
+  // Z-axis: 2x 360° corkscrew
+  const phase2bProgress = useTransform(scrollYProgress, [0.5, 0.75], [0, 1]);
+  const phase2bRotateZ = useTransform(scrollYProgress, [0.5, 0.75], [0, 720]);
+  const phase2bRotateX = useTransform(scrollYProgress, [0.5, 0.75], [0, 45]);
+  const phase2bX = useTransform(scrollYProgress, [0.5, 0.75], [-1.2, 1.0]);
+  const phase2bY = useTransform(scrollYProgress, [0.5, 0.75], [-0.5, -1.2]);
+
+  // ─── PHASE 3: Orthographic Flatten & Dock (76% – 100%) ───
+  // Target: X=0, Y=0.2, Z=0
+  // Rotation damped to 0,0,0
+  const phase3Progress = useTransform(scrollYProgress, [0.75, 1], [0, 1]);
+  const phase3RotateX = useTransform(scrollYProgress, [0.75, 1], [45, 0]);
+  const phase3RotateY = useTransform(scrollYProgress, [0.75, 1], [180, 0]);
+  const phase3RotateZ = useTransform(scrollYProgress, [0.75, 1], [720, 0]);
+  const phase3X = useTransform(scrollYProgress, [0.75, 1], [1.0, 0]);
+  const phase3Y = useTransform(scrollYProgress, [0.75, 1], [-1.2, 0.2]);
+
+  // Combined transforms with phase blending
   const rotateX = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 5, 0, 0]
+    [0, 0.25, 0.5, 0.75, 1],
+    [15, 12, 0, 45, 0]
   );
   const rotateY = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, -5, 0, 0]
+    [0, 0.25, 0.5, 0.75, 1],
+    [-25, -20, 180, 180, 0]
   );
   const rotateZ = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 0, 0, 0]
+    [0, 0.25, 0.5, 0.75, 1],
+    [0, 0, 0, 720, 0]
   );
   const ticketX = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 0, 0, 0]
+    [0, 0.25, 0.5, 0.75, 1],
+    [1.5, 1.2, -1.2, 1.0, 0]
   );
   const ticketY = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 0, 0, 0]
+    [0, 0.25, 0.5, 0.75, 1],
+    [0, 0, -0.5, -1.2, 0.2]
   );
   const ticketScale = useTransform(scrollYProgress,
-    [0, 0.2, 0.8, 1],
-    [0.9, 1, 1, 1]
+    [0, 0.25, 0.5, 0.75, 1],
+    [1, 1, 0.9, 0.95, 1]
   );
 
   const centerContentOpacity = useTransform(scrollYProgress,
@@ -160,7 +169,7 @@ export default function Tickets() {
   const [isPhase3, setIsPhase3] = useState(false);
   useEffect(() => {
     const unsub = scrollYProgress.on("change", (v) => {
-      setIsPhase3(v >= 0.8);
+      setIsPhase3(v >= 0.75);
     });
     return () => unsub();
   }, [scrollYProgress]);
@@ -233,7 +242,7 @@ export default function Tickets() {
                   rotateY,
                   rotateZ,
                   scale: ticketScale,
-                  y: ticketY,
+                  y: useTransform(ticketY, (v) => v + floatY.get()),
                   x: ticketX,
                   transformStyle: "preserve-3d"
                 }}
@@ -286,7 +295,7 @@ export default function Tickets() {
                   rotateZ,
                   scale: ticketScale,
                   x: ticketX,
-                  y: ticketY,
+                  y: useTransform(ticketY, (v) => v + floatY.get()),
                   transformStyle: "preserve-3d"
                 }}
                 className="relative z-20 w-full max-w-[400px] pointer-events-auto group cursor-pointer"
