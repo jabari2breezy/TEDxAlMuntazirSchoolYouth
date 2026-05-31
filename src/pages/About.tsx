@@ -1,9 +1,41 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect, useRef, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Mail } from 'lucide-react';
-import { AnimatedShaderBackground } from '../components/ui/animated-shader-hero';
 
 const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
+
+// Floating star dot component
+function StarField() {
+  const stars = useMemo(() =>
+    Array.from({ length: 120 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 2 + 0.8,
+      duration: Math.random() * 4 + 3,
+      delay: Math.random() * 6,
+    })),
+  []);
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+      {stars.map(s => (
+        <div
+          key={s.id}
+          className="absolute rounded-full"
+          style={{
+            left: `${s.x}%`,
+            top: `${s.y}%`,
+            width: s.size,
+            height: s.size,
+            background: 'rgba(0,8,57,0.5)',
+            boxShadow: `0 0 ${s.size * 3}px ${s.size}px rgba(0,109,56,0.15)`,
+            animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function About() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -30,14 +62,15 @@ export default function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-40 relative min-h-screen bg-transparent text-brand-primary overflow-hidden"
+      className="pt-40 relative min-h-screen text-brand-primary overflow-hidden"
+      style={{ background: '#f5f0e8' }}
     >
-      {/* WebGL Shader Background */}
-      <AnimatedShaderBackground className="opacity-60" />
+      {/* Full-page star field */}
+      <StarField />
 
       {/* Noise texture */}
       <div
-        className="fixed inset-0 z-0 pointer-events-none opacity-[0.06] mix-blend-overlay"
+        className="fixed inset-0 z-0 pointer-events-none opacity-[0.04] mix-blend-multiply"
         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }}
       />
 

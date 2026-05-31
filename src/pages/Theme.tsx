@@ -40,7 +40,7 @@ function KineticSpine({ scrollYProgress, isMobile }: { scrollYProgress: any, isM
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
-      <meshBasicMaterial color="#006d38" wireframe transparent opacity={0.4} blending={THREE.AdditiveBlending} />
+      <meshBasicMaterial color="#006d38" wireframe transparent opacity={0.5} blending={THREE.AdditiveBlending} />
     </mesh>
   );
 }
@@ -131,31 +131,17 @@ export default function Theme() {
     return () => unsub();
   }, [scrollYProgress]);
 
-  // Declare all Transforms unconditionally to satisfy the Rules of Hooks
   const phase1Opacity = useTransform(scrollYProgress, [0, 0.2, 0.28], [1, 1, 0]);
   const phase1Y = useTransform(scrollYProgress, [0, 0.28], [0, -80]);
-  
   const phase2Opacity = useTransform(scrollYProgress, [0.28, 0.36, 0.72, 0.78], [0, 1, 1, 0]);
   const phase3Opacity = useTransform(scrollYProgress, [0.78, 0.88], [0, 1]);
   const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
-
-  // Odysse split screen translations
-  const leftCardXDesktop = useTransform(scrollYProgress, [0, 0.25], [0, -450]);
-  const leftCardXMobile = useTransform(scrollYProgress, [0, 0.25], [0, -180]);
-  const leftX = isMobile ? leftCardXMobile : leftCardXDesktop;
-
-  const rightCardXDesktop = useTransform(scrollYProgress, [0, 0.25], [0, 450]);
-  const rightCardXMobile = useTransform(scrollYProgress, [0, 0.25], [0, 180]);
-  const rightX = isMobile ? rightCardXMobile : rightCardXDesktop;
-
-  const centerScale = useTransform(scrollYProgress, [0, 0.25], [1, 1.3]);
-  const centerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   return (
     <div className="bg-[#050507] text-white">
       {/* 400vh Scroll Track */}
       <div ref={containerRef} className="h-[400vh] relative">
-        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-[#050507]">
+        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
 
           {/* Scroll Indicator */}
           <motion.div
@@ -166,54 +152,19 @@ export default function Theme() {
             <div className="w-[1px] h-8 bg-gradient-to-b from-brand-secondary to-transparent" />
           </motion.div>
 
-          {/* Phase 1: Odysse-style premium split title layout */}
+          {/* Phase 1: Massive Title */}
           <motion.div
             style={{ opacity: phase1Opacity, y: phase1Y }}
-            className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-center items-center px-4 md:px-16"
+            className="absolute inset-0 z-0 pointer-events-none flex flex-col justify-center items-center px-6 md:px-16"
           >
-            <div className="w-full max-w-7xl h-full flex flex-col justify-center items-center relative">
-              
-              <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-brand-secondary block mb-10 text-center relative z-30">
+            <div className="text-center">
+              <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-brand-secondary block mb-6">
                 [ THEME OVERVIEW ]
               </span>
-
-              {/* Split Panels */}
-              <div className="flex gap-4 md:gap-8 items-center justify-center w-full max-w-4xl relative z-10 px-4">
-                
-                {/* Left Card: TED */}
-                <motion.div
-                  style={{ x: leftX }}
-                  className="w-1/2 aspect-[3/4] md:h-[50vh] md:w-[20vw] border border-white/10 bg-white/[0.02] backdrop-blur-md rounded-[2.5rem] flex items-center justify-center shadow-2xl relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
-                  <span className="font-title font-black text-6xl md:text-[6vw] uppercase text-white tracking-tighter">
-                    TED
-                  </span>
-                </motion.div>
-
-                {/* Right Card: x */}
-                <motion.div
-                  style={{ x: rightX }}
-                  className="w-1/2 aspect-[3/4] md:h-[50vh] md:w-[20vw] border border-white/10 bg-white/[0.02] backdrop-blur-md rounded-[2.5rem] flex items-center justify-center shadow-2xl relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
-                  <span className="font-title font-black text-7xl md:text-[7vw] uppercase text-brand-secondary tracking-tighter">
-                    x
-                  </span>
-                </motion.div>
-
-              </div>
-
-              {/* Centered Typography Overlay: AL MUNTAZIR */}
-              <motion.div
-                style={{ scale: centerScale, opacity: centerOpacity }}
-                className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
-              >
-                <h1 className="font-title font-black text-4xl md:text-8xl text-white tracking-[0.2em] md:tracking-[0.45em] uppercase text-center drop-shadow-[0_12px_40px_rgba(0,0,0,0.95)] pr-[-0.45em]">
-                  AL MUNTAZIR
-                </h1>
-              </motion.div>
-
+              <h1 className="text-[14vw] md:text-[12vw] font-title font-black uppercase tracking-tighter leading-[0.85] text-white">
+                BORROWED<br />
+                <span className="text-brand-secondary">TIME.</span>
+              </h1>
             </div>
           </motion.div>
 

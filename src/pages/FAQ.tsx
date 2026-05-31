@@ -88,11 +88,18 @@ export default function FAQ() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={transition}
-      className="min-h-screen bg-transparent text-brand-primary relative overflow-hidden"
+      className="min-h-screen text-white relative overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #0a0d1a 0%, #050507 60%, #001a0d 100%)' }}
     >
       {/* Meteor Background */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <Meteors number={30} />
+        <Meteors number={50} />
+      </div>
+
+      {/* Fixed ambient glow nodes */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[10%] right-[15%] w-[40vw] h-[40vw] rounded-full opacity-[0.07]" style={{ background: 'radial-gradient(circle, rgba(0,109,56,0.8) 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[20%] left-[5%] w-[30vw] h-[30vw] rounded-full opacity-[0.05]" style={{ background: 'radial-gradient(circle, rgba(0,8,57,0.9) 0%, transparent 70%)' }} />
       </div>
 
       {/* Noise texture */}
@@ -112,7 +119,7 @@ export default function FAQ() {
             <span className="font-typewriter text-[10px] text-brand-secondary tracking-[1em] uppercase">
               Information Center
             </span>
-            <h1 className="text-7xl md:text-[8vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-brand-primary flex flex-col items-center">
+            <h1 className="text-7xl md:text-[8vw] font-title font-black tracking-tighter uppercase leading-[0.8] text-white flex flex-col items-center">
               <span>The</span>
               <span className="italic font-editorial lowercase text-brand-secondary">Essentials.</span>
             </h1>
@@ -129,12 +136,12 @@ export default function FAQ() {
                   onClick={() => scrollToCategory(cat.category)}
                   className={`w-full text-left p-5 rounded-2xl flex items-center justify-between transition-all duration-500 group border ${
                     activeCategory === cat.category
-                      ? 'bg-brand-secondary/10 border-brand-secondary/40 text-white shadow-lg shadow-brand-secondary/10'
-                      : 'bg-brand-surface border-brand-outline/20 text-brand-primary/50 hover:bg-brand-surface hover:text-brand-primary'
+                      ? 'bg-brand-secondary/20 border-brand-secondary/50 text-white shadow-lg shadow-brand-secondary/10'
+                      : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:text-white'
                   }`}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-xl transition-colors ${activeCategory === cat.category ? 'bg-brand-secondary/20 text-brand-secondary' : 'bg-brand-surface text-brand-primary/40'}`}>
+                    <div className={`p-3 rounded-xl transition-colors ${activeCategory === cat.category ? 'bg-brand-secondary/20 text-brand-secondary' : 'bg-white/5 text-white/40'}`}>
                       {cat.icon}
                     </div>
                     <span className="font-title font-black uppercase tracking-tight text-sm md:text-base">
@@ -147,9 +154,9 @@ export default function FAQ() {
                 </button>
               ))}
 
-              <div className="mt-10 p-6 bg-brand-surface rounded-[1.5rem] border border-brand-outline/20 space-y-4">
-                <span className="font-typewriter text-[9px] uppercase tracking-widest text-brand-primary/30 block">Still curious?</span>
-                <p className="font-editorial text-lg italic text-brand-primary/50 leading-tight">
+              <div className="mt-10 p-6 bg-white/5 rounded-[1.5rem] border border-white/10 space-y-4">
+                <span className="font-typewriter text-[9px] uppercase tracking-widest text-white/30 block">Still curious?</span>
+                <p className="font-editorial text-lg italic text-white/50 leading-tight">
                   If you have a specific question not answered here, reach out to our team.
                 </p>
                 <a href="mailto:info@tedxalmuntazir.com" className="inline-block font-sans font-bold text-xs uppercase tracking-widest text-brand-secondary hover:underline">
@@ -179,17 +186,17 @@ export default function FAQ() {
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      className="group border border-brand-outline/20 rounded-2xl bg-brand-surface hover:border-brand-secondary/40 hover:bg-brand-surface transition-all duration-500 overflow-hidden"
+                      className="group border border-white/10 rounded-2xl bg-white/5 hover:border-brand-secondary/40 hover:bg-white/[0.08] transition-all duration-500 overflow-hidden"
                     >
                       <button
                         className="w-full text-left p-6 md:p-8 flex items-start justify-between gap-4"
                         onClick={() => setOpenQuestion(openQuestion === `${cat.category}-${i}` ? null : `${cat.category}-${i}`)}
                       >
-                        <h4 className="text-xl md:text-2xl font-title font-black uppercase text-brand-primary tracking-tighter leading-none flex-1">
+                        <h4 className="text-xl md:text-2xl font-title font-black uppercase text-white tracking-tighter leading-none flex-1">
                           {faq.q}
                         </h4>
                         <div className={`shrink-0 w-8 h-8 rounded-full border border-brand-outline/30 flex items-center justify-center transition-all duration-300 ${openQuestion === `${cat.category}-${i}` ? 'rotate-45 border-brand-secondary/50 bg-brand-secondary/10' : ''}`}>
-                          <Plus size={14} className={openQuestion === `${cat.category}-${i}` ? 'text-brand-secondary' : 'text-brand-primary/40'} />
+                          <Plus size={14} className={openQuestion === `${cat.category}-${i}` ? 'text-brand-secondary' : 'text-white/40'} />
                         </div>
                       </button>
                       <AnimatePresence>
@@ -201,7 +208,7 @@ export default function FAQ() {
                             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                             className="overflow-hidden"
                           >
-                            <p className="font-editorial text-lg md:text-xl text-brand-primary/50 italic leading-relaxed px-6 md:px-8 pb-8">
+                            <p className="font-editorial text-lg md:text-xl text-white/50 italic leading-relaxed px-6 md:px-8 pb-8">
                               {faq.a}
                             </p>
                           </motion.div>

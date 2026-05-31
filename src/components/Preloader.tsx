@@ -16,18 +16,20 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
 
-    // Griflan-style: Big agency preloader
-    // 1. Large counter ticks up
-    // 2. At 100%, text does a massive horizontal wipe
-    // 3. Everything slides off-screen revealing the page underneath
-
     const ctx = gsap.context(() => {
-      const counter = { val: 0 };
-
-      // Start the counter bar thin, will expand
+      // Initial states
+      gsap.set('.pl-ted-wrap', { yPercent: 0, opacity: 1 });
+      gsap.set('.pl-x-wrap', { yPercent: 0, opacity: 1 });
+      gsap.set('.pl-brand-name', { opacity: 0, y: 30, letterSpacing: '0.05em' });
+      gsap.set('.pl-subtitle', { opacity: 0, y: 20 });
+      gsap.set('.pl-divider', { scaleX: 0, transformOrigin: 'center' });
       gsap.set('.pl-progress-bar', { scaleX: 0, transformOrigin: 'left' });
-      gsap.set('.pl-overlay', { opacity: 1 });
 
+      // Image reveal clip — starts fully hidden (clipPath covers the text)
+      gsap.set('.pl-ted-clip', { clipPath: 'inset(100% 0% 0% 0%)' });
+      gsap.set('.pl-x-clip', { clipPath: 'inset(100% 0% 0% 0%)' });
+
+      const counter = { val: 0 };
       const tl = gsap.timeline({
         onComplete: () => {
           document.documentElement.style.overflow = '';
@@ -39,10 +41,46 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         }
       });
 
-      // Phase 1: Count up 0→100, widen the progress bar
+      // Phase 1: Reveal TED and x text from bottom (like image reveal)
+      tl.to('.pl-ted-clip', {
+        clipPath: 'inset(0% 0% 0% 0%)',
+        duration: 1.1,
+        ease: 'power4.inOut',
+      }, 0);
+
+      tl.to('.pl-x-clip', {
+        clipPath: 'inset(0% 0% 0% 0%)',
+        duration: 1.1,
+        ease: 'power4.inOut',
+        delay: 0.15,
+      }, 0);
+
+      // Phase 2: Animate divider line and brand name
+      tl.to('.pl-divider', {
+        scaleX: 1,
+        duration: 0.7,
+        ease: 'power3.inOut',
+      }, 0.9);
+
+      tl.to('.pl-brand-name', {
+        opacity: 1,
+        y: 0,
+        letterSpacing: '0.35em',
+        duration: 0.9,
+        ease: 'power3.out',
+      }, 1.0);
+
+      tl.to('.pl-subtitle', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power3.out',
+      }, 1.3);
+
+      // Phase 3: Progress bar loading
       tl.to(counter, {
         val: 100,
-        duration: 2.2,
+        duration: 1.4,
         ease: 'power2.inOut',
         onUpdate() {
           const el = document.querySelector('.pl-count');
@@ -50,25 +88,33 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           const bar = document.querySelector('.pl-progress-bar') as HTMLElement;
           if (bar) gsap.set(bar, { scaleX: counter.val / 100 });
         }
-      });
+      }, 1.4);
 
-      // Phase 2: Brief pause, then slide the left panel UP and right panel DOWN
-      tl.to('.pl-panel-left', {
-        yPercent: -105,
+      // Phase 4: Dramatic exit — TED lifts up, x drops down, brand name fades
+      tl.to('.pl-ted-wrap', {
+        yPercent: -110,
         duration: 0.9,
         ease: 'power4.inOut',
-      }, '+=0.1');
+      }, '+=0.15');
 
-      tl.to('.pl-panel-right', {
-        yPercent: 105,
+      tl.to('.pl-x-wrap', {
+        yPercent: 110,
         duration: 0.9,
         ease: 'power4.inOut',
       }, '<');
 
-      tl.to('.pl-wordmark', {
+      tl.to('.pl-brand-name', {
         opacity: 0,
-        duration: 0.3,
-      }, '<+0.2');
+        y: -20,
+        duration: 0.5,
+        ease: 'power3.in',
+      }, '<+0.1');
+
+      tl.to('.pl-subtitle', {
+        opacity: 0,
+        duration: 0.4,
+        ease: 'power3.in',
+      }, '<');
 
     }, containerRef);
 
@@ -86,40 +132,84 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] overflow-hidden pointer-events-none"
+      className="fixed inset-0 z-[9999] overflow-hidden pointer-events-none bg-[#050507]"
       style={{ height: '100dvh' }}
     >
-      {/* Two-panel split: top slides up, bottom slides down */}
-      <div className="pl-panel-left absolute inset-x-0 top-0 h-1/2 bg-[#050507] z-20" />
-      <div className="pl-panel-right absolute inset-x-0 bottom-0 h-1/2 bg-[#050507] z-20" />
+      {/* Noise texture */}
+      <div
+        className="absolute inset-0 z-0 opacity-[0.07] mix-blend-overlay pointer-events-none"
+        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }}
+      />
 
-      {/* Central Wordmark - sits between panels */}
-      <div className="pl-wordmark absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 pointer-events-none">
-        {/* Main headline */}
-        <div className="flex items-baseline gap-4 md:gap-8">
-          <span className="font-title font-black text-[14vw] md:text-[10vw] uppercase tracking-tighter leading-none text-[#E02229]">
-            TEDX
-          </span>
-          <span className="font-title font-black text-[14vw] md:text-[10vw] uppercase tracking-tighter leading-none text-white">
-            ALM
-          </span>
+      {/* === MAIN LAYOUT === */}
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-0">
+
+        {/* Top Half — TED panel (lifts UP on exit) */}
+        <div className="pl-ted-wrap w-full flex justify-center overflow-hidden" style={{ lineHeight: 1 }}>
+          {/* The clipped reveal element */}
+          <div className="pl-ted-clip overflow-hidden" style={{ clipPath: 'inset(100% 0% 0% 0%)' }}>
+            <span
+              className="font-title font-black uppercase text-[#E02229] select-none"
+              style={{
+                fontSize: 'clamp(100px, 22vw, 240px)',
+                lineHeight: 0.85,
+                letterSpacing: '-0.04em',
+                display: 'block',
+              }}
+            >
+              TED
+            </span>
+          </div>
         </div>
 
-        {/* Progress Line */}
-        <div className="w-full max-w-xs md:max-w-md mt-8 mb-4 relative">
-          <div className="h-[1px] bg-white/10 w-full" />
-          <div className="pl-progress-bar absolute inset-0 h-[1px] bg-brand-secondary" />
+        {/* Brand name row — center */}
+        <div className="flex flex-col items-center py-3 md:py-5 w-full px-6">
+          {/* Horizontal divider */}
+          <div className="pl-divider w-full max-w-[280px] md:max-w-[420px] h-[1px] bg-white/20 mb-3 md:mb-5" />
+
+          {/* "AL MUNTAZIR" — like "Ounx" in the reference */}
+          <div
+            className="pl-brand-name font-typewriter uppercase text-white/90 text-center"
+            style={{
+              fontSize: 'clamp(11px, 2.4vw, 24px)',
+              letterSpacing: '0.35em',
+            }}
+          >
+            AL MUNTAZIR
+          </div>
+
+          {/* Progress counter */}
+          <div className="pl-subtitle flex items-center gap-3 mt-2 md:mt-3">
+            <div className="w-20 md:w-32 h-[1px] bg-white/10 relative overflow-hidden">
+              <div className="pl-progress-bar absolute inset-0 bg-white/40 h-full" />
+            </div>
+            <span className="pl-count font-typewriter text-xs md:text-sm text-white/30 tabular-nums">000</span>
+            <span className="font-typewriter text-xs text-white/20">%</span>
+          </div>
         </div>
 
-        {/* Counter */}
-        <div className="flex items-baseline gap-3">
-          <span className="pl-count font-typewriter text-6xl md:text-8xl font-black tracking-tighter text-white tabular-nums">
-            000
-          </span>
-          <span className="font-typewriter text-xl text-white/30">%</span>
+        {/* Bottom Half — x panel (drops DOWN on exit) */}
+        <div className="pl-x-wrap w-full flex justify-center overflow-hidden" style={{ lineHeight: 1 }}>
+          <div className="pl-x-clip overflow-hidden" style={{ clipPath: 'inset(100% 0% 0% 0%)' }}>
+            <span
+              className="font-title font-black uppercase text-white select-none"
+              style={{
+                fontSize: 'clamp(100px, 22vw, 240px)',
+                lineHeight: 0.85,
+                letterSpacing: '-0.04em',
+                display: 'block',
+              }}
+            >
+              x
+            </span>
+          </div>
         </div>
 
-        <span className="font-typewriter text-[9px] uppercase tracking-[0.6em] text-white/30 mt-4">
+      </div>
+
+      {/* Bottom label */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+        <span className="font-typewriter text-[9px] uppercase tracking-[0.5em] text-white/20">
           [ BORROWED TIME // 2026 ]
         </span>
       </div>
