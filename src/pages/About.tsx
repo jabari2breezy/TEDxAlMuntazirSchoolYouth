@@ -113,7 +113,7 @@ export default function About() {
 
               {status === 'success' ? (
                 <div className="font-editorial text-2xl text-brand-secondary italic">
-                  Thanks for reaching out! We'll get back to you soon.
+                  Thank you for your interest! You'll be receiving updates from our team prior to the event.
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8">

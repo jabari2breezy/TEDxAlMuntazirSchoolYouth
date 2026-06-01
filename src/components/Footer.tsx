@@ -64,7 +64,7 @@ export default function Footer() {
             </motion.p>
             {subscribed ? (
               <p className="font-editorial text-sm italic text-brand-secondary">
-                Thanks for joining. We'll be in touch.
+                Thank you for your interest! You'll be receiving updates from our team prior to the event.
               </p>
             ) : (
               <form onSubmit={handleSubscribe} className="flex items-stretch gap-0 max-w-md border-b border-white/20 focus-within:border-white/50 transition-colors">

@@ -31,7 +31,7 @@ const FAQ_DATA = [
     questions: [
       {
         q: "When and where is TEDx Al Muntazir taking place?",
-        a: "The event takes place in 2026 at the Al Muntazir Islamic International Schools - Nursery Campus. Doors open strictly at 9:30 AM for registration and morning networking, with the first session starting at 10:00 AM."
+        a: "The event takes place in 2026 at the Al Muntazir Islamic International Schools, Nursery Campus. Doors open strictly at 9:30 AM for registration and morning networking, with the first session starting at 10:00 AM."
       },
       {
         q: "What is the dress code for the event?",

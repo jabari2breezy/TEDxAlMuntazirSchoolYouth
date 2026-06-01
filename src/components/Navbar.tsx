@@ -251,7 +251,7 @@ export default function Navbar() {
               <div className="max-w-xl">
                 {quote ? (
                   <p className="font-editorial text-2xl md:text-3xl text-white/40 leading-tight italic">
-                    "{quote.text}" <span className="text-brand-secondary block text-xs font-typewriter not-italic mt-2">— {quote.author}</span>
+                    "{quote.text}" <span className="text-brand-secondary block text-xs font-typewriter not-italic mt-2">, {quote.author}</span>
                   </p>
                 ) : (
                   <p className="font-editorial text-2xl md:text-4xl text-white/40 leading-tight italic">

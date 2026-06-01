@@ -157,6 +157,7 @@ app.post('/api/newsletter', async (req, res) => {
         auth: { user: gmailUser, pass: gmailPass },
       });
 
+      // Send notification to Admin
       await transporter.sendMail({
         from: `"TEDx Youth" <${gmailUser}>`,
         to: 'jabari2breezy@gmail.com',
@@ -170,6 +171,23 @@ app.post('/api/newsletter', async (req, res) => {
         `
       });
       console.log(`Newsletter notification sent for: ${email}`);
+
+      // Send Welcome to User
+      await transporter.sendMail({
+        from: `"TEDx Youth" <${gmailUser}>`,
+        to: email,
+        subject: `Thank You for Your Interest - TEDx Youth Community`,
+        html: `
+          <div style="font-family: sans-serif; line-height: 1.5; color: #000839; max-width: 600px; margin: 0 auto; padding: 32px; border: 1px solid #e2e2e2;">
+            <h1 style="border-bottom: 2px solid #006d38; padding-bottom: 10px; font-weight: 800; font-size: 32px;">Thank you for your interest.</h1>
+            <p>You've successfully joined the <strong>TEDxAlMuntazirSchoolsYouth</strong> community.</p>
+            <p>You'll be receiving updates from our team prior to the event. We can't wait to share what we have in store with you.</p>
+            <p style="margin-top: 32px; font-style: italic;">The clock's ticking. The stage is yours.</p>
+            <p>- TEDxAlMuntazirSchoolsYouth Organizing Team</p>
+          </div>
+        `
+      });
+      console.log(`Newsletter welcome email sent to: ${email}`);
     } catch (err: any) {
       console.error('Newsletter email error:', err.message || err);
     }
@@ -239,12 +257,12 @@ app.post('/api/register', async (req, res) => {
         await transporter.sendMail({
           from: `"TEDx Youth" <${gmailUser}>`,
           to: email,
-          subject: `Welcome to the TEDx Youth Community`,
+          subject: `Thank You for Your Interest - TEDx Youth Community`,
           html: `
             <div style="font-family: sans-serif; line-height: 1.5; color: #000839; max-width: 600px; margin: 0 auto; padding: 32px; border: 1px solid #e2e2e2;">
-              <h1 style="border-bottom: 2px solid #006d38; padding-bottom: 10px; font-weight: 800; font-size: 32px;">Welcome, ${name.split(' ')[0]}.</h1>
-              <p>Thank you for expressing interest in <strong>TEDxAlMuntazirSchoolsYouth</strong>.</p>
-              <p>We are building a community of visionaries, and we are excited to have you with us. Our team will review your message and reach out to you shortly regarding next steps.</p>
+              <h1 style="border-bottom: 2px solid #006d38; padding-bottom: 10px; font-weight: 800; font-size: 32px;">Thank you for your interest, ${name.split(' ')[0]}.</h1>
+              <p>We're excited to have you join the <strong>TEDxAlMuntazirSchoolsYouth</strong> community.</p>
+              <p>You'll be receiving updates from our team prior to the event. We can't wait to share what we have in store with you.</p>
               <p style="margin-top: 32px; font-style: italic;">The clock's ticking. The stage is yours.</p>
               <p>- TEDxAlMuntazirSchoolsYouth Organizing Team</p>
             </div>

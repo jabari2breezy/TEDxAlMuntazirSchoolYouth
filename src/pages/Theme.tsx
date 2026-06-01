@@ -246,7 +246,7 @@ export default function Theme() {
                 </p>
                 <div className="border-t border-white/10 pt-6">
                   <p className="font-sans text-sm text-white/40 leading-relaxed max-w-lg">
-                    'Borrowed Time' explores the urgency of the human experience — examining how we navigate finite moments, push boundaries in innovation, and make impactful choices before our window of opportunity closes.
+                    'Borrowed Time' explores the urgency of the human experience, examining how we navigate finite moments, push boundaries in innovation, and make impactful choices before our window of opportunity closes.
                   </p>
                 </div>
               </div>
@@ -285,7 +285,7 @@ export default function Theme() {
               What Does It Mean to Borrow Time?
             </h3>
             <div className="space-y-4 text-white/60 font-editorial text-lg italic leading-relaxed">
-              <p>Every generation inherits a world shaped by those who came before. We inherit economies, environments, and systems — many of which were built at our expense.</p>
+              <p>Every generation inherits a world shaped by those who came before. We inherit economies, environments, and systems, many of which were built at our expense.</p>
               <p>The question isn't whether we are borrowing time. The question is what we choose to do with it before it runs out.</p>
             </div>
           </div>
