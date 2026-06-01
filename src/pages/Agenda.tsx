@@ -1,6 +1,7 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { ChevronDown } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
+import { ChevronDown, X } from 'lucide-react';
+import { WeatherEffect } from '../components/ui/rain-and-lightning-hero-section';
 
 type AgendaItem = {
   id: string;
@@ -11,6 +12,7 @@ type AgendaItem = {
   desc: string;
   duration: string;
   type: 'KEYNOTE' | 'BREAK' | 'SESSION' | 'CEREMONY' | 'GAME' | 'REGISTRATION' | 'INTRO';
+  sub?: { id: string; time: string; title: string; speaker: string; desc: string; duration: string }[];
 };
 
 const AGENDA_ITEMS: AgendaItem[] = [
@@ -132,8 +134,46 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default function Agenda() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [expandedPanel, setExpandedPanel] = useState<string | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  // Horizontal scroll transform for desktop
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", `-${(AGENDA_ITEMS.length - 1) * 100}%`]);
+
   return (
-    <div className="relative min-h-screen bg-white text-gray-900">
+    <div ref={containerRef} className="relative bg-white text-gray-900 overflow-hidden">
+      {/* Rain and Lightning background */}
+      <div className="fixed inset-0 z-0">
+        <WeatherEffect
+          rainIntensity={40}
+          rainSpeed={0.15}
+          rainAngle={12}
+          rainColor="rgba(100, 120, 150, 0.4)"
+          lightningEnabled={true}
+          lightningFrequency={5}
+          lightningHue={140}
+          lightningSpeed={0.5}
+          lightningIntensity={1.2}
+          lightningSize={1.5}
+          thunderEnabled={false}
+        />
+      </div>
+
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-8">
+          <span className="font-typewriter text-[10px] text-brand-secondary tracking-[0.5em] uppercase block mb-2">The Timeline</span>
+          <h1 className="text-5xl md:text-7xl font-title font-black uppercase tracking-tighter text-gray-900 leading-none">
+            Full Agenda
+          </h1>
+          <p className="font-editorial text-lg italic text-gray-500 mt-4">June 14, 2026 — Al Muntazir Nursery Campus</p>
+        </div>
+      </div>
+
       {/* Scroll Indicator */}
       <motion.div 
         className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none"
@@ -150,118 +190,219 @@ export default function Agenda() {
         </motion.div>
       </motion.div>
 
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-8">
-          <span className="font-typewriter text-[10px] text-brand-secondary tracking-[0.5em] uppercase block mb-2">The Timeline</span>
-          <h1 className="text-5xl md:text-7xl font-title font-black uppercase tracking-tighter text-gray-900 leading-none">
-            Full Agenda
-          </h1>
-          <p className="font-editorial text-lg italic text-gray-500 mt-4">June 14, 2026 — Al Muntazir Nursery Campus</p>
+      {/* Desktop: Horizontal Scroll */}
+      <div className="hidden md:block">
+        <div className="h-[400vh]">
+          <div className="sticky top-0 h-screen overflow-hidden">
+            <motion.div 
+              className="flex h-full"
+              style={{ x }}
+            >
+              {AGENDA_ITEMS.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="w-screen h-full flex-shrink-0 flex items-center justify-center p-8 md:p-16"
+                >
+                  <motion.div
+                    initial={{ opacity: 0, y: 60, rotateX: 10 }}
+                    whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                    viewport={{ once: true, margin: "-10%" }}
+                    transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    className="w-full max-w-4xl"
+                  >
+                    <div 
+                      className="relative rounded-3xl p-8 md:p-12 cursor-pointer group"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        backdropFilter: 'blur(20px)',
+                        WebkitBackdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(0, 0, 0, 0.06)',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.04)',
+                      }}
+                      onClick={() => setExpandedPanel(expandedPanel === item.id ? null : item.id)}
+                    >
+                      {/* Time badge */}
+                      <div className="flex items-center gap-4 mb-6">
+                        <span className="font-typewriter text-sm font-bold tracking-wider text-brand-secondary bg-brand-secondary/10 px-4 py-2 rounded-full">
+                          {item.time} — {item.endTime}
+                        </span>
+                        <span className="font-typewriter text-[10px] uppercase tracking-widest text-gray-400">
+                          {item.duration}
+                        </span>
+                      </div>
+
+                      {/* Type badge */}
+                      <div className="inline-block mb-4">
+                        <span 
+                          className="font-typewriter text-[10px] uppercase tracking-[0.3em] px-4 py-1.5 rounded-full"
+                          style={{ 
+                            color: TYPE_COLORS[item.type],
+                            backgroundColor: `${TYPE_COLORS[item.type]}12`,
+                            border: `1px solid ${TYPE_COLORS[item.type]}25`
+                          }}
+                        >
+                          {item.type}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="font-title font-black text-4xl md:text-5xl uppercase tracking-tight text-gray-900 leading-tight mb-4">
+                        {item.title}
+                      </h3>
+
+                      {/* Speaker */}
+                      {item.speaker && (
+                        <p className="font-editorial text-xl italic text-gray-500 mb-4">
+                          {item.speaker}
+                        </p>
+                      )}
+
+                      {/* Description */}
+                      <p className="font-sans text-base text-gray-500 leading-relaxed max-w-2xl">
+                        {item.desc}
+                      </p>
+
+                      {/* Expand indicator */}
+                      {item.sub && item.sub.length > 0 && (
+                        <div className="mt-6 flex items-center gap-2 text-brand-secondary">
+                          <span className="font-typewriter text-[10px] uppercase tracking-widest">
+                            {expandedPanel === item.id ? 'Click to collapse' : 'Click for details'}
+                          </span>
+                          <motion.div
+                            animate={{ rotate: expandedPanel === item.id ? 180 : 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <ChevronDown size={16} />
+                          </motion.div>
+                        </div>
+                      )}
+
+                      {/* Expanded sub-items */}
+                      {expandedPanel === item.id && item.sub && item.sub.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                          className="mt-8 pt-8 border-t border-gray-200"
+                        >
+                          <div className="grid gap-4">
+                            {item.sub.map((sub) => (
+                              <div key={sub.id} className="flex items-start gap-6 p-4 rounded-xl bg-gray-50/50">
+                                <span className="font-typewriter text-sm font-bold text-brand-secondary shrink-0">
+                                  {sub.time}
+                                </span>
+                                <div className="flex-1">
+                                  <p className="font-sans text-base text-gray-800 font-semibold">{sub.title}</p>
+                                  {sub.speaker && (
+                                    <p className="font-editorial text-sm italic text-gray-500 mt-1">{sub.speaker}</p>
+                                  )}
+                                  <p className="font-sans text-sm text-gray-400 mt-2">{sub.desc}</p>
+                                </div>
+                                <span className="font-typewriter text-[10px] text-gray-400 shrink-0">
+                                  {sub.duration}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      {/* Agenda Timeline */}
-      <div className="max-w-screen-2xl mx-auto px-6 md:px-16 py-16">
+      {/* Mobile: Sticky Stack */}
+      <div className="md:hidden">
         <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gray-200" />
-
           {AGENDA_ITEMS.map((item, index) => (
-            <motion.div
+            <div
               key={item.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className={`relative flex items-center mb-16 last:mb-0 ${
-                index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-              }`}
+              className="sticky top-16 z-10 mb-4"
+              style={{ 
+                top: index === 0 ? 80 : 80 + (index * 20),
+                zIndex: AGENDA_ITEMS.length - index 
+              }}
             >
-              {/* Timeline dot */}
-              <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white border-4 border-brand-secondary z-10" />
-
-              {/* Content card */}
-              <div className={`w-full md:w-[45%] ml-20 md:ml-0 ${index % 2 === 0 ? 'md:mr-auto md:pr-12' : 'md:ml-auto md:pl-12'}`}>
-                <div 
-                  className="relative rounded-2xl p-6 md:p-8"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.9)',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(0, 0, 0, 0.06)',
-                    boxShadow: '0 4px 24px rgba(0, 0, 0, 0.04)',
-                  }}
-                >
-                  {/* Time badge */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="font-typewriter text-xs font-bold tracking-wider text-brand-secondary bg-brand-secondary/10 px-3 py-1 rounded-full">
-                      {item.time} — {item.endTime}
-                    </span>
-                    <span className="font-typewriter text-[9px] uppercase tracking-widest text-gray-400">
-                      {item.duration}
-                    </span>
-                  </div>
-
-                  {/* Type badge */}
-                  <div className="inline-block mb-3">
-                    <span 
-                      className="font-typewriter text-[9px] uppercase tracking-[0.3em] px-3 py-1 rounded-full"
-                      style={{ 
-                        color: TYPE_COLORS[item.type],
-                        backgroundColor: `${TYPE_COLORS[item.type]}12`,
-                        border: `1px solid ${TYPE_COLORS[item.type]}25`
-                      }}
-                    >
-                      {item.type}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="font-title font-black text-2xl md:text-3xl uppercase tracking-tight text-gray-900 leading-tight mb-2">
-                    {item.title}
-                  </h3>
-
-                  {/* Speaker */}
-                  {item.speaker && (
-                    <p className="font-editorial text-base italic text-gray-500 mb-3">
-                      {item.speaker}
-                    </p>
-                  )}
-
-                  {/* Description */}
-                  <p className="font-sans text-sm text-gray-500 leading-relaxed">
-                    {item.desc}
-                  </p>
-
-                  {/* Sub-items */}
-                  {item.sub && item.sub.length > 0 && (
-                    <div className="mt-6 pt-6 border-t border-gray-100 space-y-4">
-                      {item.sub.map((sub) => (
-                        <div key={sub.id} className="flex items-start gap-4">
-                          <span className="font-typewriter text-[10px] font-bold text-brand-secondary shrink-0 mt-0.5">
-                            {sub.time}
-                          </span>
-                          <div className="flex-1">
-                            <p className="font-sans text-sm text-gray-800 font-medium">{sub.title}</p>
-                            {sub.speaker && (
-                              <p className="font-editorial text-xs italic text-gray-400 mt-0.5">{sub.speaker}</p>
-                            )}
-                            <p className="font-sans text-xs text-gray-400 mt-1">{sub.desc}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-5%" }}
+                transition={{ duration: 0.6, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                className="mx-4 rounded-2xl p-6"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(0, 0, 0, 0.06)',
+                  boxShadow: '0 4px 24px rgba(0, 0, 0, 0.04)',
+                }}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="font-typewriter text-xs font-bold tracking-wider text-brand-secondary bg-brand-secondary/10 px-3 py-1 rounded-full">
+                    {item.time} — {item.endTime}
+                  </span>
+                  <span className="font-typewriter text-[9px] uppercase tracking-widest text-gray-400">
+                    {item.duration}
+                  </span>
                 </div>
-              </div>
-            </motion.div>
+
+                <div className="inline-block mb-2">
+                  <span 
+                    className="font-typewriter text-[9px] uppercase tracking-[0.3em] px-3 py-1 rounded-full"
+                    style={{ 
+                      color: TYPE_COLORS[item.type],
+                      backgroundColor: `${TYPE_COLORS[item.type]}12`,
+                      border: `1px solid ${TYPE_COLORS[item.type]}25`
+                    }}
+                  >
+                    {item.type}
+                  </span>
+                </div>
+
+                <h3 className="font-title font-black text-2xl uppercase tracking-tight text-gray-900 leading-tight mb-2">
+                  {item.title}
+                </h3>
+
+                {item.speaker && (
+                  <p className="font-editorial text-base italic text-gray-500 mb-2">
+                    {item.speaker}
+                  </p>
+                )}
+
+                <p className="font-sans text-sm text-gray-500 leading-relaxed">
+                  {item.desc}
+                </p>
+
+                {item.sub && item.sub.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    {item.sub.map((sub) => (
+                      <div key={sub.id} className="flex items-start gap-3 py-2">
+                        <span className="font-typewriter text-[10px] font-bold text-brand-secondary shrink-0 mt-0.5">
+                          {sub.time}
+                        </span>
+                        <div className="flex-1">
+                          <p className="font-sans text-sm text-gray-800 font-medium">{sub.title}</p>
+                          {sub.speaker && (
+                            <p className="font-editorial text-xs italic text-gray-400 mt-0.5">{sub.speaker}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            </div>
           ))}
         </div>
       </div>
 
       {/* Footer */}
-      <div className="max-w-screen-2xl mx-auto px-6 md:px-16 pb-20">
+      <div className="relative z-20 max-w-screen-2xl mx-auto px-6 md:px-16 pb-20 pt-16">
         <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <span className="font-typewriter text-[10px] text-gray-400 uppercase tracking-widest">
             June 14, 2026 — Al Muntazir Nursery Campus
