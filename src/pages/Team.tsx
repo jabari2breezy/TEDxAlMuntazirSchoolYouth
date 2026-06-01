@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { BackgroundShaders } from '../components/ui/background-paper-shaders';
+import ScrollIndicator from '../components/ScrollIndicator';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -145,6 +146,8 @@ export default function Team() {
           ))}
         </div>
       </div>
+
+      <ScrollIndicator text="Scroll to Explore" />
     </motion.div>
   );
 }

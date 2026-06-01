@@ -51,10 +51,11 @@ export default function Navbar() {
     { name: 'Home', href: '/', id: '01', sub: 'The Beginning' },
     { name: 'Theme', href: '/theme', id: '02', sub: 'Borrowed Time' },
     { name: 'Speakers', href: '/speakers', id: '03', sub: 'Global Voices' },
-    { name: 'FAQ', href: '/faq', id: '04', sub: 'The Answers' },
-    { name: 'About', href: '/about', id: '05', sub: 'Our Philosophy' },
-    { name: 'The Team', href: '/team', id: '06', sub: 'The Architects' },
-    { name: 'Tickets', href: TICKETS_URL, id: '07', sub: 'Secure Your Seat' },
+    { name: 'Agenda', href: '/agenda', id: '04', sub: 'Time Unfolding' },
+    { name: 'FAQ', href: '/faq', id: '05', sub: 'The Answers' },
+    { name: 'About', href: '/about', id: '06', sub: 'Our Philosophy' },
+    { name: 'The Team', href: '/team', id: '07', sub: 'The Architects' },
+    { name: 'Tickets', href: TICKETS_URL, id: '08', sub: 'Secure Your Seat' },
   ];
 
   return (
@@ -84,6 +85,7 @@ export default function Navbar() {
         {[
           { name: 'Home', href: '/' },
           { name: 'Theme', href: '/theme' },
+          { name: 'Agenda', href: '/agenda' },
           { name: 'Speakers', href: '/speakers' },
           { name: 'FAQ', href: '/faq' },
           { name: 'About', href: '/about' },

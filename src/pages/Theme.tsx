@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
+import ScrollIndicator from '../components/ScrollIndicator';
 
 // --- 3D SCENE COMPONENTS ---
 
@@ -302,6 +303,8 @@ export default function Theme() {
           </div>
         </div>
       </div>
+
+      <ScrollIndicator text="Scroll to Explore" />
     </div>
   );
 }

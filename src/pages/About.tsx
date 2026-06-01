@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { Mail } from 'lucide-react';
+import ScrollIndicator from '../components/ScrollIndicator';
 
 export default function About() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
@@ -163,6 +164,8 @@ export default function About() {
           </motion.div>
         </div>
       </div>
+
+      <ScrollIndicator text="Scroll to Explore" />
     </motion.div>
   );
 }

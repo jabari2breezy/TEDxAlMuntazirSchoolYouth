@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Ticket, MapPin, Lightbulb } from 'lucide-react';
 import { BackgroundPaths } from '../components/ui/background-paths';
+import ScrollIndicator from '../components/ScrollIndicator';
 
 const transition = { duration: 1, ease: [0.76, 0, 0.24, 1] as const };
 
@@ -222,6 +223,8 @@ export default function FAQ() {
           </div>
         </div>
       </div>
+
+      <ScrollIndicator text="Scroll to Explore" />
     </motion.div>
   );
 }

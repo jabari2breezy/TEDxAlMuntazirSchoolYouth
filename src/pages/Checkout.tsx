@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import ScrollIndicator from '../components/ScrollIndicator';
 
 export default function Checkout() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
@@ -157,6 +158,8 @@ export default function Checkout() {
           )}
         </motion.div>
       </div>
+
+      <ScrollIndicator text="Scroll to Explore" />
     </div>
   );
 }

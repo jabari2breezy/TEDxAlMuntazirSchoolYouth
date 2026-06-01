@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Theme from './pages/Theme';
 import SpeakersPage from './pages/Speakers';
 import About from './pages/About';
+import Agenda from './pages/Agenda';
 import FAQ from './pages/FAQ';
 import Tickets from './pages/Tickets';
 import Team from './pages/Team';
@@ -35,6 +36,7 @@ function AnimatedRoutes() {
       <Route path="/theme" element={<Theme />} />
       <Route path="/speakers" element={<SpeakersPage />} />
       <Route path="/about" element={<About />} />
+      <Route path="/agenda" element={<Agenda />} />
       <Route path="/faq" element={<FAQ />} />
       <Route path="/tickets" element={<Tickets />} />
       <Route path="/team" element={<Team />} />
