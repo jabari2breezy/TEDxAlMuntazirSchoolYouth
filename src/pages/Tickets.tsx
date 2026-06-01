@@ -1,6 +1,7 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star, ChevronDown } from 'lucide-react';
+import { GradientBackground } from '@/components/ui/gradient-background';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -86,7 +87,21 @@ export default function Tickets() {
   }, [scrollYProgress]);
 
   return (
-    <div className="bg-[#050507] text-white">
+    <div className="text-white">
+      {/* Animated gradient background */}
+      <GradientBackground
+        className="fixed inset-0 -z-10"
+        gradients={[
+          "linear-gradient(135deg, #0a4d2e 0%, #0d2b4e 100%)",
+          "linear-gradient(135deg, #000000 0%, #0d2b4e 50%, #0a6b3c 100%)",
+          "linear-gradient(135deg, #0a6b3c 0%, #000000 100%)",
+          "linear-gradient(135deg, #0d2b4e 0%, #0a4d2e 50%, #000000 100%)",
+          "linear-gradient(135deg, #000000 0%, #0a6b3c 50%, #0d2b4e 100%)",
+        ]}
+        overlay
+        overlayOpacity={0.4}
+      />
+
       {/* Noise overlay */}
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       
