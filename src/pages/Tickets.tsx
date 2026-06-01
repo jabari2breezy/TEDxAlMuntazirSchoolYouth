@@ -1,6 +1,7 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star, ChevronDown } from 'lucide-react';
+import { BackgroundGradientAnimation } from '@/components/ui/background-gradient-animation';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -91,14 +92,29 @@ export default function Tickets() {
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       
       {/* 400vh Scroll Track - more scroll room */}
-      <div ref={containerRef} className="h-[400vh] relative">
-        <div 
-          className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
-          style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
-        >
-          
-          {/* Fixed dark background */}
-          <div className="absolute inset-0 bg-[#050507] z-0" />
+  <div ref={containerRef} className="h-[400vh] relative">
+    {/* Background Gradient Animation */}
+    <BackgroundGradientAnimation 
+      className="absolute inset-0 z-[-1]"
+      gradientBackgroundStart="rgb(108, 0, 162)"
+      gradientBackgroundEnd="rgb(0, 17, 82)"
+      firstColor="18, 113, 255"
+      secondColor="221, 74, 255"
+      thirdColor="100, 220, 255"
+      fourthColor="200, 50, 50"
+      fifthColor="180, 180, 50"
+      pointerColor="140, 100, 255"
+      size="80%"
+      blendingValue="hard-light"
+    />
+    
+    <div 
+      className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
+      style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
+    >
+      
+      {/* Fixed dark background */}
+      <div className="absolute inset-0 bg-[#050507] z-0" />
 
           {/* Ambient glow blobs */}
           <div className="absolute inset-0 z-0 pointer-events-none">
@@ -108,13 +124,18 @@ export default function Tickets() {
               style={{ background: 'radial-gradient(circle, rgba(0,8,57,0.5) 0%, transparent 70%)', transform: 'translate(30%, 30%)' }} />
           </div>
 
-          {/* Huge TICKETS! Title - fades on scroll */}
-          <motion.h1
-            style={{ opacity: useTransform(scrollYProgress, [0, 0.15], [1, 0]) }}
-            className="absolute top-8 left-1/2 -translate-x-1/2 z-40 font-title font-black text-[22vw] md:text-[18vw] leading-none tracking-tighter text-white pointer-events-none select-none"
-          >
-            TICKETS!
-          </motion.h1>
+           {/* Huge GET YOUR TICKETS! Title - fades on scroll, returns in BUY NOW state */}
+           <motion.h1
+             style={{ 
+               opacity: useTransform(scrollYProgress, 
+                 [0, 0.001, 0.7, 0.701, 1], 
+                 [1, 0, 0, 1, 1]
+               ) 
+             }}
+             className="absolute top-8 left-1/2 -translate-x-1/2 z-40 font-title font-black text-[22vw] md:text-[18vw] leading-none tracking-tighter text-white pointer-events-none select-none"
+           >
+             GET YOUR TICKETS!
+           </motion.h1>
 
           {/* Large Scroll Indicator */}
           <motion.div 
