@@ -257,7 +257,7 @@ export default function Home() {
             <div className="flex flex-col items-center gap-1 md:gap-2 w-full mix-blend-difference">
               <div className="flex flex-wrap justify-center items-center">
                 <span className="font-solare text-[16vw] md:text-[14vw] font-black italic tracking-tighter text-[#e62b1e] leading-none">TED</span>
-                <span className="font-solare text-[16vw] md:text-[14vw] font-black tracking-tighter text-white leading-none">x</span>
+                <span className="font-solare text-[16vw] md:text-[14vw] font-black italic tracking-tighter text-white leading-none">x</span>
                 <span className="font-solare text-[16vw] md:text-[14vw] font-black tracking-tighter text-brand-secondary leading-none ml-[0.15em]">AL MUNTAZIR</span>
               </div>
               <span className="font-solare text-[10vw] md:text-[8vw] font-black tracking-tighter text-white leading-none mt-2">

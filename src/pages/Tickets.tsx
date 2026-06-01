@@ -109,7 +109,7 @@ export default function Tickets() {
     <div ref={containerRef} className="h-[400vh] relative">
       <div 
         className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
-        style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
+        style={{ height: '100dvh', perspective: '1500px' }}
       >
 
           {/* Ambient glow blobs */}
