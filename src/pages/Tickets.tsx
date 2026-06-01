@@ -1,7 +1,6 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star, ChevronDown } from 'lucide-react';
-import { BackgroundGradientAnimation } from '@/components/ui/background-gradient-animation';
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -91,27 +90,12 @@ export default function Tickets() {
       {/* Noise overlay */}
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
       
-       {/* 400vh Scroll Track - more scroll room */}
-   <div ref={containerRef} className="h-[400vh] relative">
-     {/* Background Gradient Animation */}
-     <BackgroundGradientAnimation 
-       className="absolute inset-0 z-[-1]"
-       gradientBackgroundStart="rgb(5, 5, 7)"
-       gradientBackgroundEnd="rgb(0, 109, 56)"
-       firstColor="18, 113, 255"
-       secondColor="221, 74, 255"
-       thirdColor="100, 220, 255"
-       fourthColor="200, 50, 50"
-       fifthColor="180, 180, 50"
-       pointerColor="140, 100, 255"
-       size="80%"
-       blendingValue="hard-light"
-     />
-     
-     <div 
-       className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
-       style={{ height: '100dvh', perspective: '1500px', backgroundColor: 'transparent' }}
-     >
+        {/* 400vh Scroll Track - more scroll room */}
+    <div ref={containerRef} className="h-[400vh] relative">
+      <div 
+        className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
+        style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
+      >
 
           {/* Ambient glow blobs */}
           <div className="absolute inset-0 z-0 pointer-events-none">
@@ -240,10 +224,10 @@ export default function Tickets() {
 
 function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
   return (
-    <div className={`relative rounded-[2.5rem] overflow-hidden bg-[linear-gradient(40deg,rgb(5,5,7)_0%,rgb(0,109,56)_100%)] shadow-[0_50px_100px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-500 ${isPhase3 ? 'ring-4 ring-brand-secondary ring-offset-4 ring-offset-[#050507]' : ''}`}>
+    <div className={`relative rounded-[2.5rem] overflow-hidden bg-[#f7f4ee] shadow-[0_50px_100px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-500 ${isPhase3 ? 'ring-4 ring-brand-secondary ring-offset-4 ring-offset-[#050507]' : ''}`}>
       
       {/* Ticket Top */}
-      <div className="bg-[linear-gradient(40deg,rgb(5,5,7)_0%,rgb(0,109,56)_100%)] px-8 md:px-14 pt-10 md:pt-16 pb-12 md:pb-14 relative overflow-hidden">
+      <div className="bg-[#000839] px-8 md:px-14 pt-10 md:pt-16 pb-12 md:pb-14 relative overflow-hidden">
         <div className="flex justify-between items-start relative z-10">
           <div className="flex-1">
             <span className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/30 block mb-3">
@@ -268,14 +252,14 @@ function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
       </div>
       
       {/* Perforated Divider */}
-      <div className="bg-[linear-gradient(40deg,rgb(5,5,7)_0%,rgb(0,109,56)_100%)] relative h-8 flex items-center">
+      <div className="bg-[#000839] relative h-8 flex items-center">
         <div className="absolute left-0 w-8 h-16 bg-[#050507] rounded-full -translate-x-1/2 z-10 shadow-inner" />
         <div className="flex-1 mx-8 border-t-[3px] border-dashed border-white/10" />
         <div className="absolute right-0 w-8 h-16 bg-[#050507] rounded-full translate-x-1/2 z-10 shadow-inner" />
       </div>
       
       {/* Ticket Bottom */}
-      <div className={`bg-[linear-gradient(40deg,rgb(5,5,7)_0%,rgb(0,109,56)_100%)] px-8 py-8 md:py-12 flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-500 ${isPhase3 ? 'bg-brand-secondary text-white' : 'text-white'}`}>
+      <div className={`bg-[#f7f4ee] px-8 py-8 md:py-12 flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-500 ${isPhase3 ? 'bg-brand-secondary text-white' : 'text-[#000839]'}`}>
         <AnimatePresence mode="wait">
           {!isPhase3 ? (
             <motion.div 
