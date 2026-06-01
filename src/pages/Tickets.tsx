@@ -110,11 +110,8 @@ export default function Tickets() {
      
      <div 
        className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
-       style={{ height: '100dvh', perspective: '1500px', backgroundColor: '#050507' }}
+       style={{ height: '100dvh', perspective: '1500px', backgroundColor: 'transparent' }}
      >
-       
-       {/* Fixed dark background */}
-       <div className="absolute inset-0 bg-[#050507] z-0" />
 
           {/* Ambient glow blobs */}
           <div className="absolute inset-0 z-0 pointer-events-none">
@@ -243,10 +240,10 @@ export default function Tickets() {
 
 function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
   return (
-    <div className={`relative rounded-[2.5rem] overflow-hidden bg-[#f7f4ee] shadow-[0_50px_100px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-500 ${isPhase3 ? 'ring-4 ring-brand-secondary ring-offset-4 ring-offset-[#050507]' : ''}`}>
+    <div className={`relative rounded-[2.5rem] overflow-hidden bg-[linear-gradient(40deg,rgb(5,5,7)_0%,rgb(0,109,56)_100%)] shadow-[0_50px_100px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-500 ${isPhase3 ? 'ring-4 ring-brand-secondary ring-offset-4 ring-offset-[#050507]' : ''}`}>
       
       {/* Ticket Top */}
-      <div className="bg-[#000839] px-8 md:px-14 pt-10 md:pt-16 pb-12 md:pb-14 relative overflow-hidden">
+      <div className="bg-[linear-gradient(40deg,rgb(5,5,7)_0%,rgb(0,109,56)_100%)] px-8 md:px-14 pt-10 md:pt-16 pb-12 md:pb-14 relative overflow-hidden">
         <div className="flex justify-between items-start relative z-10">
           <div className="flex-1">
             <span className="font-typewriter text-[9px] uppercase tracking-[0.4em] text-white/30 block mb-3">
@@ -257,7 +254,7 @@ function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
             </h2>
           </div>
         </div>
-
+        
         <div className="mt-6 md:mt-8 grid grid-cols-2 gap-4 relative z-10">
           <div>
             <span className="font-typewriter text-[8px] uppercase tracking-widest text-white/20 block mb-1">Access</span>
@@ -269,16 +266,16 @@ function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
           </div>
         </div>
       </div>
-
+      
       {/* Perforated Divider */}
-      <div className="bg-[#000839] relative h-8 flex items-center">
+      <div className="bg-[linear-gradient(40deg,rgb(5,5,7)_0%,rgb(0,109,56)_100%)] relative h-8 flex items-center">
         <div className="absolute left-0 w-8 h-16 bg-[#050507] rounded-full -translate-x-1/2 z-10 shadow-inner" />
         <div className="flex-1 mx-8 border-t-[3px] border-dashed border-white/10" />
         <div className="absolute right-0 w-8 h-16 bg-[#050507] rounded-full translate-x-1/2 z-10 shadow-inner" />
       </div>
-
+      
       {/* Ticket Bottom */}
-      <div className={`bg-[#f7f4ee] px-8 py-8 md:py-12 flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-500 ${isPhase3 ? 'bg-brand-secondary text-white' : 'text-[#000839]'}`}>
+      <div className={`bg-[linear-gradient(40deg,rgb(5,5,7)_0%,rgb(0,109,56)_100%)] px-8 py-8 md:py-12 flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-500 ${isPhase3 ? 'bg-brand-secondary text-white' : 'text-white'}`}>
         <AnimatePresence mode="wait">
           {!isPhase3 ? (
             <motion.div 
