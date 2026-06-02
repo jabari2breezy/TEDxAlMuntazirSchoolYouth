@@ -1,11 +1,19 @@
 import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 import ETGLogo from './ETGLogo';
+import AsasLogo from './logos/AsasLogo';
+import ImageMastersLogo from './logos/ImageMastersLogo';
+import RafflesGlobalLogo from './logos/RafflesGlobalLogo';
+import MetlLogo from './logos/MetlLogo';
 
 interface Sponsor {
   src: string;
   alt: string;
   isETG?: boolean;
+  isASAS?: boolean;
+  isImageMasters?: boolean;
+  isRafflesGlobal?: boolean;
+  isMetl?: boolean;
 }
 
 interface SponsorTier {
@@ -28,7 +36,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
     maxWidth: 'max-w-[min(100%,520px)]',
     sponsors: [
       { src: '/sponsors/etg-hd.png', alt: 'ETG', isETG: true },
-      { src: '/sponsors/asas-hd.png', alt: 'ASAS' },
+      { src: '', alt: 'ASAS', isASAS: true },
     ],
   },
   {
@@ -38,7 +46,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
     labelColor: 'text-amber-300',
     logoHeight: 'h-24 sm:h-28 md:h-36 lg:h-44',
     maxWidth: 'max-w-[min(100%,560px)]',
-    sponsors: [{ src: '/sponsors/leta-kazi.png', alt: 'LETA KAZI LTD.' }],
+    sponsors: [{ src: '/sponsors/leta-kazi.png', alt: 'LETA KAZI LTD.' }, { src: '', alt: 'MeTL Group', isMetl: true }],
   },
   {
     name: 'Silver Sponsor',
@@ -61,6 +69,8 @@ const SPONSOR_TIERS: SponsorTier[] = [
       { src: '/sponsors/dar-glass-works.png', alt: 'Dar es Salaam Glass Works' },
       { src: '/sponsors/amjad-motors.png', alt: 'AMJAD MOTORS International Limited' },
       { src: '/sponsors/emerson-education.png', alt: 'Emerson Education' },
+      { src: '', alt: 'Image Masters', isImageMasters: true },
+      { src: '', alt: 'Raffles Global', isRafflesGlobal: true },
     ],
   },
 ];
@@ -87,6 +97,38 @@ function SponsorLogo({
     return (
       <div className="group flex items-center justify-center px-6 md:px-10 py-6 md:py-8 transition-all duration-500 hover:scale-[1.06]">
         <ETGLogo className={`${heightClass} w-auto ${maxWidth}`} />
+      </div>
+    );
+  }
+
+  if (sponsor.isASAS) {
+    return (
+      <div className="group flex items-center justify-center px-6 md:px-10 py-6 md:py-8 transition-all duration-500 hover:scale-[1.06]">
+        <AsasLogo className={`${heightClass} w-auto ${maxWidth}`} />
+      </div>
+    );
+  }
+
+  if (sponsor.isImageMasters) {
+    return (
+      <div className="group flex items-center justify-center px-6 md:px-10 py-6 md:py-8 transition-all duration-500 hover:scale-[1.06]">
+        <ImageMastersLogo className={`${heightClass} w-auto ${maxWidth}`} />
+      </div>
+    );
+  }
+
+  if (sponsor.isRafflesGlobal) {
+    return (
+      <div className="group flex items-center justify-center px-6 md:px-10 py-6 md:py-8 transition-all duration-500 hover:scale-[1.06]">
+        <RafflesGlobalLogo className={`${heightClass} w-auto ${maxWidth}`} />
+      </div>
+    );
+  }
+
+  if (sponsor.isMetl) {
+    return (
+      <div className="group flex items-center justify-center px-6 md:px-10 py-6 md:py-8 transition-all duration-500 hover:scale-[1.06]">
+        <MetlLogo className={`${heightClass} w-auto ${maxWidth}`} />
       </div>
     );
   }
