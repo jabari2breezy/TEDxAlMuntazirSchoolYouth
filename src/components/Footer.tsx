@@ -101,6 +101,7 @@ export default function Footer() {
                 { label: 'Home', to: '/' },
                 { label: 'Theme', to: '/theme' },
                 {label: 'Speakers', to: '/speakers' },
+                { label: 'Sponsors', to: '/sponsors' },
               ].map((link) => (
                 <Link
                   key={link.label}
@@ -122,7 +123,6 @@ export default function Footer() {
                 { label: 'FAQ', to: '/faq' },
                 { label: 'About', to: '/about' },
                 { label: 'The Team', to: '/team' },
-                { label: 'Sponsors', to: '/sponsors' },
                 { label: 'Tickets', to: TICKETS_URL, external: false },
               ].map((link) => (
                 link.external ? (
