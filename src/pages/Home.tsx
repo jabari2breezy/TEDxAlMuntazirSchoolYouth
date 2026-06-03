@@ -398,8 +398,9 @@ export default function Home() {
                    Instagram
                  </a>
           </div>
+            </motion.div>
+          </div>
         </section>
-      </div>    </section>
 
       <div className="pt-20" />
     </motion.div>
