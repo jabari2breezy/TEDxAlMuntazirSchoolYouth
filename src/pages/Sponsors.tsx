@@ -1,5 +1,5 @@
 import SponsorsSection from '../components/SponsorsSection';
 
-export default function Sponsors() {
+export default function SponsorsPage() {
   return <SponsorsSection />;
 }

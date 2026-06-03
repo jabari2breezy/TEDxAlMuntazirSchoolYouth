@@ -364,6 +364,9 @@ export default function Home() {
       </div>
 
       {/* Sectors Removed */}
+
+
+
       {/* Social Call to Action */}
       <section className="py-40 bg-[#0a0a0d] border-y border-white/10 relative overflow-hidden">
         <div className="absolute inset-0 liquid-bg opacity-[0.02] pointer-events-none" />
@@ -397,10 +400,10 @@ export default function Home() {
                  >
                    Instagram
                  </a>
-          </div>
-            </motion.div>
-          </div>
-        </section>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       <div className="pt-20" />
     </motion.div>

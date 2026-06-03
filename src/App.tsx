@@ -11,8 +11,8 @@ import About from './pages/About';
 import FAQ from './pages/FAQ';
 import Tickets from './pages/Tickets';
 import Team from './pages/Team';
-import Checkout from './pages/Checkout';
 import Sponsors from './pages/Sponsors';
+import Checkout from './pages/Checkout';
 import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { useEffect } from 'react';
@@ -39,8 +39,8 @@ function AnimatedRoutes() {
       <Route path="/faq" element={<FAQ />} />
       <Route path="/tickets" element={<Tickets />} />
       <Route path="/team" element={<Team />} />
-      <Route path="/checkout" element={<Checkout />} />
       <Route path="/sponsors" element={<Sponsors />} />
+      <Route path="/checkout" element={<Checkout />} />
     </Routes>
   );
 }
