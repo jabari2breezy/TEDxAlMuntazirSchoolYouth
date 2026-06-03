@@ -29,7 +29,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
     sponsors: [
       { src: '/sponsors/etg-hd.png', alt: 'ETG', isETG: true },
       { src: '/sponsors/asas-updated.png', alt: 'ASAS' },
-      { src: 'https://assets.stickpng.com/images/600da560516067000439ac8e.png', alt: 'Hisense' },
+      { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Hisense.svg/2560px-Hisense.svg.png', alt: 'Hisense' },
     ],
   },
   {
