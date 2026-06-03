@@ -7,7 +7,6 @@ import FluidBackground from '../components/FluidBackground';
 import Countdown from '../components/Countdown';
 import PrecisionButton from '../components/PrecisionButton';
 import { TICKETS_URL, SOCIALS } from '../constants';
-import SponsorsSection from '../components/SponsorsSection';
 
 const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -365,11 +364,6 @@ export default function Home() {
       </div>
 
       {/* Sectors Removed */}
-
-
-
-      <SponsorsSection />
-
       {/* Social Call to Action */}
       <section className="py-40 bg-[#0a0a0d] border-y border-white/10 relative overflow-hidden">
         <div className="absolute inset-0 liquid-bg opacity-[0.02] pointer-events-none" />
@@ -403,10 +397,9 @@ export default function Home() {
                  >
                    Instagram
                  </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+          </div>
+        </section>
+      </div>    </section>
 
       <div className="pt-20" />
     </motion.div>
