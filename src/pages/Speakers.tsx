@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback, forwardRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { SEGMENTS, SPEAKERS } from '../constants';
 import { ArrowDown } from 'lucide-react';
@@ -200,20 +200,30 @@ const brandGreen = '#006d38';
 
 /* ────────── Speaker Chapter ────────── */
 
-function SpeakerChapter({
-  speaker,
-  index,
-  segmentLabel,
-  segmentIdx,
-  total,
-}: {
+const SpeakerChapter = forwardRef<HTMLDivElement, {
   speaker: Speaker;
   index: number;
   segmentLabel: string;
   segmentIdx: number;
   total: number;
-}) {
+}>(function SpeakerChapter({
+  speaker,
+  index,
+  segmentLabel,
+  segmentIdx,
+  total,
+}, ref) {
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Merge the forwarded ref with the internal ref
+  useEffect(() => {
+    if (!ref || !sectionRef.current) return;
+    if (typeof ref === 'function') {
+      ref(sectionRef.current);
+    } else {
+      ref.current = sectionRef.current;
+    }
+  }, [ref]);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
@@ -348,7 +358,7 @@ function SpeakerChapter({
       </div>
     </div>
   );
-}
+});
 
 /* ────────── The Voices Title Card ────────── */
 
@@ -386,11 +396,62 @@ function TheVoicesTitle() {
 export default function Speakers() {
   const [speakersData, setSpeakersData] = useState<Speaker[]>([]);
   const [mounted, setMounted] = useState(false);
+  const firstSpeakerRef = useRef<HTMLDivElement>(null);
+  const autoScrollActive = useRef(true);
 
   useEffect(() => {
     setSpeakersData(SPEAKERS as Speaker[]);
     setMounted(true);
   }, []);
+
+  // Auto-scroll to first speaker with 3-second delays
+  useEffect(() => {
+    if (!mounted) return;
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const scrollStep = (targetY: number) => {
+      if (!autoScrollActive.current) return;
+
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+
+      timeoutId = setTimeout(() => {
+        // Check if first speaker section is in view
+        if (firstSpeakerRef.current) {
+          const rect = firstSpeakerRef.current.getBoundingClientRect();
+          // If the first speaker section's top is within or above the viewport
+          if (rect.top <= window.innerHeight * 0.5) {
+            autoScrollActive.current = false;
+            return;
+          }
+        }
+
+        // Continue scrolling
+        const currentY = window.scrollY;
+        const viewportHeight = window.innerHeight;
+        const nextY = currentY + viewportHeight;
+
+        // Safety: stop if we've scrolled way past the hero + title sections (800dvh)
+        if (nextY > viewportHeight * 8) {
+          autoScrollActive.current = false;
+          return;
+        }
+
+        scrollStep(nextY);
+      }, 3000);
+    };
+
+    // Start after a 1.5-second delay to let the hero animation play
+    const startDelay = setTimeout(() => {
+      scrollStep(window.innerHeight);
+    }, 1500);
+
+    return () => {
+      clearTimeout(startDelay);
+      clearTimeout(timeoutId);
+      autoScrollActive.current = false;
+    };
+  }, [mounted]);
 
   if (speakersData.length === 0) {
     return (
@@ -419,6 +480,7 @@ export default function Speakers() {
         return (
           <SpeakerChapter
             key={speaker.id}
+            ref={i === 0 ? firstSpeakerRef : undefined}
             speaker={speaker}
             index={i}
             segmentLabel={segLabel}
