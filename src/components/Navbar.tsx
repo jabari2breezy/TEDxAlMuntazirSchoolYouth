@@ -17,7 +17,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const path = location.pathname;
-    const forceDark = path === '/' || path === '/speakers' || path === '/tickets';
+    const forceDark = path === '/' || path === '/speakers' || path === '/tickets' || path === '/faq';
     
     if (forceDark) {
       document.documentElement.classList.remove('light');
@@ -135,7 +135,7 @@ export default function Navbar() {
           ) : (
             <Moon size={16} className="text-[#000839]" />
           )}
-          {(location.pathname === '/' || location.pathname === '/speakers' || location.pathname === '/tickets') && (
+          {(location.pathname === '/' || location.pathname === '/speakers' || location.pathname === '/tickets' || location.pathname === '/faq') && (
             <Slash size={14} className="absolute text-red-400 rotate-[-30deg]" strokeWidth={3} />
           )}
         </button>
