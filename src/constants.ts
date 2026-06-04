@@ -62,7 +62,7 @@ export const SPEAKERS: Speaker[] = [
   {
     id: 'ridhwan-mohammed',
     name: 'Ridhwan Mohammed',
-    topic: 'Borrowed Time, Borrowed Selves',
+    topic: 'From Neurons to Narratives',
     bio: "4th year medical student. Debater. Public speaker. The kind of person who can't stick to just one thing.",
     talk_description: "Identity isn't something you find — it's something you build, borrow, and outgrow. Ridhwan makes the case that we don't have to be just one person. Through neuroplasticity and lived experience, he shows how we can assemble ourselves from multiple versions, and why that's not a weakness — it's the whole point.",
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600&h=800',

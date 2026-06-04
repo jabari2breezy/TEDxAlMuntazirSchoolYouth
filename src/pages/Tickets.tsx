@@ -1,7 +1,11 @@
-import React, { useRef, useMemo, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { Ticket as TicketIcon, Calendar, MapPin, ArrowUpRight, Zap, ShieldCheck, Star, ChevronDown } from 'lucide-react';
 import { GradientBackground } from '@/components/ui/gradient-background';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -12,6 +16,115 @@ const INCLUDED_ITEMS = [
   { text: 'Official TEDx Al Muntazir merch', icon: Zap },
   { text: 'Curated lunch & refreshments', icon: Star }
 ];
+
+function TickSVG() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="inline-block shrink-0 text-brand-secondary" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  );
+}
+
+function CurveSVG() {
+  return (
+    <svg width="48" height="24" viewBox="0 0 48 24" fill="none" className="inline-block shrink-0 text-white/30">
+      <path d="M0 12 Q12 0 24 12 Q36 24 48 12" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    </svg>
+  );
+}
+
+function DiamondSVG() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="inline-block shrink-0 text-brand-secondary/60">
+      <path d="M10 0L20 10L10 20L0 10Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function DotsSVG() {
+  return (
+    <svg width="40" height="12" viewBox="0 0 40 12" fill="none" className="inline-block shrink-0 text-white/20">
+      <circle cx="6" cy="6" r="2" fill="currentColor" />
+      <circle cx="20" cy="6" r="2" fill="currentColor" />
+      <circle cx="34" cy="6" r="2" fill="currentColor" />
+    </svg>
+  );
+}
+
+function TickerTape() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (!trackRef.current || !sectionRef.current) return;
+
+      const track = trackRef.current;
+      const width = track.scrollWidth - window.innerWidth;
+
+      gsap.fromTo(track,
+        { x: window.innerWidth * 0.3 },
+        {
+          x: -width - window.innerWidth * 0.3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1.2,
+            invalidateOnRefresh: true,
+          }
+        }
+      );
+    });
+
+    const handleResize = () => ScrollTrigger.refresh();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      ctx.revert();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="h-[300vh] relative">
+      <div className="sticky top-0 h-dvh overflow-hidden flex items-center">
+        <div ref={trackRef} className="flex items-center gap-6 md:gap-10 whitespace-nowrap will-change-transform px-4">
+          <span className="text-[7vw] md:text-[5vw] font-title font-black uppercase tracking-tighter text-white/90 leading-none">
+            are you ready for
+          </span>
+          <CurveSVG />
+          <span className="text-[7vw] md:text-[5vw] font-title font-black uppercase tracking-tighter text-brand-secondary leading-none">
+            TEDxALMUNTAZIR
+          </span>
+          <DotsSVG />
+          <span className="text-[7vw] md:text-[5vw] font-title font-black uppercase tracking-tighter text-white/90 leading-none">
+            SCHOOLS
+          </span>
+          <span className="text-[7vw] md:text-[5vw] font-title font-black uppercase tracking-tighter text-white/40 leading-none">
+            YOUTH
+          </span>
+          <span className="text-[7vw] md:text-[5vw] font-title font-black uppercase tracking-tighter text-brand-secondary leading-none">
+            ?
+          </span>
+          <DiamondSVG />
+          <span className="text-[7vw] md:text-[5vw] font-title font-black uppercase tracking-tighter text-white/90 leading-none">
+            buy your ticket
+          </span>
+          <CurveSVG />
+          <span className="text-[7vw] md:text-[5vw] font-title font-black uppercase tracking-tighter text-brand-secondary leading-none">
+            NOW
+          </span>
+          <span className="text-[7vw] md:text-[5vw] font-title font-black uppercase tracking-tighter text-white/90 leading-none">
+            !!
+          </span>
+          <TickSVG />
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function Tickets() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,37 +142,10 @@ export default function Tickets() {
     offset: ["start start", "end end"]
   });
 
-  // Phase 1 (0-25%): Ticket moves down to reveal details
   const ticketY = useTransform(scrollYProgress,
     [0, 0.15, 0.25, 0.35],
     [0, 120, 120, 0]
   );
-  const ticketRotateY = useTransform(scrollYProgress,
-    [0, 0.15, 0.25, 0.35],
-    [0, 0, 0, 0]
-  );
-  const ticketRotateX = useTransform(scrollYProgress,
-    [0, 0.15, 0.25, 0.35],
-    [0, 0, 0, 0]
-  );
-
-  // Phase 2 (35-65%): Slow spin
-  const spinRotateY = useTransform(scrollYProgress,
-    [0.35, 0.5, 0.65],
-    [0, 180, 360]
-  );
-  const spinRotateX = useTransform(scrollYProgress,
-    [0.35, 0.5, 0.65],
-    [0, 10, 0]
-  );
-
-  // Phase 3 (70-100%): Final state - Buy Now
-  const finalScale = useTransform(scrollYProgress,
-    [0.7, 0.8, 0.9, 1],
-    [1, 1.05, 0.98, 1]
-  );
-
-  // Combined transforms
   const rotateY = useTransform(scrollYProgress,
     [0, 0.25, 0.35, 0.65, 0.7, 1],
     [0, 0, 0, 360, 360, 360]
@@ -88,7 +174,6 @@ export default function Tickets() {
 
   return (
     <div className="text-white">
-      {/* Animated gradient background */}
       <GradientBackground
         className="fixed inset-0 -z-10"
         gradients={[
@@ -102,17 +187,15 @@ export default function Tickets() {
         overlayOpacity={0.4}
       />
 
-      {/* Noise overlay */}
       <div className="fixed inset-0 opacity-[0.12] pointer-events-none z-50 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%221.5%22 numOctaves=%226%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E")' }} />
-      
-        {/* 400vh Scroll Track - more scroll room */}
-    <div ref={containerRef} className="h-[400vh] relative">
-      <div 
-        className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
-        style={{ height: '100dvh', perspective: '1500px' }}
-      >
 
-          {/* Ambient glow blobs */}
+      <TickerTape />
+
+      <div ref={containerRef} className="h-[400vh] relative">
+        <div
+          className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
+          style={{ height: '100dvh', perspective: '1500px' }}
+        >
           <div className="absolute inset-0 z-0 pointer-events-none">
             <div className="absolute top-0 left-0 w-[60vw] h-[60vh] rounded-full opacity-10"
               style={{ background: 'radial-gradient(circle, rgba(0,109,56,0.4) 0%, transparent 70%)', transform: 'translate(-30%, -30%)' }} />
@@ -120,10 +203,7 @@ export default function Tickets() {
               style={{ background: 'radial-gradient(circle, rgba(0,8,57,0.5) 0%, transparent 70%)', transform: 'translate(30%, 30%)' }} />
           </div>
 
-
-
-          {/* Large Scroll Indicator */}
-          <motion.div 
+          <motion.div
             className="absolute bottom-12 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-3 pointer-events-none"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,11 +218,9 @@ export default function Tickets() {
             </motion.div>
           </motion.div>
 
-          {/* ──── MOBILE LAYOUT ──── */}
           {isMobile && (
             <>
-              {/* Details panel — top portion of screen on mobile */}
-              <motion.div 
+              <motion.div
                 style={{ opacity: detailsOpacity }}
                 className="absolute z-10 top-[3vh] left-0 right-0 px-5 pointer-events-auto"
               >
@@ -165,7 +243,6 @@ export default function Tickets() {
                 </div>
               </motion.div>
 
-              {/* 3D Ticket — center/bottom on mobile */}
               <motion.div
                 style={{
                   rotateX,
@@ -182,11 +259,9 @@ export default function Tickets() {
             </>
           )}
 
-          {/* ──── DESKTOP LAYOUT ──── */}
           {!isMobile && (
             <>
-              {/* Details panel — left side on desktop */}
-              <motion.div 
+              <motion.div
                 style={{ opacity: detailsOpacity }}
                 className="absolute z-10 w-full max-w-xl px-6 left-[8vw] pointer-events-auto"
               >
@@ -215,7 +290,6 @@ export default function Tickets() {
                 </div>
               </motion.div>
 
-              {/* 3D Ticket — center/right on desktop */}
               <motion.div
                 style={{
                   rotateX,
@@ -240,8 +314,6 @@ export default function Tickets() {
 function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
   return (
     <div className={`relative rounded-[2.5rem] overflow-hidden bg-[#f7f4ee] shadow-[0_50px_100px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-500 ${isPhase3 ? 'ring-4 ring-brand-secondary ring-offset-4 ring-offset-[#050507]' : ''}`}>
-      
-      {/* Ticket Top */}
       <div className="bg-[#000839] px-8 md:px-14 pt-10 md:pt-16 pb-12 md:pb-14 relative overflow-hidden">
         <div className="flex justify-between items-start relative z-10">
           <div className="flex-1">
@@ -253,7 +325,6 @@ function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
             </h2>
           </div>
         </div>
-        
         <div className="mt-6 md:mt-8 grid grid-cols-2 gap-4 relative z-10">
           <div>
             <span className="font-typewriter text-[8px] uppercase tracking-widest text-white/20 block mb-1">Access</span>
@@ -265,19 +336,15 @@ function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
           </div>
         </div>
       </div>
-      
-      {/* Perforated Divider */}
       <div className="bg-[#000839] relative h-8 flex items-center">
         <div className="absolute left-0 w-8 h-16 bg-[#050507] rounded-full -translate-x-1/2 z-10 shadow-inner" />
         <div className="flex-1 mx-8 border-t-[3px] border-dashed border-white/10" />
         <div className="absolute right-0 w-8 h-16 bg-[#050507] rounded-full translate-x-1/2 z-10 shadow-inner" />
       </div>
-      
-      {/* Ticket Bottom */}
       <div className={`bg-[#f7f4ee] px-8 py-8 md:py-12 flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-500 ${isPhase3 ? 'bg-brand-secondary text-white' : 'text-[#000839]'}`}>
         <AnimatePresence mode="wait">
           {!isPhase3 ? (
-            <motion.div 
+            <motion.div
               key="price"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -291,7 +358,7 @@ function TicketCard({ isPhase3 }: { isPhase3: boolean }) {
               </div>
             </motion.div>
           ) : (
-            <motion.div 
+            <motion.div
               key="buy"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
