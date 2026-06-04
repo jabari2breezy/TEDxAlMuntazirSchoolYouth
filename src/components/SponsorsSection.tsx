@@ -6,6 +6,7 @@ interface Sponsor {
   src: string;
   alt: string;
   isETG?: boolean;
+  className?: string;
 }
 
 interface SponsorTier {
@@ -66,7 +67,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
       { src: '/sponsors/amjad-motors.png', alt: 'AMJAD MOTORS International Limited' },
       { src: '/sponsors/emerson-education.png', alt: 'Emerson Education' },
       { src: '/sponsors/image-masters.png', alt: 'Image Masters' },
-      { src: 'https://www.rafflesglobal.org/files/oie_transparent%20(2)%20(1)-lw-scaled.png.png', alt: 'Raffles Global' },
+      { src: 'https://www.rafflesglobal.org/files/oie_transparent%20(2)%20(1)-lw-scaled.png.png', alt: 'Raffles Global', className: 'scale-[1.3]' },
     ],
   },
 ];
@@ -102,7 +103,7 @@ function SponsorLogo({
       <img
         src={sponsor.src}
         alt={sponsor.alt}
-        className={`${heightClass} w-auto ${maxWidth} object-contain object-center opacity-90 group-hover:opacity-100 brightness-[0.85] group-hover:brightness-100 transition-all duration-500 [image-rendering:auto]`}
+        className={`${heightClass} w-auto ${maxWidth} object-contain object-center opacity-90 group-hover:opacity-100 brightness-[0.85] group-hover:brightness-100 transition-all duration-500 [image-rendering:auto] ${sponsor.className || ''}`}
         loading="lazy"
         decoding="async"
         draggable={false}
