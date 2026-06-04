@@ -404,7 +404,8 @@ export default function Speakers() {
     setMounted(true);
   }, []);
 
-  // Auto-scroll to first speaker with 3-second delays
+  // Auto-scroll to end of first speaker
+  // HeroSection (200dvh) + TheVoicesTitle (200dvh) + first SpeakerChapter (300dvh) = 700dvh
   useEffect(() => {
     if (!mounted) return;
 
@@ -415,36 +416,28 @@ export default function Speakers() {
 
       window.scrollTo({ top: targetY, behavior: 'smooth' });
 
+      // Determine delay based on where we just scrolled to
+      // TheVoicesTitle section spans 200dvh–400dvh → use 1s delay
+      // Everything else → use 2s delay
+      const vh = window.innerHeight;
+      const inVoicesSection = targetY >= vh * 2 && targetY < vh * 4;
+      const delay = inVoicesSection ? 1000 : 2000;
+
       timeoutId = setTimeout(() => {
-        // Check if first speaker section is in view
-        if (firstSpeakerRef.current) {
-          const rect = firstSpeakerRef.current.getBoundingClientRect();
-          // If the first speaker section's top is within or above the viewport
-          if (rect.top <= window.innerHeight * 0.5) {
-            autoScrollActive.current = false;
-            return;
-          }
-        }
-
-        // Continue scrolling
-        const currentY = window.scrollY;
-        const viewportHeight = window.innerHeight;
-        const nextY = currentY + viewportHeight;
-
-        // Safety: stop if we've scrolled way past the hero + title sections (800dvh)
-        if (nextY > viewportHeight * 8) {
+        // Stop at the end of the first speaker (~7 viewport heights)
+        if (targetY >= vh * 7) {
           autoScrollActive.current = false;
           return;
         }
 
-        scrollStep(nextY);
-      }, 3000);
+        scrollStep(targetY + vh);
+      }, delay);
     };
 
-    // Start after a 1.5-second delay to let the hero animation play
+    // Start after a 1-second delay to let the hero animation play
     const startDelay = setTimeout(() => {
       scrollStep(window.innerHeight);
-    }, 1500);
+    }, 1000);
 
     return () => {
       clearTimeout(startDelay);
