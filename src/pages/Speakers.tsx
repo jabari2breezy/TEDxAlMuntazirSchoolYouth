@@ -396,6 +396,7 @@ function TheVoicesTitle() {
 export default function Speakers() {
   const [speakersData, setSpeakersData] = useState<Speaker[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [showScrollArrow, setShowScrollArrow] = useState(false);
   const firstSpeakerRef = useRef<HTMLDivElement>(null);
   const autoScrollActive = useRef(true);
 
@@ -404,40 +405,57 @@ export default function Speakers() {
     setMounted(true);
   }, []);
 
-  // Auto-scroll to end of first speaker
-  // HeroSection (200dvh) + TheVoicesTitle (200dvh) + first SpeakerChapter (300dvh) = 700dvh
+  // Auto-scroll to first speaker with variable delays
   useEffect(() => {
     if (!mounted) return;
 
     let timeoutId: ReturnType<typeof setTimeout>;
+    let stepCount = 0;
+
+    // Hero section: 200dvh = 2 steps, 2s delay each
+    // Voices section: 200dvh = 2 steps, 1s delay each
+    const getDelay = () => {
+      if (stepCount <= 2) return 2000; // Hero section: 2s
+      return 1000; // Voices section: 1s
+    };
 
     const scrollStep = (targetY: number) => {
       if (!autoScrollActive.current) return;
 
       window.scrollTo({ top: targetY, behavior: 'smooth' });
-
-      // Determine delay based on where we just scrolled to
-      // TheVoicesTitle section spans 200dvh–400dvh → use 1s delay
-      // Everything else → use 2s delay
-      const vh = window.innerHeight;
-      const inVoicesSection = targetY >= vh * 2 && targetY < vh * 4;
-      const delay = inVoicesSection ? 1000 : 2000;
+      stepCount++;
 
       timeoutId = setTimeout(() => {
-        // Stop at the end of the first speaker (~7 viewport heights)
-        if (targetY >= vh * 7) {
+        // Check if first speaker section is in view
+        if (firstSpeakerRef.current) {
+          const rect = firstSpeakerRef.current.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.5) {
+            autoScrollActive.current = false;
+            setShowScrollArrow(true);
+            return;
+          }
+        }
+
+        // Continue scrolling
+        const currentY = window.scrollY;
+        const viewportHeight = window.innerHeight;
+        const nextY = currentY + viewportHeight;
+
+        // Safety: stop if we've scrolled way past
+        if (nextY > viewportHeight * 8) {
           autoScrollActive.current = false;
+          setShowScrollArrow(true);
           return;
         }
 
-        scrollStep(targetY + vh);
-      }, delay);
+        scrollStep(nextY);
+      }, getDelay());
     };
 
-    // Start after a 1-second delay to let the hero animation play
+    // Start after a 1.5-second delay to let the hero animation play
     const startDelay = setTimeout(() => {
       scrollStep(window.innerHeight);
-    }, 1000);
+    }, 1500);
 
     return () => {
       clearTimeout(startDelay);
@@ -460,6 +478,26 @@ export default function Speakers() {
     <div className="relative bg-brand-primary">
       {/* Plain green background — no warp shader */}
       <div className="fixed inset-0 z-0 bg-brand-primary" />
+
+      {/* Big scroll arrow after auto-scroll stops */}
+      {showScrollArrow && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-3 pointer-events-none"
+        >
+          <span className="font-typewriter text-[10px] uppercase tracking-[0.5em] text-white/60">
+            Scroll
+          </span>
+          <motion.div
+            animate={{ y: [0, 12, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <ArrowDown size={40} className="text-white" strokeWidth={3} />
+          </motion.div>
+        </motion.div>
+      )}
 
       <HeroSection mounted={mounted} speakersCount={speakersData.length} />
 
@@ -607,24 +645,6 @@ function HeroSection({
           >
             &ldquo;Time is the currency of attention&rdquo;
           </motion.p>
-
-          {/* Scroll arrow */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={mounted ? { opacity: 1 } : {}}
-            transition={{ delay: 1.4, duration: 0.8 }}
-            className="mt-16 md:mt-24 flex flex-col items-center gap-3"
-          >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <ArrowDown size={20} className="text-white/25" strokeWidth={1.5} />
-            </motion.div>
-            <span className="font-typewriter text-[7px] uppercase tracking-[0.5em] text-white/15">
-              Scroll
-            </span>
-          </motion.div>
         </div>
       </motion.div>
     </div>
