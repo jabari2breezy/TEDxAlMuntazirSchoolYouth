@@ -65,7 +65,7 @@ export const SPEAKERS: Speaker[] = [
     topic: 'From Neurons to Narratives',
     bio: "4th year medical student. Debater. Public speaker. The kind of person who can't stick to just one thing.",
     talk_description: "Identity isn't something you find — it's something you build, borrow, and outgrow. Ridhwan makes the case that we don't have to be just one person. Through neuroplasticity and lived experience, he shows how we can assemble ourselves from multiple versions, and why that's not a weakness — it's the whole point.",
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600&h=800',
+    image: '/speakers/ridhwan.jpg',
     segmentId: 'past',
     isAlum: true
   },
@@ -111,7 +111,7 @@ export const SPEAKERS: Speaker[] = [
     topic: 'Procrastination',
     bio: "Student. Former serial procrastinator. The guy who gave a TED talk while an exam sat on his desk the next day.",
     talk_description: "Procrastination isn't about laziness — it's about how our brains handle time, pressure, and discomfort. Hassan breaks down the psychology behind why we delay, and offers a practical system for breaking the loop before it breaks you.",
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600&h=800',
+    image: '/speakers/hassan.png',
     segmentId: 'present'
   },
   {
@@ -139,7 +139,7 @@ export const SPEAKERS: Speaker[] = [
     topic: 'How to Take Your Wealth With You',
     bio: "Student. Storyteller. The kind of person who makes Alexander the Great sound like a life coach.",
     talk_description: "Alexander the Great left the world with his hands empty. Liyaan uses that image to explore what true wealth looks like — not money or status, but the impact you leave behind. Legacy isn't built someday. It's built in what you do next.",
-    image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&q=80&w=600&h=800',
+    image: '/speakers/liyaan.jpg',
     segmentId: 'future'
   }
 ];
