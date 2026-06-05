@@ -368,14 +368,14 @@ const SpeakerChapter = forwardRef<HTMLDivElement, {
                 offsetEnd={0.65}
                 className="flex md:hidden justify-center mt-5"
               >
-                <div className="relative w-32 aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-white/15 shadow-2xl">
                   <img
                     src={speaker.image}
                     alt={speaker.name}
                     className="w-full h-full object-cover object-top"
                     loading="lazy"
                   />
-                  <div className={`absolute inset-0 ${isEven ? 'bg-gradient-to-t from-[#000839]/40 to-transparent' : 'bg-gradient-to-t from-[#f7f4ee]/30 to-transparent'}`} />
+                  <div className={`absolute inset-0 ${isEven ? 'bg-gradient-to-t from-[#000839]/30 to-transparent' : 'bg-gradient-to-t from-[#f7f4ee]/20 to-transparent'}`} />
                 </div>
               </StaggerLine>
             )}

@@ -27,7 +27,7 @@ const TEAM_GROUPS = [
     members: [
       { name: 'Muhammed Omar', year: '12', lead: true, title: 'Team Lead' },
       { name: 'Husseinali Sharif', year: '12' },
-      { name: 'Nayah Gangji', year: '12' },
+      { name: 'Nayah -e- Fatema Gangji', year: '12' },
       { name: 'Dhara Gajjar', year: '11' },
       { name: 'Mohammed Datoo', year: '12' }
     ]
