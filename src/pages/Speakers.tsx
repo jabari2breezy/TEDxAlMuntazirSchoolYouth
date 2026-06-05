@@ -12,6 +12,7 @@ interface Speaker {
   segmentId: string;
   bio: string;
   talk_description: string;
+  image: string;
 }
 
 /* ────────── Scroll-driven text reveal ────────── */
@@ -299,8 +300,8 @@ const SpeakerChapter = forwardRef<HTMLDivElement, {
               </div>
             </StaggerLine>
 
-            {/* Bio + Discourse — bigger text on mobile */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-10 lg:gap-16">
+            {/* Bio + Discourse + Image */}
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-5 md:gap-10 lg:gap-16 items-start">
 
               {/* Bio — SHORT */}
               <StaggerLine
@@ -337,7 +338,47 @@ const SpeakerChapter = forwardRef<HTMLDivElement, {
                   {speaker.talk_description}
                 </p>
               </StaggerLine>
+
+              {/* Speaker Photo */}
+              {speaker.image && !speaker.image.includes('unsplash') && (
+                <StaggerLine
+                  progress={cardProgress}
+                  offsetStart={0.5}
+                  offsetEnd={0.65}
+                  className="hidden md:flex justify-end"
+                >
+                  <div className="relative w-28 lg:w-36 aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                    <img
+                      src={speaker.image}
+                      alt={speaker.name}
+                      className="w-full h-full object-cover object-top"
+                      loading="lazy"
+                    />
+                    <div className={`absolute inset-0 ${isEven ? 'bg-gradient-to-t from-[#000839]/40 to-transparent' : 'bg-gradient-to-t from-[#f7f4ee]/30 to-transparent'}`} />
+                  </div>
+                </StaggerLine>
+              )}
             </div>
+
+            {/* Mobile speaker photo */}
+            {speaker.image && !speaker.image.includes('unsplash') && (
+              <StaggerLine
+                progress={cardProgress}
+                offsetStart={0.5}
+                offsetEnd={0.65}
+                className="flex md:hidden justify-center mt-5"
+              >
+                <div className="relative w-32 aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                  <img
+                    src={speaker.image}
+                    alt={speaker.name}
+                    className="w-full h-full object-cover object-top"
+                    loading="lazy"
+                  />
+                  <div className={`absolute inset-0 ${isEven ? 'bg-gradient-to-t from-[#000839]/40 to-transparent' : 'bg-gradient-to-t from-[#f7f4ee]/30 to-transparent'}`} />
+                </div>
+              </StaggerLine>
+            )}
 
             {/* Bottom accent */}
             <StaggerLine

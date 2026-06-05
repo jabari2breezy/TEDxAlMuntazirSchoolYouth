@@ -63,8 +63,8 @@ export const SPEAKERS: Speaker[] = [
     id: 'ridhwan-mohammed',
     name: 'Ridhwan Mohammed',
     topic: 'From Neurons to Narratives',
-    bio: "4th year medical student. Debater. Public speaker. The kind of person who can't stick to just one thing.",
-    talk_description: "Identity isn't something you find — it's something you build, borrow, and outgrow. Ridhwan makes the case that we don't have to be just one person. Through neuroplasticity and lived experience, he shows how we can assemble ourselves from multiple versions, and why that's not a weakness — it's the whole point.",
+    bio: "Ridhwan Mohamed is a medical student, speaker, and advocate for youth engagement in health and leadership. Through his work with student organizations, public health initiatives, and community outreach projects, he is passionate about exploring how people grow, adapt, and find purpose beyond traditional expectations.",
+    talk_description: "At TEDx, he will share insights on identity, resilience, and the power of embracing the many dimensions of who we are.",
     image: '/speakers/ridhwan.jpg',
     segmentId: 'past',
     isAlum: true
@@ -81,10 +81,10 @@ export const SPEAKERS: Speaker[] = [
   {
     id: 'zahra-datoo',
     name: 'Zahra Datoo',
-    topic: 'Nostalgia',
-    bio: "Student. Memory collector. The kind of person who holds onto rainy afternoons and never lets go.",
-    talk_description: "The best moments in life don't feel extraordinary while they're happening — they only become priceless later. Zahra explores how nostalgia works, why ordinary moments matter more than we think, and what it means to be truly present before the moment becomes a memory.",
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=600&h=800',
+    topic: 'Borrowed Time',
+    bio: "Zahra Datoo is a student, writer, and curious thinker passionate about reading, storytelling, and inspiring others.",
+    talk_description: "She takes the TEDxAlMuntazirSchoolYouth stage with her talk, \"Borrowed Time,\" exploring why we romanticize the past and long for moments that have already passed. Through reflection and insight, she reminds us that while nostalgia helps us cherish where we've been, there is still so much waiting for us ahead.",
+    image: '/speakers/zahra-datoo.png',
     segmentId: 'past'
   },
   {
@@ -108,9 +108,9 @@ export const SPEAKERS: Speaker[] = [
   {
     id: 'hassan-abbas',
     name: 'Hassan Abbas Muhammad',
-    topic: 'Procrastination',
-    bio: "Student. Former serial procrastinator. The guy who gave a TED talk while an exam sat on his desk the next day.",
-    talk_description: "Procrastination isn't about laziness — it's about how our brains handle time, pressure, and discomfort. Hassan breaks down the psychology behind why we delay, and offers a practical system for breaking the loop before it breaks you.",
+    topic: 'Tomorrow Starts Today',
+    bio: "Hassan Abbas is a student with a keen interest in personal growth and productivity.",
+    talk_description: "Through his TEDxAlMuntazirSchoolYouth talk, \"Tomorrow Starts Today,\" he explores the challenge of procrastination and how delaying action can quietly steal opportunities, time, and potential. Drawing from relatable experiences, he encourages audiences to take ownership of the present moment and make meaningful progress before time slips away.",
     image: '/speakers/hassan.png',
     segmentId: 'present'
   },
@@ -135,10 +135,10 @@ export const SPEAKERS: Speaker[] = [
   },
   {
     id: 'liyaan-karblekar',
-    name: 'Liyaan Karblekar',
+    name: 'Liyaan Karbelkar',
     topic: 'How to Take Your Wealth With You',
-    bio: "Student. Storyteller. The kind of person who makes Alexander the Great sound like a life coach.",
-    talk_description: "Alexander the Great left the world with his hands empty. Liyaan uses that image to explore what true wealth looks like — not money or status, but the impact you leave behind. Legacy isn't built someday. It's built in what you do next.",
+    bio: "Liyaan Karbelkar is a student passionate about exploring new ideas, reflecting on life's deeper questions, and understanding the impact we leave behind.",
+    talk_description: "In her TEDxAlMuntazirSchoolYouth talk, \"How to Take Your Wealth With You,\" she explores how our actions, choices, and values shape the mark we leave on the world long after we are gone. She invites audiences to reflect on the legacy they are building and how they can make every moment count within the limited time they have.",
     image: '/speakers/liyaan.jpg',
     segmentId: 'future'
   }
