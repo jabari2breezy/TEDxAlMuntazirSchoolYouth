@@ -30,7 +30,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
     sponsors: [
       { src: '/sponsors/etg-hd.png', alt: 'ETG', isETG: true },
       { src: '/sponsors/asas-updated.png', alt: 'ASAS' },
-      { src: '/sponsors/hisense-updated.png', alt: 'Hisense', className: 'scale-[1.8]' },
+      { src: '/sponsors/hisense-hd.png', alt: 'Hisense', className: 'scale-[1.4]' },
     ],
   },
   {
