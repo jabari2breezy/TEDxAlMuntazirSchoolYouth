@@ -31,6 +31,7 @@ const SPONSOR_TIERS: SponsorTier[] = [
       { src: '/sponsors/etg-hd.png', alt: 'ETG', isETG: true },
       { src: '/sponsors/asas-updated.png', alt: 'ASAS' },
       { src: '/sponsors/hisense-hd.png', alt: 'Hisense', className: 'scale-[1.4]' },
+      { src: '/sponsors/amjad-motors.png', alt: 'AMJAD MOTORS International Limited' },
     ],
   },
   {
@@ -64,7 +65,6 @@ const SPONSOR_TIERS: SponsorTier[] = [
     sponsors: [
       { src: '/sponsors/smiles-cars.png', alt: 'Smiles Cars' },
       { src: '/sponsors/dar-glass-works.png', alt: 'Dar es Salaam Glass Works' },
-      { src: '/sponsors/amjad-motors.png', alt: 'AMJAD MOTORS International Limited' },
       { src: '/sponsors/emerson-education.png', alt: 'Emerson Education' },
       { src: '/sponsors/image-masters.png', alt: 'Image Masters' },
       { src: 'https://www.rafflesglobal.org/files/oie_transparent%20(2)%20(1)-lw-scaled.png.png', alt: 'Raffles Global', className: 'scale-[1.3]' },
