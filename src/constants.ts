@@ -73,8 +73,8 @@ export const SPEAKERS: Speaker[] = [
     id: 'anaya-rashid',
     name: 'Anaya Rashid',
     topic: 'Culture of Time',
-    bio: "Student. Overthinker. The kind of person who notices the small things most people walk past.",
-    talk_description: "Time doesn't change — we do. Anaya explores how different cultures experience the same hours in completely different ways, and what it means when you realize you were physically present but mentally somewhere else entirely.",
+    bio: "Anaya Rashid is a student who is deeply intrigued by the rhythms of life and the unseen patterns that shape human behavior.",
+    talk_description: "In her TEDxAlMuntazirSchoolYouth talk, 'The Culture of Time,' she explores how different societies perceive, value, and live through time. From fast-paced modern lifestyles to more reflective traditions, she challenges audiences to rethink their relationship with time and how culture influences the way we use every passing moment under the theme Borrowed Time.",
     image: '/speakers/anaya.jpg',
     segmentId: 'past'
   },
@@ -91,8 +91,8 @@ export const SPEAKERS: Speaker[] = [
     id: 'zahra-moledina',
     name: 'Zahra Moledina',
     topic: 'Silence is never empty',
-    bio: "Student. Professional overthinker of everything. Currently questioning her screen time stats.",
-    talk_description: "We think we're using our phones — but what if they're using us? Zahra looks at how convenience has become a system designed to take our attention, and what happens when you sit in silence long enough to notice where your time actually goes.",
+    bio: "Zahra Moledina is a student who is passionate about sharing ideas that inspire others and creating a positive impact in her community.",
+    talk_description: "In her TEDxAlMuntazirSchoolYouth talk, she explores the true value of silence and how embracing quiet moments can help us create a better understanding of ourselves, our purpose, and our place in the world. Through her message, she encourages others to slow down, reflect, and listen to the thoughts that often go unheard.",
     image: '/speakers/zahra-moledina.png',
     segmentId: 'present'
   },
@@ -110,7 +110,7 @@ export const SPEAKERS: Speaker[] = [
     name: 'Hassan Abbas Muhammad',
     topic: 'POV of a Procrastinator',
     bio: "Hassan Abbas is a student with a keen interest in personal growth and productivity.",
-    talk_description: "Through his TEDxAlMuntazirSchoolYouth talk, \"Tomorrow Starts Today,\" he explores the challenge of procrastination and how delaying action can quietly steal opportunities, time, and potential. Drawing from relatable experiences, he encourages audiences to take ownership of the present moment and make meaningful progress before time slips away.",
+    talk_description: "Through his TEDxAlMuntazirSchoolYouth talk, \"POV of a Procrastinator,\" he explores the challenge of procrastination and how delaying action can quietly steal opportunities, time, and potential. Drawing from relatable experiences, he encourages audiences to take ownership of the present moment and make meaningful progress before time slips away.",
     image: '/speakers/hassan.jpg',
     segmentId: 'present'
   },
@@ -127,9 +127,9 @@ export const SPEAKERS: Speaker[] = [
   {
     id: 'sada-mbaruk',
     name: 'Sada Mbaruk',
-    topic: 'End of the World',
-    bio: "Student. Observer. The kind of person who connects the dots most people don't even see.",
-    talk_description: "The end of the world doesn't arrive with sirens. It creeps in quietly — through small choices, ignored warnings, and problems we assumed someone else would fix. Sada traces how everything connects, and why the time to care is running out.",
+    topic: "What Does the End of the World Mean for My Generation?",
+    bio: "Sada Mbaruk is a student passionate about exploring urgent global questions and their impact on the next generation.",
+    talk_description: "In her TEDxAlMuntazirSchoolYouth talk, \"What Does the End of the World Mean for My Generation?\" she examines how young people are inheriting a world shaped by conflict, environmental destruction, and global uncertainty. She reflects on what it means to grow up with these realities and how her generation must navigate and respond to the lasting impacts of today's world.",
     image: '/speakers/sada.png',
     segmentId: 'future'
   },
