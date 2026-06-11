@@ -66,8 +66,8 @@ const SPONSOR_TIERS: SponsorTier[] = [
       { src: '/sponsors/smiles-cars.png', alt: 'Smiles Cars' },
       { src: '/sponsors/dar-glass-works.png', alt: 'Dar es Salaam Glass Works' },
       { src: '/sponsors/emerson-education.png', alt: 'Emerson Education' },
-      { src: '/sponsors/image-masters.png', alt: 'Image Masters' },
-      { src: 'https://www.rafflesglobal.org/files/oie_transparent%20(2)%20(1)-lw-scaled.png.png', alt: 'Raffles Global', className: 'scale-[1.3]' },
+      { src: '/sponsors/image-masters.png', alt: 'Image Masters', className: 'scale-[1.5]' },
+      { src: 'https://www.rafflesglobal.org/files/oie_transparent%20(2)%20(1)-lw-scaled.png.png', alt: 'Raffles Global', className: 'scale-[1.6]' },
     ],
   },
 ];
