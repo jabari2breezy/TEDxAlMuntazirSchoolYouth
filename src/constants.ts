@@ -75,7 +75,7 @@ export const SPEAKERS: Speaker[] = [
     topic: 'Culture of Time',
     bio: "Student. Overthinker. The kind of person who notices the small things most people walk past.",
     talk_description: "Time doesn't change — we do. Anaya explores how different cultures experience the same hours in completely different ways, and what it means when you realize you were physically present but mentally somewhere else entirely.",
-    image: '/speakers/anaya.png',
+    image: '/speakers/anaya.jpg',
     segmentId: 'past'
   },
   {
@@ -102,7 +102,7 @@ export const SPEAKERS: Speaker[] = [
     topic: 'Yet to be announced',
     bio: "Dr. Atish Shah is a physician, engineer, and innovator exploring the intersection of medicine, engineering, and artificial intelligence. Through his company, he develops technology-driven solutions to address real-world healthcare challenges.",
     talk_description: "At TEDx Al Muntazir Schools Youth 2026, he will examine how emerging technologies can shape healthier and more sustainable futures, helping us make the most of our 'borrowed time'.",
-    image: '/speakers/atish.jpg',
+    image: '/speakers/atish.png',
     segmentId: 'present'
   },
   {
@@ -130,7 +130,7 @@ export const SPEAKERS: Speaker[] = [
     topic: 'End of the World',
     bio: "Student. Observer. The kind of person who connects the dots most people don't even see.",
     talk_description: "The end of the world doesn't arrive with sirens. It creeps in quietly — through small choices, ignored warnings, and problems we assumed someone else would fix. Sada traces how everything connects, and why the time to care is running out.",
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600&h=800',
+    image: '/speakers/sada.png',
     segmentId: 'future'
   },
   {
