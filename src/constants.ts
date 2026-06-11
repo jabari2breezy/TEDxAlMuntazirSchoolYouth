@@ -75,7 +75,7 @@ export const SPEAKERS: Speaker[] = [
     topic: 'Culture of Time',
     bio: "Student. Overthinker. The kind of person who notices the small things most people walk past.",
     talk_description: "Time doesn't change — we do. Anaya explores how different cultures experience the same hours in completely different ways, and what it means when you realize you were physically present but mentally somewhere else entirely.",
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600&h=800',
+    image: '/speakers/anaya.png',
     segmentId: 'past'
   },
   {
@@ -90,28 +90,28 @@ export const SPEAKERS: Speaker[] = [
   {
     id: 'zahra-moledina',
     name: 'Zahra Moledina',
-    topic: 'The Best Thing Since Sliced Bread',
+    topic: 'Silence is never empty',
     bio: "Student. Professional overthinker of everything. Currently questioning her screen time stats.",
     talk_description: "We think we're using our phones — but what if they're using us? Zahra looks at how convenience has become a system designed to take our attention, and what happens when you sit in silence long enough to notice where your time actually goes.",
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600&h=800',
+    image: '/speakers/zahra-moledina.png',
     segmentId: 'present'
   },
   {
-    id: 'speaker-tba',
-    name: 'TBA',
-    topic: 'TBA',
-    bio: "Speaker details to be announced soon.",
-    talk_description: "More details about this session will be available soon.",
-    image: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=600&h=800',
+    id: 'dr-atish-shah',
+    name: 'Dr. Atish Shah',
+    topic: 'Yet to be announced',
+    bio: "Dr. Atish Shah is a physician, engineer, and innovator exploring the intersection of medicine, engineering, and artificial intelligence. Through his company, he develops technology-driven solutions to address real-world healthcare challenges.",
+    talk_description: "At TEDx Al Muntazir Schools Youth 2026, he will examine how emerging technologies can shape healthier and more sustainable futures, helping us make the most of our 'borrowed time'.",
+    image: '/speakers/atish.jpg',
     segmentId: 'present'
   },
   {
     id: 'hassan-abbas',
     name: 'Hassan Abbas Muhammad',
-    topic: 'Tomorrow Starts Today',
+    topic: 'POV of a Procrastinator',
     bio: "Hassan Abbas is a student with a keen interest in personal growth and productivity.",
     talk_description: "Through his TEDxAlMuntazirSchoolYouth talk, \"Tomorrow Starts Today,\" he explores the challenge of procrastination and how delaying action can quietly steal opportunities, time, and potential. Drawing from relatable experiences, he encourages audiences to take ownership of the present moment and make meaningful progress before time slips away.",
-    image: '/speakers/hassan.png',
+    image: '/speakers/hassan.jpg',
     segmentId: 'present'
   },
   {
@@ -120,7 +120,7 @@ export const SPEAKERS: Speaker[] = [
     topic: 'The Art of Scheduling',
     bio: "Second year medical student. Co-founder of Legions Org. The kind of person who somehow makes time for everything and still goes to the beach.",
     talk_description: "One to-do list changed everything. Yunus shares how a tiny habit pulled him from feeling lost to living with intention — and why scheduling isn't about control, it's about making space for the things that actually matter.",
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=600&h=800',
+    image: '/speakers/yunus.jpg',
     segmentId: 'future',
     isAlum: true
   },
